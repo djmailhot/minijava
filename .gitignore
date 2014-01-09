@@ -1,0 +1,63 @@
+build/
+src/Parser/parser.java
+src/Parser/sym.java
+src/Scanner/scanner.java
+src/Parser/cup.out
+
+a.out
+*.o
+*.s
+*.s.old
+SamplePrograms/*.s
+dependencies.xml
+history.xml
+.ant-targets-build.xml
+junk
+FILES
+find.out
+tags
+src/Scanner/*~
+*.swp
+.gdb_history
+
+#
+# one off test programs
+#
+test*.c
+#
+# ex/vi scripts used for develpoment
+#
+*.ex
+
+#
+# one off shell scripts
+#
+?.sh
+
+#
+# touch files
+#
+*.T
+
+#
+# products of regression test
+#
+*.diff
+*.expect
+*.actual
+*.x
+
+SamplePrograms/SampleMiniJavaPrograms/classes/
+
+#
+# macosx dynamic symbols
+#
+*.dSYM
+
+#
+# profiling
+#
+*.prof
+*.mjprof
+
+*.class

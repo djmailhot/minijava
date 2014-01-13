@@ -1,15 +1,15 @@
 //
 // Test if we can print an int after doing arithmetic
 //
-class TestPrintIntArithmetic {
+class cse401h_correct_01 {
 
   public static void main (String [] args) {
-    System.out.println(TestWorker.run());
+    System.out.println(TestPrintIntArithmetic.run());
   }
 
 }
 
-class TestWorker {
+class TestPrintIntArithmetic {
 
   public int run() {
     int x;

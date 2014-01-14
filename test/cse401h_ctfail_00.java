@@ -4,8 +4,17 @@
 class cse401h_ctfail_00 {
 
   public static void main (String [] args) {
-    System.out.println(0);
-    System.out.println(1);
+    System.out.println(new TestMissingType().run());
+  }
+
+}
+
+class TestMissingType {
+
+  public int run() {
+    x = 0;
+    System.out.println(x);
+    return x;
   }
 
 }

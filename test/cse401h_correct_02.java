@@ -12,6 +12,8 @@ class cse401h_correct_02 {
 class TestIfElse {
 
   public int run() {
+    System.out.println(100000002);
+
     // Test comparison operators.
     // Printing 0 indicates a failed test.
     if (0 == 0)

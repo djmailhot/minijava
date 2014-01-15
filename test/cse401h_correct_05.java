@@ -12,6 +12,8 @@ class cse401h_correct_05 {
 class TestObjects {
 
   public int run() {
+    System.out.println(100000005);
+
     Grandparent g;
     Parent p;
     Child c;

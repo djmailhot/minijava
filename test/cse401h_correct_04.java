@@ -13,6 +13,8 @@ class TestAndOr {
   boolean didCauseSideEffect;
 
   public int run() {
+    System.out.println(100000004);
+
     didCauseSideEffect = false;
 
     if (false && causeSideEffect())

@@ -12,6 +12,8 @@ class cse401h_correct_01 {
 class TestPrintIntArithmetic {
 
   public int run() {
+    System.out.println(100000001);
+
     int x;
 
     x = 4 - 3;

@@ -12,6 +12,8 @@ class cse401h_correct_03 {
 class TestWhile {
 
   public int run() {
+    System.out.println(100000003);
+
     int i;
 
     i = 0;

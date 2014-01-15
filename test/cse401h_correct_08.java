@@ -12,6 +12,8 @@ class cse401h_correct_08 {
 class TestCompareDoubles {
 
   public int run() {
+    System.out.println(100000008);
+
     System.out.println(0.0 == 0.0);
     System.out.println(0.0 == 1.0);
 

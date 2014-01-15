@@ -22,8 +22,10 @@ class TestPrintIntArithmetic {
     System.out.println(x);
     x = 2 * 2;
     System.out.println(x);
+    x = 5 % 3;
+    System.out.println(x);
 
-    return 1;
+    return 0;
   }
 
 }

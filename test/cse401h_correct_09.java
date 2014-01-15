@@ -60,31 +60,31 @@ class TestFunctions {
 
   public int nest1(int x) {
     System.out.println(1);
-    System.out.println(nest2(x));
+    System.out.println(nest2(x * 2));
     return x;
   }
 
   public int nest2(int x) {
     System.out.println(2);
-    System.out.println(nest3(x));
+    System.out.println(nest3(x * 2));
     return x;
   }
 
   public int nest3(int x) {
     System.out.println(3);
-    System.out.println(nest4(x));
+    System.out.println(nest4(x * 2));
     return x;
   }
 
   public int nest4(int x) {
     System.out.println(4);
-    System.out.println(nest5(x));
+    System.out.println(nest5(x * 2));
     return x;
   }
 
   public int nest5(int x) {
     System.out.println(5);
-    System.out.println(x);
+    System.out.println(x * 2);
     return x;
   }
 

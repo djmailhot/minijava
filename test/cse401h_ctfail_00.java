@@ -12,7 +12,7 @@ class cse401h_ctfail_00 {
 class TestMissingType {
 
   public int run() {
-    System.out.println(20000000);
+    System.out.println(200000000);
 
     x = 0;
     System.out.println(x);

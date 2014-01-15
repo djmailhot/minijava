@@ -12,7 +12,7 @@ class cse401h_rtfail_01 {
 class TestArrayIndexOutOfBounds {
 
   public int run() {
-    System.out.println(30000001);
+    System.out.println(300000001);
 
     int[] a;
 

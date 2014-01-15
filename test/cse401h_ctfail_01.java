@@ -12,7 +12,7 @@ class cse401h_ctfail_01 {
 class TestIncompatibleAssignmentTypes {
 
   public int run() {
-    System.out.println(20000001);
+    System.out.println(200000001);
 
     int x;
     int y;

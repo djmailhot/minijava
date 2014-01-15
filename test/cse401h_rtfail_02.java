@@ -12,7 +12,7 @@ class cse401h_rtfail_02 {
 class TestNegativeArraySize {
 
   public int run() {
-    System.out.println(30000002);
+    System.out.println(300000002);
 
     int[] a;
 

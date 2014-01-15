@@ -12,7 +12,7 @@ class cse401h_ctfail_03 {
 class TestIncompatibleReturnTypes {
 
   public int run() {
-    System.out.println(20000003);
+    System.out.println(200000003);
 
     int x;
 

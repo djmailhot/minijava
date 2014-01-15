@@ -12,7 +12,7 @@ class cse401h_ctfail_04 {
 class TestDuplicateClassNames {
 
   public int run() {
-    System.out.println(20000004);
+    System.out.println(200000004);
 
     return 0;
   }

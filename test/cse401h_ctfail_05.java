@@ -12,7 +12,7 @@ class cse401h_ctfail_05 {
 class TestDuplicateVariableNames {
 
   public int run() {
-    System.out.println(20000005);
+    System.out.println(200000005);
 
     int x;
     x = 0;

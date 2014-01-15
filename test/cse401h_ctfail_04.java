@@ -1,5 +1,5 @@
 //
-// Test compiler errors for the MainClass
+// Test compile time errors for duplicate class names
 //
 class cse401h_ctfail_04 {
 
@@ -12,6 +12,8 @@ class cse401h_ctfail_04 {
 class TestDuplicateClassNames {
 
   public int run() {
+    System.out.println(20000004);
+
     return 0;
   }
 

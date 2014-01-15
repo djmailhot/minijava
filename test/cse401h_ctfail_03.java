@@ -1,7 +1,7 @@
 //
-// Test compiler errors for the MainClass
+// Test compile time errors incompatible return types
 //
-class cse401h_ctfail_04 {
+class cse401h_ctfail_03 {
 
   public static void main (String [] args) {
     System.out.println(new TestIncompatibleReturnTypes().run());
@@ -12,6 +12,8 @@ class cse401h_ctfail_04 {
 class TestIncompatibleReturnTypes {
 
   public int run() {
+    System.out.println(20000003);
+
     int x;
 
     x = truth();

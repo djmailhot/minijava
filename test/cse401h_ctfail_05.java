@@ -1,5 +1,5 @@
 //
-// Test compiler errors for the MainClass
+// Test compile time errors for duplicate variable names
 //
 class cse401h_ctfail_05 {
 
@@ -12,6 +12,8 @@ class cse401h_ctfail_05 {
 class TestDuplicateVariableNames {
 
   public int run() {
+    System.out.println(20000005);
+
     int x;
     x = 0;
 

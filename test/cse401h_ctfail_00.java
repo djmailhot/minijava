@@ -1,5 +1,5 @@
 //
-// Test compiler errors for the MainClass
+// Test compile time errors for missing type identifiers
 //
 class cse401h_ctfail_00 {
 
@@ -12,6 +12,8 @@ class cse401h_ctfail_00 {
 class TestMissingType {
 
   public int run() {
+    System.out.println(20000000);
+
     x = 0;
     System.out.println(x);
     return x;

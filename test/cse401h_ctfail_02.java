@@ -1,24 +1,28 @@
 //
-// Test compiler errors for the MainClass
+// Test compile time errors for bad operand types
 //
 class cse401h_ctfail_02 {
 
   public static void main (String [] args) {
-    System.out.println(new TestArrayIndexOutOfBounds().run());
+    System.out.println(new TestBadOperandTypes().run());
   }
 
 }
 
-class TestArrayIndexOutOfBounds {
+class TestBadOperandTypes {
 
   public int run() {
-    int[] a;
+    System.out.println(20000002);
 
-    a = new int[1];
-    a[0] = 0;
-    a[1] = 1;
+    boolean a;
+    int x;
+    int z;
 
-    return a[1];
+    a = true;
+    x = 1;
+    z = a * x;
+
+    return z;
   }
 
 }

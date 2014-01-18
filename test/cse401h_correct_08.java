@@ -14,29 +14,37 @@ class TestCompareDoubles {
   public int run() {
     System.out.println(100000008);
 
-    System.out.println(0.0 == 0.0);
-    System.out.println(0.0 == 1.0);
+    System.out.println(compare(0.0 == 0.0));
+    System.out.println(compare(0.0 == 1.0));
 
-    System.out.println(0.0 != 0.0);
-    System.out.println(0.0 != 1.0);
+    System.out.println(compare(0.0 != 0.0));
+    System.out.println(compare(0.0 != 1.0));
 
-    System.out.println(0.0 < 1.0);
-    System.out.println(1.0 < 1.0);
-    System.out.println(1.0 < 0.0);
+    System.out.println(compare(0.0 < 1.0));
+    System.out.println(compare(1.0 < 1.0));
+    System.out.println(compare(1.0 < 0.0));
 
-    System.out.println(1.0 > 0.0);
-    System.out.println(1.0 > 1.0);
-    System.out.println(0.0 > 1.0);
+    System.out.println(compare(1.0 > 0.0));
+    System.out.println(compare(1.0 > 1.0));
+    System.out.println(compare(0.0 > 1.0));
 
-    System.out.println(0.0 <= 1.0);
-    System.out.println(1.0 <= 1.0);
-    System.out.println(1.0 <= 0.0);
+    System.out.println(compare(0.0 <= 1.0));
+    System.out.println(compare(1.0 <= 1.0));
+    System.out.println(compare(1.0 <= 0.0));
 
-    System.out.println(1.0 >= 0.0);
-    System.out.println(1.0 >= 1.0);
-    System.out.println(0.0 >= 1.0);
+    System.out.println(compare(1.0 >= 0.0));
+    System.out.println(compare(1.0 >= 1.0));
+    System.out.println(compare(0.0 >= 1.0));
 
     return 0;
+  }
+
+  public int compare(boolean result) {
+    if (result) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
 }

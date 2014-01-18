@@ -22,7 +22,7 @@ class TestFunctions {
 
     // Test argument ordering
     System.out.println(divide(4, 2));
-    System.out.println(passedOneThroughSix(1, 2, 3, 4, 5, 6));
+    passedOneThroughSix(1, 2, 3, 4, 5, 6);
 
     // Test nested function calls
     System.out.println(nest1(42));

@@ -1,4 +1,9 @@
 /*
+ * Group cse401h
+ * Jake Bailey, David Mailhot
+ */
+
+/*
  * CUP specification for the parser for a simple demo language.
  * Change this into the parser for your implementation of MiniJava.
  * CSE 401/P501 Au11.

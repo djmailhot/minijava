@@ -38,6 +38,10 @@ import java_cup.runtime.Symbol;
   public String symbolToString(Symbol s) {
     String rep;
     switch (s.sym) {
+      case sym.BANG:
+        return "BANG";
+      case sym.RETURN:
+        return "RETURN";
       case sym.STRING:
         return "STRING";
       case sym.FALSE:
@@ -132,7 +136,7 @@ import java_cup.runtime.Symbol;
         return "<UNEXPECTED TOKEN " + s.toString() + ">";
     }
   }
-%}
+  %}
 
 /* Helper definitions */
 letter = [a-zA-Z]
@@ -165,6 +169,7 @@ white = {eol}|[ \t]
 
 "if" { return symbol(sym.IF); }
 "while" { return symbol(sym.WHILE); }
+"return" { return symbol(sym.RETURN); }
 
 "length" { return symbol(sym.LENGTH); }
 
@@ -190,6 +195,7 @@ white = {eol}|[ \t]
 "%" { return symbol(sym.MOD); }
 "=" { return symbol(sym.BECOMES); }
 "." { return symbol(sym.DOT); }
+"!" { return symbol(sym.BANG); }
 
 /* delimiters */
 "(" { return symbol(sym.LPAREN); }

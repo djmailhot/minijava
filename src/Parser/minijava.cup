@@ -113,6 +113,7 @@ terminal BOOLEAN;
 
 terminal IF;
 terminal WHILE;
+terminal RETURN;
 
 terminal LENGTH;
 
@@ -123,7 +124,7 @@ terminal FALSE;
 /* operators: */
 terminal NOT, EQUAL, NOTEQUAL, LESSTHAN, GREATERTHAN, LESSEQUAL, GREATEREQUAL;
 terminal AND, OR;
-terminal PLUS, MINUS, STAR, FSLASH, MOD, BECOMES, DOT;
+terminal PLUS, MINUS, STAR, FSLASH, MOD, BECOMES, DOT, BANG;
 
 /* delimiters: */
 terminal LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, SEMICOLON;

@@ -54,6 +54,8 @@ import java_cup.runtime.Symbol;
         return "ID(" + (String)s.value + ")";
       case sym.CONSTANT:
         return "CONSTANT(" + (String)s.value + ")";
+      case sym.COMMENT:
+        return "COMMENT";
       case sym.EOF:
         return "<EOF>";
       case sym.error:
@@ -69,6 +71,7 @@ letter = [a-zA-Z]
 digit = [0-9]
 eol = [\r\n]
 white = {eol}|[ \t]
+any = [^\r\n]
 
 %%
 
@@ -92,6 +95,9 @@ white = {eol}|[ \t]
 
 /* constants */
 {digit}+ { return symbol(sym.CONSTANT, yytext()); }
+
+/* comment */
+"//"{any}*{eol} { return symbol(sym.COMMENT, yytext()); }
 
 
 /* whitespace */

@@ -106,6 +106,9 @@ terminal LPAREN, RPAREN, SEMICOLON;
 terminal String IDENTIFIER;
 terminal String CONSTANT;
 
+/* comments */
+terminal COMMENT;
+
 /* Nonterminals */
 
 nonterminal List<Statement> Program;

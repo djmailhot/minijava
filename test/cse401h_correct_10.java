@@ -25,6 +25,7 @@ class TestDoubles {
     System.out.println(5d);
     System.out.println(3.d);
     System.out.println(5e00);
+    System.out.println(5e-2D);
 
     System.out.println(1.0 + 1.0);
     System.out.println(1.0 - 1.0);

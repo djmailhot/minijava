@@ -128,6 +128,8 @@ import java_cup.runtime.Symbol;
         return "ID(" + (String)s.value + ")";
       case sym.INTLITERAL:
         return "INTLITERAL(" + (String)s.value + ")";
+      case sym.DOUBLELITERAL:
+        return "DOUBLELITERAL(" + (String)s.value + ")";
       case sym.EOF:
         return "<EOF>";
       case sym.error:
@@ -143,6 +145,11 @@ letter = [a-zA-Z]
 digit = [0-9]
 eol = [\r\n]
 white = {eol}|[ \t]
+exponent = "e" [+-]? {digit}+
+bigdecimal = {digit}+ "." {digit}*
+smalldecimal = "." {digit}+
+decimaldouble = ({bigdecimal} | {smalldecimal}) {exponent}? ([dD])?
+intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 
 %%
 
@@ -211,6 +218,7 @@ white = {eol}|[ \t]
 
 /* constants */
 {digit}+ { return symbol(sym.INTLITERAL, yytext()); }
+({decimaldouble} | {intdouble}) { return symbol(sym.DOUBLELITERAL, yytext()); }
 
 /* comment */
 "//" .* {eol} { /* ignore comments */ }

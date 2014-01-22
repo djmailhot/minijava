@@ -132,6 +132,7 @@ terminal LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, SEMICOLON, COMMA;
 /* tokens with values: */
 terminal String IDENTIFIER;
 terminal String INTLITERAL;
+terminal String DOUBLELITERAL;
 
 /* comments */
 terminal COMMENT;

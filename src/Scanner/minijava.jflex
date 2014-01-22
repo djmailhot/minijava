@@ -38,6 +38,8 @@ import java_cup.runtime.Symbol;
   public String symbolToString(Symbol s) {
     String rep;
     switch (s.sym) {
+      case sym.STRING:
+        return "STRING";
       case sym.FALSE:
         return "FALSE";
       case sym.TRUE:
@@ -127,7 +129,7 @@ white = {eol}|[ \t]
 /* reserved words */
 /* (put here so that reserved words take precedence over identifiers) */
 "display" { return symbol(sym.DISPLAY); }
-"System.out.print" { return symbol(sym.PRINT); }
+"System.out.println" { return symbol(sym.PRINT); }
 
 "class" { return symbol(sym.CLASS); }
 "extends" { return symbol(sym.EXTENDS); }

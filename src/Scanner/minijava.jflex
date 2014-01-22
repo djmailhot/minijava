@@ -38,6 +38,36 @@ import java_cup.runtime.Symbol;
   public String symbolToString(Symbol s) {
     String rep;
     switch (s.sym) {
+      case sym.FALSE:
+        return "FALSE";
+      case sym.TRUE:
+        return "TRUE";
+      case sym.LENGTH:
+        return "LENGTH";
+      case sym.WHILE:
+        return "WHILE";
+      case sym.IF:
+        return "IF";
+      case sym.BOOLEAN:
+        return "BOOLEAN";
+      case sym.DOUBLE:
+        return "DOUBLE";
+      case sym.INT:
+        return "INT";
+      case sym.CLASS:
+        return "CLASS";
+      case sym.EXTENDS:
+        return "EXTENDS";
+      case sym.NEW:
+        return "NEW";
+      case sym.PUBLIC:
+        return "PUBLIC";
+      case sym.MAIN:
+        return "MAIN";
+      case sym.VOID:
+        return "VOID";
+      case sym.STATIC:
+        return "STATIC";
       case sym.BECOMES:
         return "BECOMES";
       case sym.SEMICOLON:
@@ -64,6 +94,8 @@ import java_cup.runtime.Symbol;
         return "RBRACE";
       case sym.DISPLAY:
         return "DISPLAY";
+      case sym.PRINT:
+        return "PRINT";
       case sym.IDENTIFIER:
         return "ID(" + (String)s.value + ")";
       case sym.CONSTANT:

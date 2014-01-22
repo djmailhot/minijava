@@ -74,8 +74,6 @@ import java_cup.runtime.Symbol;
         return "VOID";
       case sym.STATIC:
         return "STATIC";
-      case sym.NOT:
-        return "NOT";
       case sym.EQUAL:
         return "EQUAL";
       case sym.NOTEQUAL:
@@ -179,7 +177,6 @@ white = {eol}|[ \t]
 "false" { return symbol(sym.FALSE); }
 
 /* operators */
-"!"  { return symbol(sym.NOT); }
 "==" { return symbol(sym.EQUAL); }
 "!=" { return symbol(sym.NOTEQUAL); }
 "<"  { return symbol(sym.LESSTHAN); }

@@ -121,10 +121,10 @@ terminal FALSE;
 
 
 /* operators: */
-terminal PLUS, BECOMES;
+terminal PLUS, MINUS, STAR, FSLASH, BECOMES;
 
 /* delimiters: */
-terminal LPAREN, RPAREN, SEMICOLON;
+terminal LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, SEMICOLON;
 
 /* tokens with values: */
 terminal String IDENTIFIER;

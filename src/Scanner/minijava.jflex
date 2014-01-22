@@ -44,10 +44,24 @@ import java_cup.runtime.Symbol;
         return "SEMICOLON";
       case sym.PLUS:
         return "PLUS";
+      case sym.MINUS:
+        return "MINUS";
+      case sym.STAR:
+        return "STAR";
+      case sym.FSLASH:
+        return "FSLASH";
       case sym.LPAREN:
         return "LPAREN";
       case sym.RPAREN:
         return "RPAREN";
+      case sym.LBRACKET:
+        return "LBRACKET";
+      case sym.RBRACKET:
+        return "RBRACKET";
+      case sym.LBRACE:
+        return "LBRACE";
+      case sym.RBRACE:
+        return "RBRACE";
       case sym.DISPLAY:
         return "DISPLAY";
       case sym.IDENTIFIER:
@@ -106,11 +120,18 @@ any = [^\r\n]
 
 /* operators */
 "+" { return symbol(sym.PLUS); }
+"-" { return symbol(sym.MINUS); }
+"*" { return symbol(sym.STAR); }
+"/" { return symbol(sym.FSLASH); }
 "=" { return symbol(sym.BECOMES); }
 
 /* delimiters */
 "(" { return symbol(sym.LPAREN); }
 ")" { return symbol(sym.RPAREN); }
+"[" { return symbol(sym.LBRACKET); }
+"]" { return symbol(sym.RBRACKET); }
+"{" { return symbol(sym.LBRACE); }
+"}" { return symbol(sym.RBRACE); }
 ";" { return symbol(sym.SEMICOLON); }
 
 /* identifiers */

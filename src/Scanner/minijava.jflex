@@ -80,6 +80,29 @@ any = [^\r\n]
 /* reserved words */
 /* (put here so that reserved words take precedence over identifiers) */
 "display" { return symbol(sym.DISPLAY); }
+"System.out.print" { return symbol(sym.PRINT); }
+
+"class" { return symbol(sym.CLASS); };
+"extends" { return symbol(sym.EXTENDS); };
+"new" { return symbol(sym.NEW;); }
+
+"public" { return symbol(sym.PUBLIC); };
+"static" { return symbol(sym.STATIC); };
+"void" { return symbol(sym.VOID); };
+"main" { return symbol(sym.MAIN); };
+"String" { return symbol(sym.STRING); };
+
+"int" { return symbol(sym.INT;
+"double" { return symbol(sym.DOUBLE); };
+"boolean" { return symbol(sym.BOOLEAN); };
+
+"if" { return symbol(sym.IF;
+"while" { return symbol(sym.WHILE); };
+
+"length" { return symbol(sym.LENGTH); };
+
+"true" { return symbol(sym.TRUE); };
+"false" { return symbol(sym.FALSE); };
 
 /* operators */
 "+" { return symbol(sym.PLUS); }

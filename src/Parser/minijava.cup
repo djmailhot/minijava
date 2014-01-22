@@ -95,6 +95,30 @@ parser code {:
 
 /* reserved words: */
 terminal DISPLAY;
+terminal PRINT;
+
+terminal CLASS;
+terminal EXTENDS;
+terminal NEW;
+
+terminal PUBLIC;
+terminal STATIC;
+terminal VOID;
+terminal MAIN;
+terminal STRING;
+
+terminal INT;
+terminal DOUBLE;
+terminal BOOLEAN;
+
+terminal IF;
+terminal WHILE;
+
+terminal LENGTH;
+
+terminal TRUE;
+terminal FALSE;
+
 
 /* operators: */
 terminal PLUS, BECOMES;

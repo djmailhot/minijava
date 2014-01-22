@@ -141,7 +141,7 @@ any = [^\r\n]
 {digit}+ { return symbol(sym.CONSTANT, yytext()); }
 
 /* comment */
-"//"{any}*{eol} { return symbol(sym.COMMENT, yytext()); }
+"//"{any}*{eol} { /* ignore whitespace */ }
 
 
 /* whitespace */

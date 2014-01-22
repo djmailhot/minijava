@@ -127,7 +127,7 @@ terminal AND, OR;
 terminal PLUS, MINUS, STAR, FSLASH, MOD, BECOMES, DOT, BANG;
 
 /* delimiters: */
-terminal LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, SEMICOLON;
+terminal LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, SEMICOLON, COMMA;
 
 /* tokens with values: */
 terminal String IDENTIFIER;

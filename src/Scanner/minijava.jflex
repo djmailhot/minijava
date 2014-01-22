@@ -120,6 +120,8 @@ import java_cup.runtime.Symbol;
         return "LBRACE";
       case sym.RBRACE:
         return "RBRACE";
+      case sym.COMMA:
+        return "COMMA";
       case sym.DISPLAY:
         return "DISPLAY";
       case sym.PRINT:
@@ -205,6 +207,7 @@ white = {eol}|[ \t]
 "{" { return symbol(sym.LBRACE); }
 "}" { return symbol(sym.RBRACE); }
 ";" { return symbol(sym.SEMICOLON); }
+"," { return symbol(sym.COMMA); }
 
 /* identifiers */
 {letter} ({letter}|{digit}|_)* { return symbol(sym.IDENTIFIER, yytext()); }

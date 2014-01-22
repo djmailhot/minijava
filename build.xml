@@ -121,7 +121,7 @@
       classname="TestScanner"
       classpath="build/classes;lib/CUP.jar"
       fork="true"
-      input="SamplePrograms/ExampleConst.java"
+      input="${file}"
       >
     </java>
   </target>

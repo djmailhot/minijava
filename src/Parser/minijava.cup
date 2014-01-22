@@ -131,7 +131,7 @@ terminal LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, SEMICOLON, COMMA;
 
 /* tokens with values: */
 terminal String IDENTIFIER;
-terminal String CONSTANT;
+terminal String INTLITERAL;
 
 /* comments */
 terminal COMMENT;
@@ -193,7 +193,7 @@ Expression    ::=
           IDENTIFIER:name
             {: RESULT = new IdentifierExp(name, nameleft); :}
 
-        | CONSTANT:value
+        | INTLITERAL:value
             {: RESULT = new ConstantExp(value, valueleft); :}
 
         | Expression:arg1 PLUS Expression:arg2

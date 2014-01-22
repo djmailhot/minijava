@@ -126,8 +126,8 @@ import java_cup.runtime.Symbol;
         return "PRINT";
       case sym.IDENTIFIER:
         return "ID(" + (String)s.value + ")";
-      case sym.CONSTANT:
-        return "CONSTANT(" + (String)s.value + ")";
+      case sym.INTLITERAL:
+        return "INTLITERAL(" + (String)s.value + ")";
       case sym.EOF:
         return "<EOF>";
       case sym.error:
@@ -210,7 +210,7 @@ white = {eol}|[ \t]
 {letter} ({letter}|{digit}|_)* { return symbol(sym.IDENTIFIER, yytext()); }
 
 /* constants */
-{digit}+ { return symbol(sym.CONSTANT, yytext()); }
+{digit}+ { return symbol(sym.INTLITERAL, yytext()); }
 
 /* comment */
 "//" .* {eol} { /* ignore comments */ }

@@ -100,8 +100,6 @@ import java_cup.runtime.Symbol;
         return "ID(" + (String)s.value + ")";
       case sym.CONSTANT:
         return "CONSTANT(" + (String)s.value + ")";
-      case sym.COMMENT:
-        return "COMMENT";
       case sym.EOF:
         return "<EOF>";
       case sym.error:
@@ -117,7 +115,6 @@ letter = [a-zA-Z]
 digit = [0-9]
 eol = [\r\n]
 white = {eol}|[ \t]
-any = [^\r\n]
 
 %%
 
@@ -128,27 +125,27 @@ any = [^\r\n]
 "display" { return symbol(sym.DISPLAY); }
 "System.out.print" { return symbol(sym.PRINT); }
 
-"class" { return symbol(sym.CLASS); };
-"extends" { return symbol(sym.EXTENDS); };
-"new" { return symbol(sym.NEW;); }
+"class" { return symbol(sym.CLASS); }
+"extends" { return symbol(sym.EXTENDS); }
+"new" { return symbol(sym.NEW;)
 
-"public" { return symbol(sym.PUBLIC); };
-"static" { return symbol(sym.STATIC); };
-"void" { return symbol(sym.VOID); };
-"main" { return symbol(sym.MAIN); };
-"String" { return symbol(sym.STRING); };
+"public" { return symbol(sym.PUBLIC); }
+"static" { return symbol(sym.STATIC); }
+"void" { return symbol(sym.VOID); }
+"main" { return symbol(sym.MAIN); }
+"String" { return symbol(sym.STRING); }
 
-"int" { return symbol(sym.INT;
-"double" { return symbol(sym.DOUBLE); };
-"boolean" { return symbol(sym.BOOLEAN); };
+"int" { return symbol(sym.INT
+"double" { return symbol(sym.DOUBLE); }
+"boolean" { return symbol(sym.BOOLEAN); }
 
-"if" { return symbol(sym.IF;
-"while" { return symbol(sym.WHILE); };
+"if" { return symbol(sym.IF
+"while" { return symbol(sym.WHILE); }
 
-"length" { return symbol(sym.LENGTH); };
+"length" { return symbol(sym.LENGTH); }
 
-"true" { return symbol(sym.TRUE); };
-"false" { return symbol(sym.FALSE); };
+"true" { return symbol(sym.TRUE); }
+"false" { return symbol(sym.FALSE); }
 
 /* operators */
 "+" { return symbol(sym.PLUS); }
@@ -173,8 +170,7 @@ any = [^\r\n]
 {digit}+ { return symbol(sym.CONSTANT, yytext()); }
 
 /* comment */
-"//"{any}*{eol} { /* ignore whitespace */ }
-
+"//" .* {eol} { /* ignore comments */ }
 
 /* whitespace */
 {white}+ { /* ignore whitespace */ }

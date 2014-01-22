@@ -138,7 +138,7 @@ import java_cup.runtime.Symbol;
         return "<UNEXPECTED TOKEN " + s.toString() + ">";
     }
   }
-  %}
+%}
 
 /* Helper definitions */
 letter = [a-zA-Z]

@@ -70,6 +70,20 @@ import java_cup.runtime.Symbol;
         return "VOID";
       case sym.STATIC:
         return "STATIC";
+      case sym.NOT:
+        return "NOT";
+      case sym.EQUAL:
+        return "EQUAL";
+      case sym.NOTEQUAL:
+        return "NOTEQUAL";
+      case sym.LESSTHAN:
+        return "LESSTHAN";
+      case sym.GREATERTHAN:
+        return "GREATERTHAN";
+      case sym.LESSEQUAL:
+        return "LESSEQUAL";
+      case sym.GREATEREQUAL:
+        return "GREATEREQUAL";
       case sym.BECOMES:
         return "BECOMES";
       case sym.SEMICOLON:
@@ -154,6 +168,14 @@ white = {eol}|[ \t]
 "false" { return symbol(sym.FALSE); }
 
 /* operators */
+"!"  { return symbol(sym.NOT); }
+"==" { return symbol(sym.EQUAL); }
+"!=" { return symbol(sym.NOTEQUAL); }
+"<"  { return symbol(sym.LESSTHAN); }
+">"  { return symbol(sym.GREATERTHAN); }
+"<=" { return symbol(sym.LESSEQUAL); }
+">=" { return symbol(sym.GREATEREQUAL); }
+
 "+" { return symbol(sym.PLUS); }
 "-" { return symbol(sym.MINUS); }
 "*" { return symbol(sym.STAR); }

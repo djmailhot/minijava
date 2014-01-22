@@ -84,6 +84,10 @@ import java_cup.runtime.Symbol;
         return "LESSEQUAL";
       case sym.GREATEREQUAL:
         return "GREATEREQUAL";
+      case sym.AND:
+        return "AND";
+      case sym.OR:
+        return "OR";
       case sym.BECOMES:
         return "BECOMES";
       case sym.SEMICOLON:
@@ -175,6 +179,9 @@ white = {eol}|[ \t]
 ">"  { return symbol(sym.GREATERTHAN); }
 "<=" { return symbol(sym.LESSEQUAL); }
 ">=" { return symbol(sym.GREATEREQUAL); }
+
+"&&" { return symbol(sym.AND); }
+"||" { return symbol(sym.OR); }
 
 "+" { return symbol(sym.PLUS); }
 "-" { return symbol(sym.MINUS); }

@@ -122,6 +122,7 @@ terminal FALSE;
 
 /* operators: */
 terminal NOT, EQUAL, NOTEQUAL, LESSTHAN, GREATERTHAN, LESSEQUAL, GREATEREQUAL;
+terminal AND, OR;
 terminal PLUS, MINUS, STAR, FSLASH, MOD, BECOMES, DOT;
 
 /* delimiters: */

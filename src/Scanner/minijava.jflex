@@ -80,6 +80,8 @@ import java_cup.runtime.Symbol;
         return "STAR";
       case sym.FSLASH:
         return "FSLASH";
+      case sym.MOD:
+        return "MOD";
       case sym.DOT:
         return "DOT";
       case sym.LPAREN:
@@ -154,6 +156,7 @@ white = {eol}|[ \t]
 "-" { return symbol(sym.MINUS); }
 "*" { return symbol(sym.STAR); }
 "/" { return symbol(sym.FSLASH); }
+"%" { return symbol(sym.MOD); }
 "=" { return symbol(sym.BECOMES); }
 "." { return symbol(sym.DOT); }
 

@@ -121,7 +121,7 @@ terminal FALSE;
 
 
 /* operators: */
-terminal PLUS, MINUS, STAR, FSLASH, BECOMES, DOT;
+terminal PLUS, MINUS, STAR, FSLASH, MOD, BECOMES, DOT;
 
 /* delimiters: */
 terminal LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, SEMICOLON;

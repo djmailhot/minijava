@@ -154,7 +154,13 @@ nonterminal Identifier Identifier;
 
 /* Precedence declarations */
 
-precedence left PLUS;
+precedence left AND, OR;
+precedence left EQUAL, NOTEQUAL, LESSTHAN, GREATERTHAN, LESSEQUAL, GREATEREQUAL;
+precedence left BANG;
+precedence left MOD;
+precedence left PLUS, MINUS;
+precedence left FSLASH, STAR;
+precedence left DOT;
 
 
 /* Productions */

@@ -144,6 +144,17 @@
     </java>
   </target>
 
+  <target name="codegen" depends="compile">
+    <java
+      classname="CodeGenMain"
+      classpath="build/classes;lib/CUP.jar"
+      fork="true"
+      input="SamplePrograms/ExampleConst.java"
+      output="SamplePrograms/ExampleConst.s"
+      >
+    </java>
+  </target>
+
   <!--
     Compile .c or .s files.
     See, perhaps;
@@ -158,7 +169,7 @@
 
   -->
 
-  <target name="build-example" depends="test-parser">
+  <target name="build-example" depends="codegen">
     <cpptasks:cc
       name="gcc"
       outtype="executable"

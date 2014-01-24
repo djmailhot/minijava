@@ -98,13 +98,8 @@ public class TestParser {
       root = p.parse();
       List<Statement> program = (List<Statement>)root.value;
       for (Statement statement: program) {
-        if (false) {
-          statement.accept(new PrettyPrintVisitor());
-          System.out.print("\n");
-        }
-        if (true) {
-          statement.accept(new CodeGeneratorVisitor(cg));
-        }
+        statement.accept(new PrettyPrintVisitor());
+        System.out.print("\n");
       }
       //
       // System.out.print("\n" + "Parsing completed");

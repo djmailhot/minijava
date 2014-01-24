@@ -14,6 +14,7 @@ import AST.ClassDeclList;
 import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
+import AST.Divide;
 import AST.DoubleLiteral;
 import AST.Exp;
 import AST.ExpList;
@@ -301,6 +302,15 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print("(");
     n.e1.accept(this);
     System.out.print(" * ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(Divide n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" / ");
     n.e2.accept(this);
     System.out.print(")");
   }

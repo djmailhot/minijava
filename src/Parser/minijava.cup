@@ -25,6 +25,8 @@ import AST.ClassDeclList;
 import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
+import AST.Divide;
+import AST.DoubleLiteral;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
@@ -209,10 +211,22 @@ Expression    ::=
             {: RESULT = new IntegerLiteral(value, valueleft); :}
 
         | DOUBLELITERAL:value
-            {: RESULT = new DOUBLELITERAL(value, valueleft); :}
+            {: RESULT = new DoubleLiteral(value, valueleft); :}
+
+        | BANG Expression:arg1
+            {: RESULT = new Not(arg1, arg1left); :}
 
         | Expression:arg1 PLUS Expression:arg2
             {: RESULT = new Plus(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 MINUS Expression:arg2
+            {: RESULT = new Minus(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 STAR Expression:arg2
+            {: RESULT = new Times(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 FSLASH Expression:arg2
+            {: RESULT = new Divide(arg1, arg2, arg1left); :}
 
         | LPAREN Expression:expr RPAREN
             {: RESULT = expr; :}

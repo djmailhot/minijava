@@ -14,6 +14,7 @@ import AST.ClassDeclList;
 import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
+import AST.DoubleLiteral;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
@@ -338,6 +339,10 @@ public class PrettyPrintVisitor implements Visitor {
   // int i;
   public void visit(IntegerLiteral n) {
     System.out.print(n.i);
+  }
+
+  public void visit(DoubleLiteral n) {
+    System.out.print(n.d);
   }
 
   public void visit(True n) {

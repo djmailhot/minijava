@@ -206,7 +206,10 @@ Expression    ::=
             {: RESULT = new IdentifierExp(name, nameleft); :}
 
         | INTLITERAL:value
-            {: RESULT = new ConstantExp(value, valueleft); :}
+            {: RESULT = new IntegerLiteral(value, valueleft); :}
+
+        | DOUBLELITERAL:value
+            {: RESULT = new DOUBLELITERAL(value, valueleft); :}
 
         | Expression:arg1 PLUS Expression:arg2
             {: RESULT = new Plus(arg1, arg2, arg1left); :}

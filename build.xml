@@ -131,7 +131,7 @@
       classname="TestParser"
       classpath="build/classes;lib/CUP.jar"
       fork="true"
-      input="SamplePrograms/ExampleConst.java"
+      input="${file}"
       >
       <!--
       <arg value="-p"/>

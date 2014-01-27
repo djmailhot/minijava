@@ -145,9 +145,11 @@ terminal COMMENT;
 
 /* Nonterminals */
 
-nonterminal List<Statement> Program;
+nonterminal Program Program;
+nonterminal MainClass MainClass;
 nonterminal Statement Statement;
 nonterminal Assign AssignStatement;
+nonterminal Print PrintStatement;
 nonterminal Exp Expression;
 nonterminal Identifier Identifier;
 
@@ -166,27 +168,30 @@ precedence left DOT;
 /* Productions */
 
 Program ::=
-          Statement:s
-            {:
-              List<Statement> p = new LinkedList<Statement>();
-              p.add(s);
-              RESULT = p;
-            :}
-        | Program:p Statement:s
-            {:
-              p.add(s);
-              RESULT = p;
-            :}
+          MainClass:m
+            {: RESULT = new Program(m, new ClassDeclList(mleft), mleft); :}
+        ;
+
+MainClass ::=
+          CLASS Identifier:name LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET Identifier:args RPAREN LBRACE Statement:s RBRACE RBRACE
+            {: RESULT = new MainClass(name, args, s, nameleft); :}
         ;
 
 Statement   ::=
           AssignStatement:s
+            {: RESULT = s; :}
+          | PrintStatement:s
             {: RESULT = s; :}
         ;
 
 AssignStatement ::=
           Identifier:id BECOMES Expression:expr SEMICOLON
             {: RESULT = new Assign(id, expr, idleft); :}
+        ;
+
+PrintStatement ::=
+          PRINT LPAREN Expression:e RPAREN SEMICOLON
+            {: RESULT = new Print(e, eleft); :}
         ;
 
 Identifier  ::=

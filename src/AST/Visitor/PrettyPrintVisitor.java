@@ -87,6 +87,7 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.println(") {");
     System.out.print("    ");
     n.s.accept(this);
+    System.out.println();
     System.out.println("  }");
     System.out.println("}");
   }

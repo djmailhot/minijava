@@ -14,6 +14,8 @@ import AST.ClassDeclList;
 import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
+import AST.Divide;
+import AST.DoubleLiteral;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
@@ -235,6 +237,12 @@ public class CodeGeneratorVisitor implements Visitor {
   }
 
   // Exp e1,e2;
+  public void visit(Divide n) {
+    n.e1.accept(this);
+    n.e2.accept(this);
+  }
+
+  // Exp e1,e2;
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
     n.e2.accept(this);
@@ -258,6 +266,10 @@ public class CodeGeneratorVisitor implements Visitor {
 
   // int i;
   public void visit(IntegerLiteral n) {
+  }
+
+  // double d;
+  public void visit(DoubleLiteral n) {
   }
 
   public void visit(True n) {

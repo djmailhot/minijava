@@ -12,6 +12,8 @@ import AST.ClassDeclList;
 import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
+import AST.Divide;
+import AST.DoubleLiteral;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;

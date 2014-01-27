@@ -120,8 +120,6 @@ import java_cup.runtime.Symbol;
         return "RBRACE";
       case sym.COMMA:
         return "COMMA";
-      case sym.DISPLAY:
-        return "DISPLAY";
       case sym.PRINT:
         return "PRINT";
       case sym.IDENTIFIER:
@@ -157,7 +155,6 @@ intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 
 /* reserved words */
 /* (put here so that reserved words take precedence over identifiers) */
-"display" { return symbol(sym.DISPLAY); }
 "System.out.println" { return symbol(sym.PRINT); }
 
 "class" { return symbol(sym.CLASS); }

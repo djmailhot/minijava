@@ -101,7 +101,6 @@ parser code {:
 /* Terminals (tokens returned by the scanner) */
 
 /* reserved words: */
-terminal DISPLAY;
 terminal PRINT;
 
 terminal CLASS;
@@ -149,7 +148,6 @@ terminal COMMENT;
 nonterminal List<Statement> Program;
 nonterminal Statement Statement;
 nonterminal Assign AssignStatement;
-nonterminal Display DisplayStatement;
 nonterminal Exp Expression;
 nonterminal Identifier Identifier;
 
@@ -184,8 +182,6 @@ Program ::=
 Statement   ::=
           AssignStatement:s
             {: RESULT = s; :}
-        | DisplayStatement:s
-            {: RESULT = s; :}
         ;
 
 AssignStatement ::=
@@ -196,11 +192,6 @@ AssignStatement ::=
 Identifier  ::=
           IDENTIFIER:id
             {: RESULT = new Identifier(id, idleft); :}
-        ;
-
-DisplayStatement ::=
-          DISPLAY:d Expression:expr SEMICOLON
-             {: RESULT = new Display(expr, dleft); :}
         ;
 
 Expression    ::=

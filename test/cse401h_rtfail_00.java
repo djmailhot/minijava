@@ -12,9 +12,10 @@ class cse401h_rtfail_00 {
 class TestNullPointer {
 
   public int run() {
+    NullType nt;
+
     System.out.println(300000000);
 
-    NullType nt;
     nt = null;
 
     return nt.field;

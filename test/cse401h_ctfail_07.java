@@ -12,15 +12,15 @@ class cse401h_ctfail_07 {
 class TestIncompatibleMethodArguments {
 
   public int run() {
-    System.out.println(200000007);
-
     int x;
     int y;
     int z;
 
+    System.out.println(200000007);
+
     x = 0;
     y = 1;
-    z = method(x, y);
+    z = this.method(x, y);
 
     return z;
   }

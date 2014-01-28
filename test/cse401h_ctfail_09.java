@@ -12,9 +12,9 @@ class cse401h_ctfail_09 {
 class TestIncompatibleArrayElementTypes {
 
   public int run() {
-    System.out.println(200000009);
-
     int[] a;
+
+    System.out.println(200000009);
 
     a = new int[1];
     a[0] = true;

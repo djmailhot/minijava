@@ -12,8 +12,9 @@ class cse401h_ctfail_08 {
 class TestUninitializedVariables {
 
   public int run() {
-    System.out.println(200000008);
     int x;
+
+    System.out.println(200000008);
 
     return x;
   }

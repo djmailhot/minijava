@@ -12,11 +12,11 @@ class cse401h_ctfail_02 {
 class TestBadOperandTypes {
 
   public int run() {
-    System.out.println(200000002);
-
     boolean a;
     int x;
     int z;
+
+    System.out.println(200000002);
 
     a = true;
     x = 1;

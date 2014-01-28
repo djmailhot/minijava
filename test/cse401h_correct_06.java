@@ -12,11 +12,11 @@ class cse401h_correct_06 {
 class TestOverriding {
 
   public int run() {
-    System.out.println(100000006);
-
     Grandparent g;
     Parent p;
     Child c;
+
+    System.out.println(100000006);
 
     g = new Grandparent();
     g.gInit();

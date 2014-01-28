@@ -17,7 +17,7 @@ class TestAndOr {
 
     didCauseSideEffect = false;
 
-    if (false && causeSideEffect())
+    if (false && this.causeSideEffect())
       System.out.println(0);
 
     if (didCauseSideEffect)
@@ -25,7 +25,7 @@ class TestAndOr {
 
     didCauseSideEffect = false;
 
-    if (true || causeSideEffect())
+    if (true || this.causeSideEffect())
       System.out.println(1);
 
     if (didCauseSideEffect)

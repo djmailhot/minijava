@@ -15,20 +15,20 @@ class TestFunctions {
     System.out.println(100000009);
 
     // Test return value
-    System.out.println(returnFive());
+    System.out.println(this.returnFive());
 
     // Test argument passing
-    System.out.println(identity(42));
+    System.out.println(this.identity(42));
 
     // Test argument ordering
-    System.out.println(divide(4, 2));
-    passedOneThroughSix(1, 2, 3, 4, 5, 6);
+    System.out.println(this.divide(4, 2));
+    this.passedOneThroughSix(1, 2, 3, 4, 5, 6);
 
     // Test nested function calls
-    System.out.println(nest1(42));
+    System.out.println(this.nest1(42));
 
     // Test recursion
-    System.out.println(recursiveCount(42));
+    System.out.println(this.recursiveCount(42));
 
     return 0;
   }
@@ -46,7 +46,9 @@ class TestFunctions {
   }
 
   public boolean passedOneThroughSix(int a, int b, int c, int d, int e, int f) {
-    boolean correct = true;
+    boolean correct;
+
+    correct = true;
 
     correct = correct && (a == 1);
     correct = correct && (b == 2);
@@ -60,25 +62,25 @@ class TestFunctions {
 
   public int nest1(int x) {
     System.out.println(1);
-    System.out.println(nest2(x * 2));
+    System.out.println(this.nest2(x * 2));
     return x;
   }
 
   public int nest2(int x) {
     System.out.println(2);
-    System.out.println(nest3(x * 2));
+    System.out.println(this.nest3(x * 2));
     return x;
   }
 
   public int nest3(int x) {
     System.out.println(3);
-    System.out.println(nest4(x * 2));
+    System.out.println(this.nest4(x * 2));
     return x;
   }
 
   public int nest4(int x) {
     System.out.println(4);
-    System.out.println(nest5(x * 2));
+    System.out.println(this.nest5(x * 2));
     return x;
   }
 
@@ -92,7 +94,7 @@ class TestFunctions {
     if (n == 0)
       System.out.println(n);
     else {
-      recursiveCount(n - 1);
+      this.recursiveCount(n - 1);
       System.out.println(n);
     }
     return 0;

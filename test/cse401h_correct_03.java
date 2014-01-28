@@ -12,9 +12,9 @@ class cse401h_correct_03 {
 class TestWhile {
 
   public int run() {
-    System.out.println(100000003);
-
     int i;
+
+    System.out.println(100000003);
 
     i = 0;
     while (i < 5) {

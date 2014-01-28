@@ -12,8 +12,9 @@ class cse401h_ctfail_10 {
 class TestInvalidStatements {
 
   public int run() {
-    System.out.println(20000010);
     int[] a;
+
+    System.out.println(20000010);
 
     a = new int[1];
     a[0] = 1;

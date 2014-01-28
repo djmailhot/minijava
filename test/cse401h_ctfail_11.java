@@ -12,9 +12,9 @@ class cse401h_ctfail_11 {
 class TestUnreachableStatements {
 
   public int run() {
-    System.out.println(20000011);
-
     int x;
+
+    System.out.println(20000011);
 
     x = 1;
     return x;

@@ -12,10 +12,10 @@ class cse401h_ctfail_06 {
 class TestDereferenceLiteral {
 
   public int run() {
-    System.out.println(200000006);
-
     int x;
     int y;
+
+    System.out.println(200000006);
 
     x = 0;
     y = x.length;

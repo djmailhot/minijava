@@ -12,9 +12,9 @@ class cse401h_correct_07 {
 class TestDoubles {
 
   public int run() {
-    System.out.println(100000007);
-
     double x;
+
+    System.out.println(100000007);
 
     x = 5.0 + 3.0;
     System.out.println(x);

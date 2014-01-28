@@ -14,27 +14,27 @@ class TestCompareDoubles {
   public int run() {
     System.out.println(100000008);
 
-    System.out.println(compare(0.0 == 0.0));
-    System.out.println(compare(0.0 == 1.0));
+    System.out.println(this.compare(0.0 == 0.0));
+    System.out.println(this.compare(0.0 == 1.0));
 
-    System.out.println(compare(0.0 != 0.0));
-    System.out.println(compare(0.0 != 1.0));
+    System.out.println(this.compare(0.0 != 0.0));
+    System.out.println(this.compare(0.0 != 1.0));
 
-    System.out.println(compare(0.0 < 1.0));
-    System.out.println(compare(1.0 < 1.0));
-    System.out.println(compare(1.0 < 0.0));
+    System.out.println(this.compare(0.0 < 1.0));
+    System.out.println(this.compare(1.0 < 1.0));
+    System.out.println(this.compare(1.0 < 0.0));
 
-    System.out.println(compare(1.0 > 0.0));
-    System.out.println(compare(1.0 > 1.0));
-    System.out.println(compare(0.0 > 1.0));
+    System.out.println(this.compare(1.0 > 0.0));
+    System.out.println(this.compare(1.0 > 1.0));
+    System.out.println(this.compare(0.0 > 1.0));
 
-    System.out.println(compare(0.0 <= 1.0));
-    System.out.println(compare(1.0 <= 1.0));
-    System.out.println(compare(1.0 <= 0.0));
+    System.out.println(this.compare(0.0 <= 1.0));
+    System.out.println(this.compare(1.0 <= 1.0));
+    System.out.println(this.compare(1.0 <= 0.0));
 
-    System.out.println(compare(1.0 >= 0.0));
-    System.out.println(compare(1.0 >= 1.0));
-    System.out.println(compare(0.0 >= 1.0));
+    System.out.println(this.compare(1.0 >= 0.0));
+    System.out.println(this.compare(1.0 >= 1.0));
+    System.out.println(this.compare(0.0 >= 1.0));
 
     return 0;
   }

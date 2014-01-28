@@ -45,6 +45,7 @@ import AST.MainClass;
 import AST.MethodDecl;
 import AST.MethodDeclList;
 import AST.Minus;
+import AST.Modulo;
 import AST.NewArray;
 import AST.NewObject;
 import AST.Not;
@@ -406,6 +407,9 @@ Expression    ::=
 
         | Expression:arg1 FSLASH Expression:arg2
             {: RESULT = new Divide(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 MOD Expression:arg2
+            {: RESULT = new Modulo(arg1, arg2, arg1left); :}
 
         | LPAREN Expression:expr RPAREN
             {: RESULT = expr; :}

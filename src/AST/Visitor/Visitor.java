@@ -34,6 +34,7 @@ import AST.MainClass;
 import AST.MethodDecl;
 import AST.MethodDeclList;
 import AST.Minus;
+import AST.Modulo;
 import AST.NewArray;
 import AST.NewObject;
 import AST.Not;
@@ -78,6 +79,7 @@ public interface Visitor {
   public void visit(Minus n);
   public void visit(Times n);
   public void visit(Divide n);
+  public void visit(Modulo n);
   public void visit(ArrayLookup n);
   public void visit(ArrayLength n);
   public void visit(Call n);

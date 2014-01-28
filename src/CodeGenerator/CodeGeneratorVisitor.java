@@ -34,6 +34,7 @@ import AST.MainClass;
 import AST.MethodDecl;
 import AST.MethodDeclList;
 import AST.Minus;
+import AST.Modulo;
 import AST.NewArray;
 import AST.NewObject;
 import AST.Not;
@@ -242,6 +243,12 @@ public class CodeGeneratorVisitor implements Visitor {
 
   // Exp e1,e2;
   public void visit(Divide n) {
+    n.e1.accept(this);
+    n.e2.accept(this);
+  }
+
+  // Exp e1,e2;
+  public void visit(Modulo n) {
     n.e1.accept(this);
     n.e2.accept(this);
   }

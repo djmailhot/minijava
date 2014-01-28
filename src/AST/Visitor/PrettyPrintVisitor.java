@@ -34,6 +34,7 @@ import AST.MainClass;
 import AST.MethodDecl;
 import AST.MethodDeclList;
 import AST.Minus;
+import AST.Modulo;
 import AST.NewArray;
 import AST.NewObject;
 import AST.Not;
@@ -317,6 +318,15 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print("(");
     n.e1.accept(this);
     System.out.print(" / ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(Modulo n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" % ");
     n.e2.accept(this);
     System.out.print(")");
   }

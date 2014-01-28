@@ -16,6 +16,7 @@ import AST.ConstantExp;
 import AST.Display;
 import AST.Divide;
 import AST.DoubleLiteral;
+import AST.DoubleType;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
@@ -63,6 +64,7 @@ public interface Visitor {
   public void visit(IntArrayType n);
   public void visit(BooleanType n);
   public void visit(IntegerType n);
+  public void visit(DoubleType n);
   public void visit(IdentifierType n);
   public void visit(Block n);
   public void visit(If n);

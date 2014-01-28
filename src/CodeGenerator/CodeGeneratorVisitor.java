@@ -16,6 +16,7 @@ import AST.ConstantExp;
 import AST.Display;
 import AST.Divide;
 import AST.DoubleLiteral;
+import AST.DoubleType;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
@@ -157,6 +158,9 @@ public class CodeGeneratorVisitor implements Visitor {
   }
 
   public void visit(IntegerType n) {
+  }
+
+  public void visit(DoubleType n) {
   }
 
   // String s;

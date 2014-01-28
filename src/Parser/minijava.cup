@@ -27,6 +27,7 @@ import AST.ConstantExp;
 import AST.Display;
 import AST.Divide;
 import AST.DoubleLiteral;
+import AST.DoubleType;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
@@ -325,6 +326,8 @@ Formal ::=
 Type ::=
           INT:i
             {: RESULT = new IntegerType(ileft); :}
+          | DOUBLE:d
+            {: RESULT = new DoubleType(dleft); :}
           | BOOLEAN:b
             {: RESULT = new BooleanType(bleft); :}
         ;

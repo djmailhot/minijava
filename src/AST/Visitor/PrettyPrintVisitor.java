@@ -16,6 +16,7 @@ import AST.ConstantExp;
 import AST.Display;
 import AST.Divide;
 import AST.DoubleLiteral;
+import AST.DoubleType;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
@@ -195,6 +196,10 @@ public class PrettyPrintVisitor implements Visitor {
 
   public void visit(IntegerType n) {
     System.out.print("int");
+  }
+
+  public void visit(DoubleType n) {
+    System.out.print("double");
   }
 
   // String s;

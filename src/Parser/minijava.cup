@@ -147,9 +147,20 @@ terminal COMMENT;
 
 nonterminal Program Program;
 nonterminal MainClass MainClass;
+nonterminal ClassDeclList ClassDeclList;
+nonterminal ClassDecl ClassDecl;
+nonterminal VarDeclList VarDeclList;
+nonterminal VarDecl VarDecl;
+nonterminal MethodDeclList MethodDeclList;
+nonterminal MethodDecl MethodDecl;
+nonterminal FormalList FormalList;
+nonterminal Formal Formal;
+nonterminal Type Type;
+nonterminal StatementList StatementList;
 nonterminal Statement Statement;
 nonterminal Assign AssignStatement;
 nonterminal Print PrintStatement;
+nonterminal ExpList ExpressionList;
 nonterminal Exp Expression;
 nonterminal Identifier Identifier;
 
@@ -168,13 +179,168 @@ precedence left DOT;
 /* Productions */
 
 Program ::=
-          MainClass:m
+          MainClass:m ClassDeclList:cl
+            {: RESULT = new Program(m, cl, mleft); :}
+          | MainClass:m
             {: RESULT = new Program(m, new ClassDeclList(mleft), mleft); :}
         ;
 
 MainClass ::=
           CLASS Identifier:name LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET Identifier:args RPAREN LBRACE Statement:s RBRACE RBRACE
             {: RESULT = new MainClass(name, args, s, nameleft); :}
+        ;
+
+ClassDeclList ::=
+          ClassDecl:c
+            {:
+              ClassDeclList cl = new ClassDeclList(cleft);
+              cl.add(c);
+              RESULT = cl;
+            :}
+          | ClassDeclList:cl ClassDecl:c
+            {:
+              cl.add(c);
+              RESULT = cl;
+            :}
+        ;
+
+/* FIXME: hack to cover optional constructs; there's probably a better way */
+ClassDecl ::=
+          CLASS Identifier:name LBRACE VarDeclList:vl MethodDeclList:ml RBRACE
+            {:
+              RESULT = new ClassDeclSimple(name, vl, ml, nameleft);
+            :}
+          |
+          CLASS Identifier:name LBRACE VarDeclList:vl RBRACE
+            {:
+              RESULT = new ClassDeclSimple(name, vl, new MethodDeclList(vlleft), nameleft);
+            :}
+          |
+          CLASS Identifier:name LBRACE:lb MethodDeclList:ml RBRACE
+            {:
+              RESULT = new ClassDeclSimple(name, new VarDeclList(lbleft), ml, nameleft);
+            :}
+          |
+          CLASS Identifier:name LBRACE:lb RBRACE
+            {:
+              RESULT = new ClassDeclSimple(name, new VarDeclList(lbleft), new MethodDeclList(lbleft), nameleft);
+            :}
+          |
+          CLASS Identifier:name EXTENDS Identifier:parent LBRACE VarDeclList:vl MethodDeclList:ml RBRACE
+            {:
+              RESULT = new ClassDeclExtends(name, parent, vl, ml, nameleft);
+            :}
+          |
+          CLASS Identifier:name EXTENDS Identifier:parent LBRACE VarDeclList:vl RBRACE
+            {:
+              RESULT = new ClassDeclExtends(name, parent, vl, new MethodDeclList(vlleft), nameleft);
+            :}
+          |
+          CLASS Identifier:name EXTENDS Identifier:parent LBRACE:lb MethodDeclList:ml RBRACE
+            {:
+              RESULT = new ClassDeclExtends(name, parent, new VarDeclList(lbleft), ml, nameleft);
+            :}
+          |
+          CLASS Identifier:name EXTENDS Identifier:parent LBRACE:lb RBRACE
+            {:
+              RESULT = new ClassDeclExtends(name, parent, new VarDeclList(lbleft), new MethodDeclList(lbleft), nameleft);
+            :}
+        ;
+
+VarDeclList ::=
+          VarDecl:v
+            {:
+              VarDeclList vl = new VarDeclList(vleft);
+              vl.add(v);
+              RESULT = vl;
+            :}
+          | VarDeclList:vl VarDecl:v
+            {:
+              vl.add(v);
+              RESULT = vl;
+            :}
+        ;
+
+VarDecl ::=
+          Type:t Identifier:id SEMICOLON
+            {: RESULT = new VarDecl(t, id, tleft); :}
+        ;
+
+MethodDeclList ::=
+          MethodDecl:m
+            {:
+              MethodDeclList ml = new MethodDeclList(mleft);
+              ml.add(m);
+              RESULT = ml;
+            :}
+          | MethodDeclList:ml MethodDecl:m
+            {:
+              ml.add(m);
+              RESULT = ml;
+            :}
+        ;
+
+/* FIXME: hack to cover optional constructs; there's probably a better way */
+MethodDecl ::=
+          PUBLIC Type:t Identifier:id LPAREN FormalList:fl RPAREN LBRACE VarDeclList:vl StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+            {:
+              RESULT = new MethodDecl(t, id, fl, vl, sl, e, tleft);
+            :}
+          |
+          PUBLIC Type:t Identifier:id LPAREN FormalList:fl RPAREN LBRACE:lb StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+            {:
+              RESULT = new MethodDecl(t, id, fl, new VarDeclList(lbleft), sl, e, tleft);
+            :}
+          |
+          PUBLIC Type:t Identifier:id LPAREN:lp RPAREN LBRACE VarDeclList:vl StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+            {:
+              RESULT = new MethodDecl(t, id, new FormalList(lpleft), vl, sl, e, tleft);
+            :}
+          |
+          PUBLIC Type:t Identifier:id LPAREN:lp RPAREN LBRACE:lb StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+            {:
+              RESULT = new MethodDecl(t, id, new FormalList(lpleft), new VarDeclList(lbleft), sl, e, tleft);
+            :}
+        ;
+
+FormalList ::=
+          Formal:f
+            {:
+              FormalList fl = new FormalList(fleft);
+              fl.add(f);
+              RESULT = fl;
+            :}
+          | FormalList:fl COMMA Formal:f
+            {:
+              fl.add(f);
+              RESULT = fl;
+            :}
+        ;
+
+Formal ::=
+          Type:t Identifier:id
+            {: RESULT = new Formal(t, id, tleft); :}
+        ;
+
+Type ::=
+          INT:i
+            {: RESULT = new IntegerType(ileft); :}
+          | BOOLEAN:b
+            {: RESULT = new BooleanType(bleft); :}
+        ;
+
+StatementList ::=
+          Statement:s
+            {:
+              StatementList sl = new StatementList(sleft);
+              sl.add(s);
+              RESULT = sl;
+            :}
+          | StatementList:sl Statement:s
+            {:
+              sl.add(s);
+              RESULT = sl;
+            :}
         ;
 
 Statement   ::=
@@ -197,6 +363,20 @@ PrintStatement ::=
 Identifier  ::=
           IDENTIFIER:id
             {: RESULT = new Identifier(id, idleft); :}
+        ;
+
+ExpressionList ::=
+          Expression:e
+            {:
+              ExpList el = new ExpList(eleft);
+              el.add(e);
+              RESULT = el;
+            :}
+          | ExpressionList:el COMMA Expression:e
+            {:
+              el.add(e);
+              RESULT = el;
+            :}
         ;
 
 Expression    ::=
@@ -226,4 +406,12 @@ Expression    ::=
 
         | LPAREN Expression:expr RPAREN
             {: RESULT = expr; :}
+
+        | NEW Identifier:id LPAREN RPAREN
+            {: RESULT = new NewObject(id, idleft); :}
+
+        | Expression:e DOT Identifier:id LPAREN ExpressionList:el RPAREN
+            {: RESULT = new Call(e, id, el, eleft); :}
+        | Expression:e DOT Identifier:id LPAREN RPAREN
+            {: RESULT = new Call(e, id, new ExpList(idleft), eleft); :}
         ;

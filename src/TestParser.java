@@ -97,7 +97,7 @@ public class TestParser {
       // replace p.parse() with p.debug_parse() in next line to see trace of
       // parser shift/reduce actions during parse
       //
-      root = p.parse();
+      root = traceParser ? p.debug_parse() : p.parse();
       Program program = (Program) root.value;
       program.accept(new PrettyPrintVisitor());
       System.out.println();

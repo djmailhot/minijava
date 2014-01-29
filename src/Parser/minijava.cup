@@ -169,6 +169,7 @@ nonterminal StatementList StatementList;
 nonterminal Statement Statement;
 nonterminal Assign AssignStatement;
 nonterminal Print PrintStatement;
+nonterminal While WhileStatement;
 nonterminal If IfStatement;
 nonterminal ExpList ExpressionList;
 nonterminal Exp Expression;
@@ -360,10 +361,12 @@ Statement   ::=
             {: RESULT = s; :}
           | PrintStatement:s
             {: RESULT = s; :}
+          | WhileStatement:s
+            {: RESULT = s; :}
           | IfStatement:s
             {: RESULT = s; :}
-          | LBRACE Statement:s RBRACE
-            {: RESULT = s; :}
+          | LBRACE StatementList:sl RBRACE
+            {: RESULT = new Block(sl, slleft); :}
         ;
 
 AssignStatement ::=
@@ -374,6 +377,11 @@ AssignStatement ::=
 PrintStatement ::=
           PRINT LPAREN Expression:e RPAREN SEMICOLON
             {: RESULT = new Print(e, eleft); :}
+        ;
+
+WhileStatement ::=
+          WHILE LPAREN Expression:e RPAREN Statement:s
+            {: RESULT = new While(e, s, sleft); :}
         ;
 
 IfStatement ::=

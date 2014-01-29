@@ -54,6 +54,8 @@ import java_cup.runtime.Symbol;
         return "WHILE";
       case sym.IF:
         return "IF";
+      case sym.ELSE:
+        return "ELSE";
       case sym.BOOLEAN:
         return "BOOLEAN";
       case sym.DOUBLE:
@@ -172,6 +174,7 @@ intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 "boolean" { return symbol(sym.BOOLEAN); }
 
 "if" { return symbol(sym.IF); }
+"else" { return symbol(sym.ELSE); }
 "while" { return symbol(sym.WHILE); }
 "return" { return symbol(sym.RETURN); }
 

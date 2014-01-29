@@ -18,6 +18,7 @@ find.out
 tags
 src/Scanner/*~
 *.swp
+*.swo
 .gdb_history
 
 #

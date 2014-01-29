@@ -28,11 +28,14 @@ import AST.Display;
 import AST.Divide;
 import AST.DoubleLiteral;
 import AST.DoubleType;
+import AST.Equal;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
 import AST.Formal;
 import AST.FormalList;
+import AST.GreaterEqual;
+import AST.GreaterThan;
 import AST.Identifier;
 import AST.IdentifierExp;
 import AST.IdentifierType;
@@ -40,6 +43,7 @@ import AST.If;
 import AST.IntArrayType;
 import AST.IntegerLiteral;
 import AST.IntegerType;
+import AST.LessEqual;
 import AST.LessThan;
 import AST.MainClass;
 import AST.MethodDecl;
@@ -49,10 +53,12 @@ import AST.Modulo;
 import AST.NewArray;
 import AST.NewObject;
 import AST.Not;
+import AST.NotEqual;
 import AST.Plus;
 import AST.Print;
 import AST.Program;
 import AST.ShortCircuitAnd;
+import AST.ShortCircuitOr;
 import AST.Statement;
 import AST.StatementList;
 import AST.This;
@@ -120,6 +126,7 @@ terminal DOUBLE;
 terminal BOOLEAN;
 
 terminal IF;
+terminal ELSE;
 terminal WHILE;
 terminal RETURN;
 
@@ -162,6 +169,7 @@ nonterminal StatementList StatementList;
 nonterminal Statement Statement;
 nonterminal Assign AssignStatement;
 nonterminal Print PrintStatement;
+nonterminal If IfStatement;
 nonterminal ExpList ExpressionList;
 nonterminal Exp Expression;
 nonterminal Identifier Identifier;
@@ -352,6 +360,10 @@ Statement   ::=
             {: RESULT = s; :}
           | PrintStatement:s
             {: RESULT = s; :}
+          | IfStatement:s
+            {: RESULT = s; :}
+          | LBRACE Statement:s RBRACE
+            {: RESULT = s; :}
         ;
 
 AssignStatement ::=
@@ -362,6 +374,11 @@ AssignStatement ::=
 PrintStatement ::=
           PRINT LPAREN Expression:e RPAREN SEMICOLON
             {: RESULT = new Print(e, eleft); :}
+        ;
+
+IfStatement ::=
+          IF LPAREN Expression:e RPAREN Statement:s1 ELSE Statement:s2
+            {: RESULT = new If(e, s1, s2, s2left); :}
         ;
 
 Identifier  ::=
@@ -396,6 +413,24 @@ Expression    ::=
         | BANG Expression:arg1
             {: RESULT = new Not(arg1, arg1left); :}
 
+        | Expression:arg1 EQUAL Expression:arg2
+            {: RESULT = new Equal(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 NOTEQUAL Expression:arg2
+            {: RESULT = new NotEqual(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 LESSTHAN Expression:arg2
+            {: RESULT = new LessThan(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 GREATERTHAN Expression:arg2
+            {: RESULT = new GreaterThan(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 LESSEQUAL Expression:arg2
+            {: RESULT = new LessEqual(arg1, arg2, arg1left); :}
+
+        | Expression:arg1 GREATEREQUAL Expression:arg2
+            {: RESULT = new GreaterEqual(arg1, arg2, arg1left); :}
+
         | Expression:arg1 PLUS Expression:arg2
             {: RESULT = new Plus(arg1, arg2, arg1left); :}
 
@@ -419,6 +454,7 @@ Expression    ::=
 
         | Expression:e DOT Identifier:id LPAREN ExpressionList:el RPAREN
             {: RESULT = new Call(e, id, el, eleft); :}
+
         | Expression:e DOT Identifier:id LPAREN RPAREN
             {: RESULT = new Call(e, id, new ExpList(idleft), eleft); :}
         ;

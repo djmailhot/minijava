@@ -17,11 +17,14 @@ import AST.Display;
 import AST.Divide;
 import AST.DoubleLiteral;
 import AST.DoubleType;
+import AST.Equal;
 import AST.Exp;
 import AST.ExpList;
 import AST.False;
 import AST.Formal;
 import AST.FormalList;
+import AST.GreaterEqual;
+import AST.GreaterThan;
 import AST.Identifier;
 import AST.IdentifierExp;
 import AST.IdentifierType;
@@ -29,6 +32,7 @@ import AST.If;
 import AST.IntArrayType;
 import AST.IntegerLiteral;
 import AST.IntegerType;
+import AST.LessEqual;
 import AST.LessThan;
 import AST.MainClass;
 import AST.MethodDecl;
@@ -38,10 +42,12 @@ import AST.Modulo;
 import AST.NewArray;
 import AST.NewObject;
 import AST.Not;
+import AST.NotEqual;
 import AST.Plus;
 import AST.Print;
 import AST.Program;
 import AST.ShortCircuitAnd;
+import AST.ShortCircuitOr;
 import AST.Statement;
 import AST.StatementList;
 import AST.This;
@@ -269,10 +275,19 @@ public class PrettyPrintVisitor implements Visitor {
   }
 
   // Exp e1,e2;
-  public void visit(ShortCircuitAnd n) {
+  public void visit(Equal n) {
     System.out.print("(");
     n.e1.accept(this);
-    System.out.print(" && ");
+    System.out.print(" == ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(NotEqual n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" != ");
     n.e2.accept(this);
     System.out.print(")");
   }
@@ -282,6 +297,51 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print("(");
     n.e1.accept(this);
     System.out.print(" < ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(GreaterThan n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" > ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(LessEqual n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" <= ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(GreaterEqual n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" >= ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(ShortCircuitAnd n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" && ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(ShortCircuitOr n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" || ");
     n.e2.accept(this);
     System.out.print(")");
   }

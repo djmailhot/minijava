@@ -412,11 +412,23 @@ Expression    ::=
           IDENTIFIER:name
             {: RESULT = new IdentifierExp(name, nameleft); :}
 
+        | TRUE:t
+            {: RESULT = new True(tleft); :}
+
+        | FALSE:f
+            {: RESULT = new False(fleft); :}
+
         | INTLITERAL:value
             {: RESULT = new IntegerLiteral(value, valueleft); :}
 
         | DOUBLELITERAL:value
             {: RESULT = new DoubleLiteral(value, valueleft); :}
+
+        | Expression:arg1 AND Expression:arg2
+            {: RESULT = new ShortCircuitAnd(arg1, arg2, arg2left); :}
+
+        | Expression:arg1 OR Expression:arg2
+            {: RESULT = new ShortCircuitOr(arg1, arg2, arg2left); :}
 
         | BANG Expression:arg1
             {: RESULT = new Not(arg1, arg1left); :}

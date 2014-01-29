@@ -18,20 +18,28 @@ class TestAndOr {
     didCauseSideEffect = false;
 
     if (false && this.causeSideEffect())
+      System.out.println(1);
+    else
       System.out.println(0);
 
     if (didCauseSideEffect)
+      System.out.println(2);
+    else
       System.out.println(0);
 
     didCauseSideEffect = false;
 
     if (true || this.causeSideEffect())
-      System.out.println(1);
-
-    if (didCauseSideEffect)
+      System.out.println(3);
+    else
       System.out.println(0);
 
-    return 1;
+    if (didCauseSideEffect)
+      System.out.println(4);
+    else
+      System.out.println(0);
+
+    return 5;
   }
 
   public boolean causeSideEffect() {

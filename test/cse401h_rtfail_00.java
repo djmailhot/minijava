@@ -18,11 +18,15 @@ class TestNullPointer {
 
     nt = null;
 
-    return nt.field;
+    return nt.getField();
   }
 
 }
 
 class NullType {
   int field;
+
+  public int getField() {
+    return field;
+  }
 }

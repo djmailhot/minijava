@@ -17,7 +17,7 @@ class TestNegativeArraySize {
 
     System.out.println(300000002);
 
-    x = 1 - 2
+    x = 1 - 2;
 
     a = new int[x];
     a[0] = 0;

@@ -12,6 +12,8 @@ class cse401h_correct_09 {
 class TestFunctions {
 
   public int run() {
+    int ret;
+
     System.out.println(100000009);
 
     // Test return value
@@ -22,7 +24,7 @@ class TestFunctions {
 
     // Test argument ordering
     System.out.println(this.divide(4, 2));
-    this.passedOneThroughSix(1, 2, 3, 4, 5, 6);
+    ret = this.passedOneThroughSix(1, 2, 3, 4, 5, 6);
 
     // Test nested function calls
     System.out.println(this.nest1(42));

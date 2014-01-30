@@ -19,6 +19,7 @@ import AST.Assign;
 import AST.Block;
 import AST.BooleanType;
 import AST.Call;
+import AST.ClassBody;
 import AST.ClassDecl;
 import AST.ClassDeclExtends;
 import AST.ClassDeclList;
@@ -159,6 +160,7 @@ nonterminal Program Program;
 nonterminal MainClass MainClass;
 nonterminal ClassDeclList ClassDeclList;
 nonterminal ClassDecl ClassDecl;
+nonterminal ClassBody ClassBody;
 nonterminal VarDeclList VarDeclList;
 nonterminal VarDecl VarDecl;
 nonterminal MethodDeclList MethodDeclList;
@@ -217,46 +219,34 @@ ClassDeclList ::=
             :}
         ;
 
-/* FIXME: hack to cover optional constructs; there's probably a better way */
 ClassDecl ::=
-          CLASS Identifier:name LBRACE VarDeclList:vl MethodDeclList:ml RBRACE
+          CLASS Identifier:name EXTENDS Identifier:parent ClassBody:cb
             {:
-              RESULT = new ClassDeclSimple(name, vl, ml, nameleft);
+              RESULT = new ClassDeclExtends(name, parent, cb.vl, cb.ml, nameleft);
             :}
           |
-          CLASS Identifier:name LBRACE VarDeclList:vl RBRACE
+          CLASS Identifier:name ClassBody:cb
             {:
-              RESULT = new ClassDeclSimple(name, vl, new MethodDeclList(vlleft), nameleft);
+              RESULT = new ClassDeclSimple(name, cb.vl, cb.ml, nameleft);
             :}
-          |
-          CLASS Identifier:name LBRACE:lb MethodDeclList:ml RBRACE
+        ;
+
+ClassBody ::=
+          LBRACE:lb VarDeclList:vl MethodDeclList:ml RBRACE
             {:
-              RESULT = new ClassDeclSimple(name, new VarDeclList(lbleft), ml, nameleft);
+              RESULT = new ClassBody(vl, ml, lbleft);
             :}
-          |
-          CLASS Identifier:name LBRACE:lb RBRACE
+          | LBRACE:lb VarDeclList:vl RBRACE
             {:
-              RESULT = new ClassDeclSimple(name, new VarDeclList(lbleft), new MethodDeclList(lbleft), nameleft);
+              RESULT = new ClassBody(vl, new MethodDeclList(lbleft), lbleft);
             :}
-          |
-          CLASS Identifier:name EXTENDS Identifier:parent LBRACE VarDeclList:vl MethodDeclList:ml RBRACE
+          | LBRACE:lb MethodDeclList:ml RBRACE
             {:
-              RESULT = new ClassDeclExtends(name, parent, vl, ml, nameleft);
+              RESULT = new ClassBody(new VarDeclList(lbleft), ml, lbleft);
             :}
-          |
-          CLASS Identifier:name EXTENDS Identifier:parent LBRACE VarDeclList:vl RBRACE
-            {:
-              RESULT = new ClassDeclExtends(name, parent, vl, new MethodDeclList(vlleft), nameleft);
-            :}
-          |
-          CLASS Identifier:name EXTENDS Identifier:parent LBRACE:lb MethodDeclList:ml RBRACE
-            {:
-              RESULT = new ClassDeclExtends(name, parent, new VarDeclList(lbleft), ml, nameleft);
-            :}
-          |
-          CLASS Identifier:name EXTENDS Identifier:parent LBRACE:lb RBRACE
-            {:
-              RESULT = new ClassDeclExtends(name, parent, new VarDeclList(lbleft), new MethodDeclList(lbleft), nameleft);
+          | LBRACE:lb RBRACE
+            {: 
+              RESULT = new ClassBody(new VarDeclList(lbleft), new MethodDeclList(lbleft), lbleft);
             :}
         ;
 

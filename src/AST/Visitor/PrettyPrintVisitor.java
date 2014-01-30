@@ -127,7 +127,7 @@ public class PrettyPrintVisitor implements Visitor {
   public void visit(ClassDeclExtends n) {
     System.out.print("class ");
     n.i.accept(this);
-    System.out.println(" extends ");
+    System.out.print(" extends ");
     n.j.accept(this);
     System.out.println(" { ");
     for (int i = 0; i < n.vl.size(); i++) {

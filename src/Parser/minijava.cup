@@ -340,6 +340,8 @@ Type ::=
             {: RESULT = new DoubleType(dleft); :}
           | BOOLEAN:b
             {: RESULT = new BooleanType(bleft); :}
+          | IDENTIFIER:id
+            {: RESULT = new IdentifierType(id, idleft); :}
         ;
 
 StatementList ::=

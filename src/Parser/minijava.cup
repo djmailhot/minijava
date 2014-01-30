@@ -46,6 +46,7 @@ import AST.IntegerType;
 import AST.LessEqual;
 import AST.LessThan;
 import AST.MainClass;
+import AST.MethodBody;
 import AST.MethodDecl;
 import AST.MethodDeclList;
 import AST.Minus;
@@ -162,6 +163,7 @@ nonterminal VarDeclList VarDeclList;
 nonterminal VarDecl VarDecl;
 nonterminal MethodDeclList MethodDeclList;
 nonterminal MethodDecl MethodDecl;
+nonterminal MethodBody MethodBody;
 nonterminal FormalList FormalList;
 nonterminal Formal Formal;
 nonterminal Type Type;
@@ -291,26 +293,34 @@ MethodDeclList ::=
             :}
         ;
 
-/* FIXME: hack to cover optional constructs; there's probably a better way */
 MethodDecl ::=
-          PUBLIC Type:t Identifier:id LPAREN FormalList:fl RPAREN LBRACE VarDeclList:vl StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+          PUBLIC Type:t Identifier:id LPAREN FormalList:fl RPAREN MethodBody:mb
             {:
-              RESULT = new MethodDecl(t, id, fl, vl, sl, e, tleft);
+              RESULT = new MethodDecl(t, id, fl, mb.vl, mb.sl, mb.e, tleft);
             :}
           |
-          PUBLIC Type:t Identifier:id LPAREN FormalList:fl RPAREN LBRACE:lb StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+          PUBLIC Type:t Identifier:id LPAREN RPAREN MethodBody:mb
             {:
-              RESULT = new MethodDecl(t, id, fl, new VarDeclList(lbleft), sl, e, tleft);
+              RESULT = new MethodDecl(t, id, new FormalList(tleft), mb.vl, mb.sl, mb.e, tleft);
             :}
-          |
-          PUBLIC Type:t Identifier:id LPAREN:lp RPAREN LBRACE VarDeclList:vl StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+        ;
+
+MethodBody ::=
+          LBRACE:lb VarDeclList:vl StatementList:sl RETURN Expression:e SEMICOLON RBRACE
             {:
-              RESULT = new MethodDecl(t, id, new FormalList(lpleft), vl, sl, e, tleft);
+              RESULT = new MethodBody(vl, sl, e, lbleft);
             :}
-          |
-          PUBLIC Type:t Identifier:id LPAREN:lp RPAREN LBRACE:lb StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+          | LBRACE:lb VarDeclList:vl RETURN Expression:e SEMICOLON RBRACE
             {:
-              RESULT = new MethodDecl(t, id, new FormalList(lpleft), new VarDeclList(lbleft), sl, e, tleft);
+              RESULT = new MethodBody(vl, new StatementList(lbleft), e, lbleft);
+            :}
+          | LBRACE:lb StatementList:sl RETURN Expression:e SEMICOLON RBRACE
+            {:
+              RESULT = new MethodBody(new VarDeclList(lbleft), sl, e, lbleft);
+            :}
+          | LBRACE:lb RETURN Expression:e SEMICOLON RBRACE
+            {:
+              RESULT = new MethodBody(new VarDeclList(lbleft), new StatementList(lbleft), e, lbleft);
             :}
         ;
 

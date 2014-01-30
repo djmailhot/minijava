@@ -36,9 +36,9 @@ class TestDoubles {
     System.out.println(22.0 / 7.0);
     System.out.println(3.125 * 4d);
 
-    System.out.println(-4.0 * 1.0);
-    System.out.println(-4.0 * -1.0);
-    System.out.println(-4.0 / -1.0);
+    System.out.println(4.0 * 1.0);
+    System.out.println(4.0 * -1.0);
+    System.out.println(4.0 / -1.0);
 
     if (0.0 == 0.0)
       System.out.println(1);

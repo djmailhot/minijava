@@ -42,41 +42,88 @@ class TestDoubles {
 
     if (0.0 == 0.0)
       System.out.println(1);
+    else
+      System.out.println(0);
+
     if (0.0 == 1.0)
       System.out.println(0);
+    else
+      System.out.println(2);
+
 
     if (0.0 != 0.0)
       System.out.println(0);
+    else
+      System.out.println(3);
+
     if (0.0 != 1.0)
-      System.out.println(2);
+      System.out.println(4);
+    else
+      System.out.println(0);
+
 
     if (0.0 < 1.0)
-      System.out.println(3);
+      System.out.println(5);
+    else
+      System.out.println(0);
+
     if (1.0 < 1.0)
       System.out.println(0);
+    else
+      System.out.println(6);
+
     if (1.0 < 0.0)
       System.out.println(0);
+    else
+      System.out.println(7);
+
 
     if (1.0 > 0.0)
-      System.out.println(4);
+      System.out.println(8);
+    else
+      System.out.println(0);
+
     if (1.0 > 1.0)
       System.out.println(0);
+    else
+      System.out.println(9);
+
     if (0.0 > 1.0)
       System.out.println(0);
+    else
+      System.out.println(10);
+
 
     if (0.0 <= 1.0)
-      System.out.println(5);
-    if (1.0 <= 1.0)
-      System.out.println(6);
-    if (1.0 <= 0.0)
+      System.out.println(11);
+    else
       System.out.println(0);
 
+    if (1.0 <= 1.0)
+      System.out.println(12);
+    else
+      System.out.println(0);
+
+    if (1.0 <= 0.0)
+      System.out.println(0);
+    else
+      System.out.println(13);
+
+
     if (1.0 >= 0.0)
-      System.out.println(7);
+      System.out.println(14);
+    else
+      System.out.println(0);
+
     if (1.0 >= 1.0)
-      System.out.println(8);
+      System.out.println(15);
+    else
+      System.out.println(0);
+
     if (0.0 >= 1.0)
       System.out.println(0);
+    else
+      System.out.println(16);
 
     return 0;
   }

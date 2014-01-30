@@ -40,11 +40,13 @@ class TestCompareDoubles {
   }
 
   public int compare(boolean result) {
+    int i;
     if (result) {
-      return 1;
+      i = 1;
     } else {
-      return 0;
+      i = 0;
     }
+    return i;
   }
 
 }

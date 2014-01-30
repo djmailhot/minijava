@@ -15,32 +15,33 @@ class TestOverriding {
     Grandparent g;
     Parent p;
     Child c;
+    int ret;
 
     System.out.println(100000006);
 
     g = new Grandparent();
-    g.gInit();
+    ret = g.gInit();
 
     // Minijava has no super() call, so fake it:
     p = new Parent();
-    p.gInit();
-    p.pInit();
+    ret = p.gInit();
+    ret = p.pInit();
 
     c = new Child();
-    c.gInit();
-    c.pInit();
-    c.cInit();
+    ret = c.gInit();
+    ret = c.pInit();
+    ret = c.cInit();
 
-    g.grandparentMethod();
+    ret = g.grandparentMethod();
 
     // p's grandparentMethod prints 1 (Grandparent's field), but p's
     // parentMethod prints 4 for grandparentField, since Parent overrides it.
-    p.grandparentMethod();
-    p.parentMethod();
+    ret = p.grandparentMethod();
+    ret = p.parentMethod();
 
-    c.grandparentMethod();
-    c.parentMethod(); // override; prints 5
-    c.childMethod();
+    ret = c.grandparentMethod();
+    ret = c.parentMethod(); // override; prints 5
+    ret = c.childMethod();
 
     return 0;
   }

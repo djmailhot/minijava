@@ -15,6 +15,7 @@ class TestObjects {
     Grandparent g;
     Parent p;
     Child c;
+    int ret;
 
     System.out.println(100000005);
 
@@ -22,14 +23,14 @@ class TestObjects {
     p = new Parent();
     c = new Child();
 
-    g.grandparentMethod();
+    ret = g.grandparentMethod();
 
-    p.grandparentMethod();
-    p.parentMethod();
+    ret = p.grandparentMethod();
+    ret = p.parentMethod();
 
-    c.grandparentMethod();
-    c.parentMethod();
-    c.childMethod();
+    ret = c.grandparentMethod();
+    ret = c.parentMethod();
+    ret = c.childMethod();
 
     return 0;
   }

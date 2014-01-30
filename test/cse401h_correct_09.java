@@ -91,10 +91,11 @@ class TestFunctions {
   }
 
   public int recursiveCount(int n) {
+    int ret;
     if (n == 0)
       System.out.println(n);
     else {
-      this.recursiveCount(n - 1);
+      ret = this.recursiveCount(n - 1);
       System.out.println(n);
     }
     return 0;

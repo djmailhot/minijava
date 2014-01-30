@@ -275,6 +275,24 @@ public class PrettyPrintVisitor implements Visitor {
   }
 
   // Exp e1,e2;
+  public void visit(ShortCircuitAnd n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" && ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(ShortCircuitOr n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" || ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
   public void visit(Equal n) {
     System.out.print("(");
     n.e1.accept(this);
@@ -324,24 +342,6 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print("(");
     n.e1.accept(this);
     System.out.print(" >= ");
-    n.e2.accept(this);
-    System.out.print(")");
-  }
-
-  // Exp e1,e2;
-  public void visit(ShortCircuitAnd n) {
-    System.out.print("(");
-    n.e1.accept(this);
-    System.out.print(" && ");
-    n.e2.accept(this);
-    System.out.print(")");
-  }
-
-  // Exp e1,e2;
-  public void visit(ShortCircuitOr n) {
-    System.out.print("(");
-    n.e1.accept(this);
-    System.out.print(" || ");
     n.e2.accept(this);
     System.out.print(")");
   }

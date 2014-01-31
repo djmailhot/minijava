@@ -151,9 +151,6 @@ terminal String IDENTIFIER;
 terminal String INTLITERAL;
 terminal String DOUBLELITERAL;
 
-/* comments */
-terminal COMMENT;
-
 /* Nonterminals */
 
 nonterminal Program Program;
@@ -172,6 +169,7 @@ nonterminal Type Type;
 nonterminal StatementList StatementList;
 nonterminal Statement Statement;
 nonterminal Assign AssignStatement;
+nonterminal ArrayAssign ArrayAssignStatement;
 nonterminal Print PrintStatement;
 nonterminal While WhileStatement;
 nonterminal If IfStatement;
@@ -340,6 +338,8 @@ Type ::=
             {: RESULT = new DoubleType(dleft); :}
           | BOOLEAN:b
             {: RESULT = new BooleanType(bleft); :}
+          | INT LBRACKET RBRACKET:rb
+            {: RESULT = new IntArrayType(rbleft); :}
           | IDENTIFIER:id
             {: RESULT = new IdentifierType(id, idleft); :}
         ;
@@ -360,6 +360,8 @@ StatementList ::=
 
 Statement   ::=
           AssignStatement:s
+            {: RESULT = s; :}
+          | ArrayAssignStatement:s
             {: RESULT = s; :}
           | PrintStatement:s
             {: RESULT = s; :}
@@ -389,6 +391,11 @@ WhileStatement ::=
 IfStatement ::=
           IF LPAREN Expression:e RPAREN Statement:s1 ELSE Statement:s2
             {: RESULT = new If(e, s1, s2, s2left); :}
+        ;
+
+ArrayAssignStatement ::=
+          Identifier:id LBRACKET Expression:e1 RBRACKET BECOMES Expression:e2 SEMICOLON
+            {: RESULT = new ArrayAssign(id, e1, e2, e2left); :}
         ;
 
 Identifier  ::=
@@ -473,6 +480,15 @@ Expression    ::=
 
         | NEW Identifier:id LPAREN RPAREN
             {: RESULT = new NewObject(id, idleft); :}
+
+        | NEW INT LBRACKET Expression:e RBRACKET
+            {: RESULT = new NewArray(e, eleft); :}
+
+        | Expression:e DOT LENGTH
+            {: RESULT = new ArrayLength(e, eleft); :}
+
+        | Expression:e1 LBRACKET Expression:e2 RBRACKET
+            {: RESULT = new ArrayLookup(e1, e2, e2left); :}
 
         | Expression:e DOT Identifier:id LPAREN ExpressionList:el RPAREN
             {: RESULT = new Call(e, id, el, eleft); :}

@@ -1,10 +1,10 @@
 package AST;
 import AST.Visitor.Visitor;
 
-public class NewArray extends Exp {
+public class NewIntArray extends Exp {
   public Exp e;
 
-  public NewArray(Exp ae, int lineNumber) {
+  public NewIntArray(Exp ae, int lineNumber) {
     super(lineNumber);
     this.e = ae;
   }

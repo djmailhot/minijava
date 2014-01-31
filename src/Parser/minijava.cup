@@ -53,7 +53,8 @@ import AST.MethodDecl;
 import AST.MethodDeclList;
 import AST.Minus;
 import AST.Modulo;
-import AST.NewArray;
+import AST.NewIntArray;
+import AST.NewDoubleArray;
 import AST.NewObject;
 import AST.Not;
 import AST.NotEqual;
@@ -490,10 +491,10 @@ Expression    ::=
             {: RESULT = new NewObject(id, idleft); :}
 
         | NEW INT LBRACKET Expression:e RBRACKET
-            {: RESULT = new NewArray(e, eleft); :}
+            {: RESULT = new NewIntArray(e, eleft); :}
 
         | NEW DOUBLE LBRACKET Expression:e RBRACKET
-            {: RESULT = new NewArray(e, eleft); :}
+            {: RESULT = new NewDoubleArray(e, eleft); :}
 
         | Expression:e DOT LENGTH
             {: RESULT = new ArrayLength(e, eleft); :}

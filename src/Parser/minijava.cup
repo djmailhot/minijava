@@ -340,6 +340,8 @@ Type ::=
             {: RESULT = new BooleanType(bleft); :}
           | INT LBRACKET RBRACKET:rb
             {: RESULT = new IntArrayType(rbleft); :}
+          | DOUBLE LBRACKET RBRACKET:rb
+            {: RESULT = new IntArrayType(rbleft); :}
           | IDENTIFIER:id
             {: RESULT = new IdentifierType(id, idleft); :}
         ;
@@ -482,6 +484,9 @@ Expression    ::=
             {: RESULT = new NewObject(id, idleft); :}
 
         | NEW INT LBRACKET Expression:e RBRACKET
+            {: RESULT = new NewArray(e, eleft); :}
+
+        | NEW DOUBLE LBRACKET Expression:e RBRACKET
             {: RESULT = new NewArray(e, eleft); :}
 
         | Expression:e DOT LENGTH

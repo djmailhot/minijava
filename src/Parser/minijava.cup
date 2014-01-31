@@ -373,6 +373,11 @@ Statement   ::=
             {: RESULT = s; :}
           | LBRACE StatementList:sl RBRACE
             {: RESULT = new Block(sl, slleft); :}
+          | LBRACE:lb RBRACE
+            {:
+              StatementList sl = new StatementList(lbleft);
+              RESULT = new Block(sl, lbleft);
+            :}
         ;
 
 AssignStatement ::=

@@ -236,8 +236,7 @@ public class PrettyPrintVisitor implements Visitor {
   public void visit(If n) {
     System.out.print("if (");
     n.e.accept(this);
-    System.out.println(")");
-    System.out.print("    ");
+    System.out.print(") ");
     n.s1.accept(this);
     System.out.println();
     System.out.print("    else ");

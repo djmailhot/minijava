@@ -15,6 +15,7 @@ import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
 import AST.Divide;
+import AST.DoubleArrayType;
 import AST.DoubleLiteral;
 import AST.DoubleType;
 import AST.Equal;
@@ -159,6 +160,9 @@ public class CodeGeneratorVisitor implements Visitor {
   }
 
   public void visit(IntArrayType n) {
+  }
+
+  public void visit(DoubleArrayType n) {
   }
 
   public void visit(BooleanType n) {

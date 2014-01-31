@@ -15,6 +15,7 @@ import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
 import AST.Divide;
+import AST.DoubleArrayType;
 import AST.DoubleLiteral;
 import AST.DoubleType;
 import AST.Equal;
@@ -69,6 +70,7 @@ public interface Visitor {
   public void visit(MethodDecl n);
   public void visit(Formal n);
   public void visit(IntArrayType n);
+  public void visit(DoubleArrayType n);
   public void visit(BooleanType n);
   public void visit(IntegerType n);
   public void visit(DoubleType n);

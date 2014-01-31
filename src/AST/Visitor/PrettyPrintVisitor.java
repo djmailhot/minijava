@@ -15,6 +15,7 @@ import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
 import AST.Divide;
+import AST.DoubleArrayType;
 import AST.DoubleLiteral;
 import AST.DoubleType;
 import AST.Equal;
@@ -195,6 +196,10 @@ public class PrettyPrintVisitor implements Visitor {
 
   public void visit(IntArrayType n) {
     System.out.print("int []");
+  }
+
+  public void visit(DoubleArrayType n) {
+    System.out.print("double []");
   }
 
   public void visit(BooleanType n) {

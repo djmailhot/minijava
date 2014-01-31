@@ -27,6 +27,7 @@ import AST.ClassDeclSimple;
 import AST.ConstantExp;
 import AST.Display;
 import AST.Divide;
+import AST.DoubleArrayType;
 import AST.DoubleLiteral;
 import AST.DoubleType;
 import AST.Equal;
@@ -341,7 +342,7 @@ Type ::=
           | INT LBRACKET RBRACKET:rb
             {: RESULT = new IntArrayType(rbleft); :}
           | DOUBLE LBRACKET RBRACKET:rb
-            {: RESULT = new IntArrayType(rbleft); :}
+            {: RESULT = new DoubleArrayType(rbleft); :}
           | IDENTIFIER:id
             {: RESULT = new IdentifierType(id, idleft); :}
         ;

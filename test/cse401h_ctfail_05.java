@@ -13,13 +13,12 @@ class TestDuplicateVariableNames {
 
   public int run() {
     int x;
+    int x;
 
     System.out.println(200000005);
 
-    x = 0;
-
-    int x;
     x = 1;
+
     return x;
   }
 

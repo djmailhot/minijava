@@ -17,7 +17,7 @@ class TestDereferenceLiteral {
 
     System.out.println(200000006);
 
-    x = 0;
+    x = 1;
     y = x.length;
 
     return x;

@@ -204,6 +204,7 @@ public class CodeGeneratorVisitor implements Visitor {
   // Exp e;
   public void visit(Print n) {
     n.e.accept(this);
+    cg.genPrint();
   }
 
   // Identifier i;

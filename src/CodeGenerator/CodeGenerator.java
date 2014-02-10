@@ -129,4 +129,9 @@ public class CodeGenerator {
     printInsn("call", assemblerPrefixName + "put");
   }
 
+  public void genPrint() {
+    printInsn("popq", "%rdi");  // single operand
+    printInsn("call", assemblerPrefixName + "put");
+  }
+
 }

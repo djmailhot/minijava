@@ -28,6 +28,7 @@ public class CodeGenerator {
   }
 
   public void genFunctionEntry(String functionName) {
+    printComment("entry point for " + assemblerPrefixName + functionName);
     printSection(".text");
     printGlobalName(functionName);
     printLabel(functionName);
@@ -87,6 +88,7 @@ public class CodeGenerator {
   }
 
   public void genAdd() {
+    printComment("add operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
     printInsn("addq", "%rbx", "%rax");  // %rax += %rbx  (2nd operand is dst)
@@ -94,6 +96,7 @@ public class CodeGenerator {
   }
 
   public void genSub() {
+    printComment("sub operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
     printInsn("subq", "%rbx", "%rax");  // %rax -= %rbx  (2nd operand is dst)
@@ -101,6 +104,7 @@ public class CodeGenerator {
   }
 
   public void genMul() {
+    printComment("mul operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
     printInsn("imulq", "%rbx", "%rax");  // %rax *= %rbx  (2nd operand is dst)
@@ -108,6 +112,7 @@ public class CodeGenerator {
   }
 
   public void genDiv() {
+    printComment("div operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
     printInsn("sarq", "$63", "%rax");  // populate the sign
@@ -117,6 +122,7 @@ public class CodeGenerator {
 
   // TODO:  does this really do mod?
   public void genMod() {
+    printComment("mod operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
     printInsn("sarq", "$63", "%rax");  // populate the sign
@@ -130,6 +136,7 @@ public class CodeGenerator {
   }
 
   public void genPrint() {
+    printComment("print statement");
     printInsn("popq", "%rdi");  // single operand
     printInsn("call", assemblerPrefixName + "put");
   }

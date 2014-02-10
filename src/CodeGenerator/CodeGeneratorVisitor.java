@@ -192,6 +192,7 @@ public class CodeGeneratorVisitor implements Visitor {
     n.e.accept(this);
     n.s1.accept(this);
     n.s2.accept(this);
+    cg.genIf();
   }
 
   // Exp e;
@@ -199,6 +200,7 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(While n) {
     n.e.accept(this);
     n.s.accept(this);
+    cg.genWhile();
   }
 
   // Exp e;

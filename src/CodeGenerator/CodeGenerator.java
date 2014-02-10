@@ -87,6 +87,32 @@ public class CodeGenerator {
     outputStream.println("# " + comment);
   }
 
+  public void genIf() {
+    printComment("if statement");
+    printInsn("popq", "%r8");  // false case statement
+    printInsn("popq", "%r9");  // true case statement
+    printInsn("popq", "%rbx");  // boolean expression
+    printInsn("cmpq", "$0", "%rbx");  // eval if false
+    printInsn("je", ".Lelse");  // if false, jump to else case
+    printInsn("pushq", "%r8");  // push the true statement
+    printInsn("jmp", ".Lifend");  // if true, jump to end
+    printLabel(".Lelse");
+    printInsn("pushq", "%r9");  // push the false statement
+    printLabel(".Lifend");
+  }
+
+  public void genWhile() {
+    printComment("while statement");
+    printInsn("popq", "%r8");  // loop statement
+    printInsn("popq", "%rbx");  // boolean expression
+    printLabel(".Ltop");
+    printInsn("cmpq", "$0", "%rbx");  // eval if false
+    printInsn("je", ".Lbot");  // if false, jump to else case
+    printInsn("pushq", "%r8");  // execute
+    printInsn("jmp", ".Ltop");  // loop
+    printLabel(".Lbot");
+  }
+
   public void genAdd() {
     printComment("add operation");
     printInsn("popq", "%rbx");  // right operand

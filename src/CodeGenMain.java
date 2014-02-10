@@ -23,7 +23,6 @@ public class CodeGenMain {
       CodeGenerator cg = new CodeGenerator(null);
       Symbol root;
 
-      cg.genFunctionEntry("asm_main");
       //
       // replace p.parse() with p.debug_parse() in next line to see trace of
       // parser shift/reduce actions during parse
@@ -34,7 +33,6 @@ public class CodeGenMain {
       //
       // System.out.print("\n" + "Parsing completed");
       //
-      cg.genFunctionExit("asm_main");
     } catch (Exception e) {
       //
       // yuck: some kind of error in the compiler implementation

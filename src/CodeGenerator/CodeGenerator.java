@@ -113,6 +113,60 @@ public class CodeGenerator {
     printLabel(".Lbot");
   }
 
+  public void genEqual() {
+    printComment("equal operation");
+    printInsn("popq", "%rax");  // right operand
+    printInsn("popq", "%rbx");  // left operand
+    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
+    printInsn("sete", "%al");  // equal?
+    printInsn("pushq", "%al");
+  }
+
+  public void genNotEqual() {
+    printComment("notequal operation");
+    printInsn("popq", "%rax");  // right operand
+    printInsn("popq", "%rbx");  // left operand
+    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
+    printInsn("setne", "%al");  // not equal?
+    printInsn("pushq", "%al");
+  }
+
+  public void genLessThan() {
+    printComment("lessthan operation");
+    printInsn("popq", "%rax");  // right operand
+    printInsn("popq", "%rbx");  // left operand
+    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
+    printInsn("setl", "%al");  // less than?
+    printInsn("pushq", "%al");
+  }
+
+  public void genGreaterThan() {
+    printComment("greaterthan operation");
+    printInsn("popq", "%rax");  // right operand
+    printInsn("popq", "%rbx");  // left operand
+    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
+    printInsn("setg", "%al");  // greater than?
+    printInsn("pushq", "%al");
+  }
+
+  public void genLessEqual() {
+    printComment("lessorequal operation");
+    printInsn("popq", "%rax");  // right operand
+    printInsn("popq", "%rbx");  // left operand
+    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
+    printInsn("setle", "%al");  // less than or equal?
+    printInsn("pushq", "%al");
+  }
+
+  public void genGreaterEqual() {
+    printComment("greaterorequal operation");
+    printInsn("popq", "%rax");  // right operand
+    printInsn("popq", "%rbx");  // left operand
+    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
+    printInsn("setge", "%al");  // greater than or equal?
+    printInsn("pushq", "%al");
+  }
+
   public void genAdd() {
     printComment("add operation");
     printInsn("popq", "%rbx");  // right operand

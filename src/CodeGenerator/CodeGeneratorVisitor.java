@@ -240,36 +240,42 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(Equal n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genEqual();
   }
 
   // Exp e1,e2;
   public void visit(NotEqual n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genNotEqual();
   }
 
   // Exp e1,e2;
   public void visit(LessThan n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genLessThan();
   }
 
   // Exp e1,e2;
   public void visit(GreaterThan n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genGreaterThan();
   }
 
   // Exp e1,e2;
   public void visit(LessEqual n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genLessEqual();
   }
 
   // Exp e1,e2;
   public void visit(GreaterEqual n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genGreaterEqual();
   }
 
   // Exp e1,e2;

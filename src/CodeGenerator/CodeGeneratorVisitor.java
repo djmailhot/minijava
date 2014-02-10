@@ -329,6 +329,7 @@ public class CodeGeneratorVisitor implements Visitor {
 
   // int i;
   public void visit(IntegerLiteral n) {
+    cg.genConstant(n.i);
   }
 
   // double d;

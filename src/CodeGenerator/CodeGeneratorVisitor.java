@@ -280,24 +280,28 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(Minus n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genSub();
   }
 
   // Exp e1,e2;
   public void visit(Times n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genMul();
   }
 
   // Exp e1,e2;
   public void visit(Divide n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genDiv();
   }
 
   // Exp e1,e2;
   public void visit(Modulo n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genMod();
   }
 
   // Exp e1,e2;

@@ -93,6 +93,37 @@ public class CodeGenerator {
     printInsn("pushq", "%rax");
   }
 
+  public void genSub() {
+    printInsn("popq", "%rbx");  // right operand
+    printInsn("popq", "%rax");  // left operand
+    printInsn("subq", "%rbx", "%rax");  // %rax -= %rbx  (2nd operand is dst)
+    printInsn("pushq", "%rax");
+  }
+
+  public void genMul() {
+    printInsn("popq", "%rbx");  // right operand
+    printInsn("popq", "%rax");  // left operand
+    printInsn("imulq", "%rbx", "%rax");  // %rax *= %rbx  (2nd operand is dst)
+    printInsn("pushq", "%rax");
+  }
+
+  public void genDiv() {
+    printInsn("popq", "%rbx");  // right operand
+    printInsn("popq", "%rax");  // left operand
+    printInsn("sarq", "$63", "%rax");  // populate the sign
+    printInsn("idivq", "%rbx", "%rax");  // %rax /= %rbx  (2nd operand is dst)
+    printInsn("pushq", "%rax");
+  }
+
+  // TODO:  does this really do mod?
+  public void genMod() {
+    printInsn("popq", "%rbx");  // right operand
+    printInsn("popq", "%rax");  // left operand
+    printInsn("sarq", "$63", "%rax");  // populate the sign
+    printInsn("idivq", "%rbx", "%rax");  // %rax /= %rbx  (2nd operand is dst)
+    printInsn("pushq", "%rdx");  // pull from the extended accumulator
+  }
+
   public void genDisplay() {
     printInsn("popq", "%rdi");  // single operand
     printInsn("call", assemblerPrefixName + "put");

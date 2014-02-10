@@ -149,8 +149,8 @@
       classname="CodeGenMain"
       classpath="build/classes;lib/CUP.jar"
       fork="true"
-      input="${file}"
-      output="src/CodeGenerator/codegen.out"
+      input="${file}.java"
+      output="${file}.s"
       >
       <!--
       input="SamplePrograms/ExampleConst.java"
@@ -173,18 +173,18 @@
 
   -->
 
-  <target name="build-example" depends="codegen">
+  <target name="build" depends="codegen">
     <cpptasks:cc
       name="gcc"
       outtype="executable"
       subsystem="console"
-      outfile="SamplePrograms/ExampleConst.x"
+      outfile="${file}.x"
       debug="yes"
       objdir="./"
       >
       <linkerarg value="-lm" />
       <fileset dir="./" includes="boot.c number_converter.c" />
-      <fileset dir="SamplePrograms" includes="ExampleConst.s" />
+      <fileset dir="./" includes="${file}.s" />
     </cpptasks:cc>
 
 

@@ -108,54 +108,60 @@ public class CodeGenerator {
     printComment("equal operation");
     printInsn("popq", "%rax");  // right operand
     printInsn("popq", "%rbx");  // left operand
-    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
-    printInsn("sete", "%rdx");  // equal?
-    printInsn("pushq", "%rdx");
+    printInsn("cmpq", "%rax", "%rbx");  // compare %rax to %rbx
+    printInsn("sete", "%al");  // set %al to 1 if equal
+    printInsn("movzbq", "%al", "%rax");  // pad with zeros
+    printInsn("pushq", "%rax");
   }
 
   public void genNotEqual() {
     printComment("notequal operation");
     printInsn("popq", "%rax");  // right operand
     printInsn("popq", "%rbx");  // left operand
-    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
-    printInsn("setne", "%al");  // not equal?
-    printInsn("pushq", "%al");
+    printInsn("cmpq", "%rax", "%rbx");  // compare %rax to %rbx
+    printInsn("setne", "%al");  // set %al to 1 if not equal
+    printInsn("movzbq", "%al", "%rax");  // pad with zeros
+    printInsn("pushq", "%rax");
   }
 
   public void genLessThan() {
     printComment("lessthan operation");
     printInsn("popq", "%rax");  // right operand
     printInsn("popq", "%rbx");  // left operand
-    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
-    printInsn("setl", "%al");  // less than?
-    printInsn("pushq", "%al");
+    printInsn("cmpq", "%rax", "%rbx");  // compare %rax to %rbx
+    printInsn("setl", "%al");  // set %al to 1 if less
+    printInsn("movzbq", "%al", "%rax");  // pad with zeros
+    printInsn("pushq", "%rax");
   }
 
   public void genGreaterThan() {
     printComment("greaterthan operation");
     printInsn("popq", "%rax");  // right operand
     printInsn("popq", "%rbx");  // left operand
-    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
-    printInsn("setg", "%al");  // greater than?
-    printInsn("pushq", "%al");
+    printInsn("cmpq", "%rax", "%rbx");  // compare %rax to %rbx
+    printInsn("setg", "%al");  // set %al to 1 if greater
+    printInsn("movzbq", "%al", "%rax");  // pad with zeros
+    printInsn("pushq", "%rax");
   }
 
   public void genLessEqual() {
     printComment("lessorequal operation");
     printInsn("popq", "%rax");  // right operand
     printInsn("popq", "%rbx");  // left operand
-    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
-    printInsn("setle", "%al");  // less than or equal?
-    printInsn("pushq", "%al");
+    printInsn("cmpq", "%rax", "%rbx");  // compare %rax to %rbx
+    printInsn("setle", "%al");  // set %al to 1 if less or equal
+    printInsn("movzbq", "%al", "%rax");  // pad with zeros
+    printInsn("pushq", "%rax");
   }
 
   public void genGreaterEqual() {
     printComment("greaterorequal operation");
     printInsn("popq", "%rax");  // right operand
     printInsn("popq", "%rbx");  // left operand
-    printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
-    printInsn("setge", "%al");  // greater than or equal?
-    printInsn("pushq", "%al");
+    printInsn("cmpq", "%rax", "%rbx");  // compare %rax to %rbx
+    printInsn("setge", "%al");  // set %al to 1 if greater or equal
+    printInsn("movzbq", "%al", "%rax");  // pad with zeros
+    printInsn("pushq", "%rax");
   }
 
   public void genAdd() {

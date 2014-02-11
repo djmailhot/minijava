@@ -201,14 +201,14 @@ public class CodeGenerator {
     printInsn("pushq", "%rax");
   }
 
-  // TODO:  does this really do mod?
   public void genMod() {
     printComment("mod operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
-    printInsn("sarq", "$63", "%rax");  // populate the sign
-    printInsn("idivq", "%rbx", "%rax");  // %rax /= %rbx  (2nd operand is dst)
-    printInsn("pushq", "%rdx");  // pull from the extended accumulator
+    printInsn("movq", "%rax", "%rdx");  // copy left to extension register
+    printInsn("sarq", "$63", "%rdx");  // extend sign bit to fill register
+    printInsn("idivq", "%rbx");  // %rdx:%rax /= %rbx (%rdx contains remainder)
+    printInsn("pushq", "%rdx");
   }
 
   public void genDisplay() {

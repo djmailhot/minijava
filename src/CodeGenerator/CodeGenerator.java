@@ -164,6 +164,15 @@ public class CodeGenerator {
     printInsn("pushq", "%rax");
   }
 
+  public void genNot() {
+    printComment("negation operation");
+    printInsn("popq", "%rax");
+    printInsn("testq", "%rax", "%rax"); // sets ZF if %rax = 0
+    printInsn("sete", "%al"); // set %al to ZF
+    printInsn("movzbq", "%al", "%rax");  // pad with zeros
+    printInsn("pushq", "%rax");
+  }
+
   public void genAdd() {
     printComment("add operation");
     printInsn("popq", "%rbx");  // right operand

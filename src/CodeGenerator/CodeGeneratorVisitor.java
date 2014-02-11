@@ -141,6 +141,7 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(MethodDecl n) {
     n.t.accept(this);
     n.i.accept(this);
+    cg.genMethodEntry(n.i.s);
     for (int i = 0; i < n.fl.size(); i++) {
       n.fl.get(i).accept(this);
     }
@@ -151,6 +152,7 @@ public class CodeGeneratorVisitor implements Visitor {
       n.sl.get(i).accept(this);
     }
     n.e.accept(this);
+    cg.genMethodExit(n.i.s);
   }
 
   // Type t;
@@ -368,7 +370,9 @@ public class CodeGeneratorVisitor implements Visitor {
     n.i.accept(this);
     for (int i = 0; i < n.el.size(); i++) {
       n.el.get(i).accept(this);
+      cg.genActual(i + 1);
     }
+    cg.genMethodCall(n.i.s);
   }
 
   // int i;

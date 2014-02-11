@@ -5,6 +5,9 @@ import java.io.PrintStream;
 
 public class CodeGenerator {
 
+  private static final String[] PARAM_REGISTERS =
+    { "", "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+
   private PrintStream outputStream;
   private int labelCounter;
   public String assemblerPrefixName;
@@ -42,6 +45,44 @@ public class CodeGenerator {
     printComment("return point for " + assemblerPrefixName + functionName);
     printInsn("popq", "%rbp");
     printInsn("ret");
+  }
+
+  public void genMethodEntry(String methodName) {
+    printComment("entry point for " + assemblerPrefixName + methodName);
+    printLabel(methodName);
+
+    printInsn("pushq", "%rbp");
+    printInsn("movq", "%rsp", "%rbp");
+
+    // Store callee-saved registers
+    printInsn("pushq", "%rbx");
+  }
+
+  public void genMethodExit(String methodName) {
+    printComment("return point for " + assemblerPrefixName + methodName);
+
+    // Pop return value
+    printInsn("popq", "%rax");
+
+    // Restore callee-saved registers
+    printInsn("popq", "%rbx");
+
+    printInsn("popq", "%rbp");
+    printInsn("ret");
+  }
+
+  public void genMethodCall(String methodName) {
+    printInsn("call", assemblerPrefixName + methodName);
+    printInsn("pushq", "%rax");
+  }
+
+  public void genActual(int position) {
+    if (position > 5) {
+      System.err.println("Encountered a function with more than 5 explicit arguments.");
+      System.exit(0);
+    }
+    String register = PARAM_REGISTERS[position];
+    printInsn("popq", register);
   }
 
   public void genConstant(int value) {

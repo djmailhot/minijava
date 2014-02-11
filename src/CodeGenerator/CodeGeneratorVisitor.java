@@ -199,9 +199,9 @@ public class CodeGeneratorVisitor implements Visitor {
     cg.genJmpIfFalse(labelFalse);
     n.s1.accept(this);
     cg.genJmp(labelEnd);
-    cg.printLabel(labelFalse);
+    cg.printLocalLabel(labelFalse);
     n.s2.accept(this);
-    cg.printLabel(labelEnd);
+    cg.printLocalLabel(labelEnd);
   }
 
   // Exp e;
@@ -211,12 +211,12 @@ public class CodeGeneratorVisitor implements Visitor {
     String labelTop = cg.newLabel("top");
     String labelBot = cg.newLabel("bot");
 
-    cg.printLabel(labelTop);
+    cg.printLocalLabel(labelTop);
     n.e.accept(this);
     cg.genJmpIfFalse(labelBot);
     n.s.accept(this);
     cg.genJmp(labelTop);
-    cg.printLabel(labelBot);
+    cg.printLocalLabel(labelBot);
   }
 
   // Exp e;
@@ -252,9 +252,9 @@ public class CodeGeneratorVisitor implements Visitor {
     cg.genJmpIfFalse(labelFalse);
     cg.genConstant(1);
     cg.genJmp(labelEnd);
-    cg.printLabel(labelFalse);
+    cg.printLocalLabel(labelFalse);
     cg.genConstant(0);
-    cg.printLabel(labelEnd);
+    cg.printLocalLabel(labelEnd);
   }
 
   // Exp e1,e2;
@@ -269,9 +269,9 @@ public class CodeGeneratorVisitor implements Visitor {
     cg.genJmpIfTrue(labelTrue);
     cg.genConstant(0);
     cg.genJmp(labelEnd);
-    cg.printLabel(labelTrue);
+    cg.printLocalLabel(labelTrue);
     cg.genConstant(1);
-    cg.printLabel(labelEnd);
+    cg.printLocalLabel(labelEnd);
   }
 
   // Exp e1,e2;

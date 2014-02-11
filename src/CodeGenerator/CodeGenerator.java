@@ -91,13 +91,17 @@ public class CodeGenerator {
   }
 
   public String newLabel(String labelName) {
-    String label = ".L" + labelName + labelCounter;
+    String label = "L" + labelCounter + labelName;
     labelCounter += 1;
     return label;
   }
 
   public void printLabel(String labelName) {
     outputStream.println(assemblerPrefixName + labelName + ":");
+  }
+
+  public void printLocalLabel(String labelName) {
+    outputStream.println(labelName + ":");
   }
 
   private void printSection(String directive) {

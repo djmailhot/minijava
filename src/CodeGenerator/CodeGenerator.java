@@ -193,10 +193,11 @@ public class CodeGenerator {
 
   public void genDiv() {
     printComment("div operation");
-    printInsn("popq", "%rbx");  // right operand
-    printInsn("popq", "%rax");  // left operand
-    printInsn("sarq", "$63", "%rax");  // populate the sign
-    printInsn("idivq", "%rbx", "%rax");  // %rax /= %rbx  (2nd operand is dst)
+    printInsn("popq", "%rbx");  // divisor
+    printInsn("popq", "%rax");  // dividend
+    printInsn("movq", "%rax", "%rdx");  // copy dividend to extension register
+    printInsn("sarq", "$63", "%rdx");  // extend sign bit to fill register
+    printInsn("idivq", "%rbx");  // %rdx:%rax /= %rbx (%rax is dest)
     printInsn("pushq", "%rax");
   }
 

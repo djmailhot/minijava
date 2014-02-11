@@ -97,7 +97,13 @@ public class CodeGenerator {
   public void genJmpIfFalse(String label) {
     printInsn("popq", "%rbx");  // boolean expression
     printInsn("cmpq", "$0", "%rbx");  // eval if false
-    printInsn("je", label);  // if false, jump to else case
+    printInsn("je", label);  // if false, jump to label
+  }
+
+  public void genJmpIfTrue(String label) {
+    printInsn("popq", "%rbx");  // boolean expression
+    printInsn("cmpq", "$0", "%rbx");  // eval if false
+    printInsn("jne", label);  // if not false, jump to label
   }
 
   public void genJmp(String label) {

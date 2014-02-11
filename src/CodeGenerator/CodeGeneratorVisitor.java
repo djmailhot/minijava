@@ -240,14 +240,36 @@ public class CodeGeneratorVisitor implements Visitor {
 
   // Exp e1,e2;
   public void visit(ShortCircuitAnd n) {
+    cg.printComment("and operator");
+    String labelFalse = cg.newLabel("false");
+    String labelEnd = cg.newLabel("end");
+
     n.e1.accept(this);
+    cg.genJmpIfFalse(labelFalse);
     n.e2.accept(this);
+    cg.genJmpIfFalse(labelFalse);
+    cg.genConstant(1);
+    cg.genJmp(labelEnd);
+    cg.printLabel(labelFalse);
+    cg.genConstant(0);
+    cg.printLabel(labelEnd);
   }
 
   // Exp e1,e2;
   public void visit(ShortCircuitOr n) {
+    cg.printComment("or operator");
+    String labelTrue = cg.newLabel("true");
+    String labelEnd = cg.newLabel("end");
+
     n.e1.accept(this);
+    cg.genJmpIfTrue(labelTrue);
     n.e2.accept(this);
+    cg.genJmpIfTrue(labelTrue);
+    cg.genConstant(0);
+    cg.genJmp(labelEnd);
+    cg.printLabel(labelTrue);
+    cg.genConstant(1);
+    cg.printLabel(labelEnd);
   }
 
   // Exp e1,e2;

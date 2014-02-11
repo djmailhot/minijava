@@ -6,6 +6,7 @@ import java.io.PrintStream;
 public class CodeGenerator {
 
   private PrintStream outputStream;
+  private int labelCounter;
   public String assemblerPrefixName;
 
   public CodeGenerator(String outputFileName) {
@@ -48,7 +49,13 @@ public class CodeGenerator {
     printInsn("pushq", "%rax");
   }
 
-  private void printLabel(String labelName) {
+  public String newLabel(String labelName) {
+    String label = ".L" + labelName + labelCounter;
+    labelCounter += 1;
+    return label;
+  }
+
+  public void printLabel(String labelName) {
     outputStream.println(assemblerPrefixName + labelName + ":");
   }
 
@@ -87,30 +94,14 @@ public class CodeGenerator {
     outputStream.println("# " + comment);
   }
 
-  public void genIf() {
-    printComment("if statement");
-    printInsn("popq", "%r8");  // false case statement
-    printInsn("popq", "%r9");  // true case statement
+  public void genJmpIfFalse(String label) {
     printInsn("popq", "%rbx");  // boolean expression
     printInsn("cmpq", "$0", "%rbx");  // eval if false
-    printInsn("je", ".Lelse");  // if false, jump to else case
-    printInsn("pushq", "%r8");  // push the true statement
-    printInsn("jmp", ".Lifend");  // if true, jump to end
-    printLabel(".Lelse");
-    printInsn("pushq", "%r9");  // push the false statement
-    printLabel(".Lifend");
+    printInsn("je", label);  // if false, jump to else case
   }
 
-  public void genWhile() {
-    printComment("while statement");
-    printInsn("popq", "%r8");  // loop statement
-    printInsn("popq", "%rbx");  // boolean expression
-    printLabel(".Ltop");
-    printInsn("cmpq", "$0", "%rbx");  // eval if false
-    printInsn("je", ".Lbot");  // if false, jump to else case
-    printInsn("pushq", "%r8");  // execute
-    printInsn("jmp", ".Ltop");  // loop
-    printLabel(".Lbot");
+  public void genJmp(String label) {
+    printInsn("jmp", label);  // jump to label
   }
 
   public void genEqual() {
@@ -118,8 +109,8 @@ public class CodeGenerator {
     printInsn("popq", "%rax");  // right operand
     printInsn("popq", "%rbx");  // left operand
     printInsn("cmpq", "%rbx", "%rax");  // %rbx compareto %rax
-    printInsn("sete", "%al");  // equal?
-    printInsn("pushq", "%al");
+    printInsn("sete", "%rdx");  // equal?
+    printInsn("pushq", "%rdx");
   }
 
   public void genNotEqual() {

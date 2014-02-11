@@ -189,18 +189,32 @@ public class CodeGeneratorVisitor implements Visitor {
   // Exp e;
   // Statement s1,s2;
   public void visit(If n) {
+    cg.printComment("If statement");
+    String labelFalse = cg.newLabel("false");
+    String labelEnd = cg.newLabel("end");
+
     n.e.accept(this);
+    cg.genJmpIfFalse(labelFalse);
     n.s1.accept(this);
+    cg.genJmp(labelEnd);
+    cg.printLabel(labelFalse);
     n.s2.accept(this);
-    cg.genIf();
+    cg.printLabel(labelEnd);
   }
 
   // Exp e;
   // Statement s;
   public void visit(While n) {
+    cg.printComment("While statement");
+    String labelTop = cg.newLabel("top");
+    String labelBot = cg.newLabel("bot");
+
+    cg.printLabel(labelTop);
     n.e.accept(this);
+    cg.genJmpIfFalse(labelBot);
     n.s.accept(this);
-    cg.genWhile();
+    cg.genJmp(labelTop);
+    cg.printLabel(labelBot);
   }
 
   // Exp e;

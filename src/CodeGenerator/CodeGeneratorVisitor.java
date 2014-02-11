@@ -345,9 +345,11 @@ public class CodeGeneratorVisitor implements Visitor {
   }
 
   public void visit(True n) {
+    cg.genConstant(1);
   }
 
   public void visit(False n) {
+    cg.genConstant(0);
   }
 
   public void visit(IdentifierExp n) {

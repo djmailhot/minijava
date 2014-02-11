@@ -1,3 +1,8 @@
+/*
+ * Group cse401h
+ * Jake Bailey, David Mailhot
+ */
+
 package CodeGenerator;
 
 import AST.ASTNode;

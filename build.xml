@@ -159,6 +159,20 @@
     </java>
   </target>
 
+  <target name="semanal" depends="compile">
+    <java
+      classname="SemAnalMain"
+      classpath="build/classes;lib/CUP.jar"
+      fork="true"
+      input="${file}.java"
+      >
+      <!--
+      input="SamplePrograms/ExampleConst.java"
+      output="SamplePrograms/ExampleConst.s"
+      -->
+    </java>
+  </target>
+
   <!--
     Compile .c or .s files.
     See, perhaps;

@@ -11,4 +11,8 @@ abstract public class ASTNode {
   public ASTNode(int lineNumber) {
     this.line_number = lineNumber;
   }
+
+  public int getLineNumber() {
+    return line_number;
+  }
 }

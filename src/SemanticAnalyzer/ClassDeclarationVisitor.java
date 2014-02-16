@@ -7,6 +7,7 @@ package SemanticAnalyzer;
 
 import AST.*;
 import AST.Visitor.Visitor;
+import SemanticAnalyzer.ErrorMessages;
 import SemanticAnalyzer.TypeGraph;
 import SemanticAnalyzer.SemanticTypes.*;
 
@@ -31,7 +32,7 @@ public class ClassDeclarationVisitor implements Visitor {
   private void addClass(String name, int lineNumber) {
     // check if we have a class name conflict
     if (pm.classes.containsKey(name)) {
-      System.err.println("Line "+lineNumber+":  Class name conflict on " + name);
+      ErrorMessages.errDuplicateClass(lineNumber, name);
     }
     pm.classes.put(name, new ClassVarType());
   }

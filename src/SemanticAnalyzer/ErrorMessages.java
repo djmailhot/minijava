@@ -18,4 +18,8 @@ public class ErrorMessages {
   public static void errSymbolNotFound(int lineNum, String symbol) {
     printErrorMessage(lineNum, "Symbol "+symbol+" is undefined");
   }
+
+  public static void errClassHierarchyCycle(int lineNum, String symbol) {
+    printErrorMessage(lineNum, "Cycle in class hierarchy: "+symbol+" is a superclass of itself");
+  }
 }

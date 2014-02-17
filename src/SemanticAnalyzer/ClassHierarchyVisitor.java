@@ -10,62 +10,39 @@ import AST.Visitor.Visitor;
 import SemanticAnalyzer.ErrorMessages;
 import SemanticAnalyzer.SemanticTypes.*;
 
-public class ClassDeclarationVisitor implements Visitor {
-  
+public class ClassHierarchyVisitor implements Visitor {
+
   private ProgramMetadata pm;
 
-  public ClassDeclarationVisitor(ProgramMetadata pm) {
+  public ClassHierarchyVisitor(ProgramMetadata pm) {
     this.pm = pm;
   }
 
-
-  // MainClass m;
-  // ClassDeclList cl;
   public void visit(Program n) {
-    n.m.accept(this);
-    for (int i = 0; i < n.cl.size(); i++) {
-        n.cl.get(i).accept(this);
-    }
+    for (int i = 0; i < n.cl.size(); i++)
+      n.cl.get(i).accept(this);
   }
 
-  private void addClass(String name, int lineNumber) {
-    // check if we have a class name conflict
-    if (pm.classes.containsKey(name)) {
-      ErrorMessages.errDuplicateClass(lineNumber, name);
-    }
-    pm.classes.put(name, new ClassVarType());
-  }
-
-  // Identifier i1 -> the MainClass declared name
-  // Identifier i2 -> args
-  // Statement s;
-  public void visit(MainClass n) {
-    String name = n.i1.s;
-
-    addClass(name, n.i1.getLineNumber());
-  }
-
-  // Identifier i;
-  // VarDeclList vl;
-  // MethodDeclList ml;
-  public void visit(ClassDeclSimple n) {
-    String name = n.i.s;
-
-    addClass(name, n.i.getLineNumber());
-  }
-
-  // Identifier i;
-  // Identifier j;
-  // VarDeclList vl;
-  // MethodDeclList ml;
   public void visit(ClassDeclExtends n) {
-    String name = n.i.s;
+    String childName = n.i.s;
+    String parentName = n.j.s;
 
-    addClass(name, n.i.getLineNumber());
-    // Don't bother with the super class type
+    ClassVarType child = pm.classes.get(childName);
+    ClassVarType parent = pm.classes.get(parentName);
+
+    child.superclass = parent;
+
+    // Detect cycles. If one is detected, exit.
+    while (parent != null) {
+      if (parent == child)
+        ErrorMessages.errClassHierarchyCycle(n.getLineNumber(), childName);
+      parent = parent.superclass;
+    }
   }
 
-  // The ClassDeclarationVisitor is only interested in class declarations
+  // The ClassHierarchyVisitor is only interested in class extends declarations.
+  public void visit(MainClass n) {}
+  public void visit(ClassDeclSimple n) {}
   public void visit(Display n) {}
   public void visit(VarDecl n) {}
   public void visit(MethodDecl n) {}

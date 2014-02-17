@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class ClassVarType extends VarType {
 
-  public ClassVarType baseType;  // for subclassing
+  public ClassVarType superclass;
   public Map<String, VarType> fields;
   public Map<String, MethodMetadata> methods;
 

@@ -1,12 +1,10 @@
 import AST.*;
 import SemanticAnalyzer.*;
-import SemanticAnalyzer.SemanticTypes.ProgramMetadata;
+import SemanticAnalyzer.SemanticTypes.*;
 import Parser.parser;
 import Scanner.scanner;
 
 import java_cup.runtime.Symbol;
-
-import java.util.*;
 
 /**
  * Entry point for semantic analysis. Feel free to use this as your compiler's
@@ -29,8 +27,31 @@ public class SemAnalMain {
       // First pass:  initialize types for all declared classes
       program.accept(new ClassDeclarationVisitor(pm));
 
+      // Second pass: Link subclasses to superclasses
+      program.accept(new ClassHierarchyVisitor(pm));
 
-      // Second pass:  for all declared classes fill in class and method details
+      // Debug: print all class hierarchy relationships
+      System.out.println("Pass 2: Class hierarchy");
+      for (String className : pm.classes.keySet()) {
+        ClassVarType childClass = pm.classes.get(className);
+        if (childClass.superclass == null) {
+          System.out.println(className + " is a base class");
+        } else {
+          String parentName = null;
+          // This loop is a hack, but it's just for debug purposes; we don't need a bimap.
+          for (String prospectiveParent : pm.classes.keySet()) {
+            ClassVarType parentClass = pm.classes.get(prospectiveParent);
+            if (parentClass == childClass.superclass) {
+              parentName = prospectiveParent;
+              break;
+            }
+          }
+          System.out.println(className + " extends " + parentName);
+        }
+      }
+      System.out.println();
+
+      // Third pass:  for all declared classes fill in class and method details
       // program.accept(new ClassInternalsVisitor(pt));
 
       // First verification:  verify method override relationships

@@ -2,17 +2,20 @@ package SemanticAnalyzer;
 
 public class ErrorMessages {
 
-  private ErrorMessages() {}
+  private static void printErrorMessage(int lineNum, String message) {
+    System.err.println("Line " + lineNum + ": " + message);
+    System.exit(0);
+  }
 
   public static void errDuplicateClass(int lineNum, String name) {
-    System.err.println("Line "+lineNum+":  "+name+" is a duplicate class name");
+    printErrorMessage(lineNum, name+" is a duplicate class name");
   }
 
   public static void errDuplicateVariable(int lineNum, String name) {
-    System.err.println("Line "+lineNum+":  "+name+" is a duplicate varible name");
+    printErrorMessage(lineNum, name+" is a duplicate variable name");
   }
 
   public static void errSymbolNotFound(int lineNum, String symbol) {
-    System.err.println("Line "+lineNum+":  Symbol "+symbol+" is undefined");
+    printErrorMessage(lineNum, "Symbol "+symbol+" is undefined");
   }
 }

@@ -55,6 +55,7 @@ public class SemAnalMain {
       // program.accept(new ClassInternalsVisitor(pt));
 
       // First verification:  verify method override relationships
+      verifyOverrides(pm);
 
       //
       // System.out.print("\n" + "Parsing completed");
@@ -70,6 +71,33 @@ public class SemAnalMain {
       // print out a stack dump
       //
       e.printStackTrace();
+    }
+  }
+
+  private static void verifyOverrides(ProgramMetadata pm) {
+    for (String className : pm.classes.keySet()) {
+      ClassVarType childClass = pm.classes.get(className);
+      ClassVarType superclass = childClass.superclass;
+
+      while (superclass != null) {
+        for (String methodName : childClass.methods.keySet()) {
+          if (superclass.methods.containsKey(methodName)) {
+            MethodMetadata childMethod = childClass.methods.get(methodName);
+            MethodMetadata parentMethod = superclass.methods.get(methodName);
+
+            if (!childMethod.args.equals(parentMethod.args)
+                || !childMethod.returnType.equals(parentMethod.returnType)) {
+              // TODO: Print line number, possibly superclass name.
+              // Maybe we should include that information in ClassVarType.
+              System.err.println("Override of "+methodName+" in "+className
+                  + " doesn't match definition in superclass.");
+              System.exit(0);
+            }
+          }
+        }
+
+        superclass = superclass.superclass;
+      }
     }
   }
 

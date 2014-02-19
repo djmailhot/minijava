@@ -15,4 +15,8 @@ public class MethodMetadata {
     this.args = new LinkedHashMap<String, VarType>();
     this.localVars = new HashMap<String, VarType>();
   }
+
+  public String toString() {
+    return this.getClass().getName();
+  }
 }

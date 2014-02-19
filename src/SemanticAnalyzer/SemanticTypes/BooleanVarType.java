@@ -11,4 +11,8 @@ public class BooleanVarType extends VarType {
     }
     return singleton;
   }
+
+  public String toString() {
+    return "boolean";
+  }
 }

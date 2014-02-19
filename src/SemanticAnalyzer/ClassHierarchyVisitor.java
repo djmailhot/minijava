@@ -5,6 +5,8 @@
 
 package SemanticAnalyzer;
 
+import java.util.Map;
+
 import AST.*;
 import AST.Visitor.Visitor;
 import SemanticAnalyzer.ErrorMessages;
@@ -12,10 +14,10 @@ import SemanticAnalyzer.SemanticTypes.*;
 
 public class ClassHierarchyVisitor implements Visitor {
 
-  private ProgramMetadata pm;
+  private Map<String, ClassVarType> classScope;
 
   public ClassHierarchyVisitor(ProgramMetadata pm) {
-    this.pm = pm;
+    this.classScope = pm.classes;
   }
 
   public void visit(Program n) {
@@ -27,8 +29,8 @@ public class ClassHierarchyVisitor implements Visitor {
     String childName = n.i.s;
     String parentName = n.j.s;
 
-    ClassVarType child = pm.classes.get(childName);
-    ClassVarType parent = pm.classes.get(parentName);
+    ClassVarType child = classScope.get(childName);
+    ClassVarType parent = classScope.get(parentName);
 
     child.superclass = parent;
 

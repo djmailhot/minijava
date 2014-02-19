@@ -14,4 +14,7 @@ public class ClassVarType extends VarType {
     this.methods = new HashMap<String, MethodMetadata>();
   }
 
+  public String toString() {
+    return this.getClass().getName();
+  }
 }

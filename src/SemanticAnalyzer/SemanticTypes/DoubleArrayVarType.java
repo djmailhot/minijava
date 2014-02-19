@@ -11,4 +11,8 @@ public class DoubleArrayVarType extends VarType {
     }
     return singleton;
   }
+
+  public String toString() {
+    return "double[]";
+  }
 }

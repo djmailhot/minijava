@@ -11,4 +11,8 @@ public class DoubleVarType extends VarType {
     }
     return singleton;
   }
+
+  public String toString() {
+    return "double";
+  }
 }

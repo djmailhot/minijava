@@ -27,6 +27,13 @@ public class SemAnalMain {
       // First pass:  initialize types for all declared classes
       program.accept(new ClassDeclarationVisitor(pm));
 
+      // Debug: print all class declarations
+      System.out.println("Pass 1: Class declarations");
+      for (String className : pm.classes.keySet()) {
+        System.out.println(className + " is a class");
+      }
+      System.out.println();
+
       // Second pass: Link subclasses to superclasses
       program.accept(new ClassHierarchyVisitor(pm));
 
@@ -52,7 +59,30 @@ public class SemAnalMain {
       System.out.println();
 
       // Third pass:  for all declared classes fill in class and method details
-      // program.accept(new ClassInternalsVisitor(pt));
+      program.accept(new ClassInternalsVisitor(pm));
+
+      // Debug: print all class declarations
+      System.out.println("Pass 3: Class internals");
+      for (String className : pm.classes.keySet()) {
+        System.out.println("Class: " + className);
+        ClassVarType ct = pm.classes.get(className);
+        for (String fieldName : ct.fields.keySet()) {
+          System.out.println("  Field: " + ct.fields.get(fieldName) + " " + fieldName);
+        }
+
+        for (String methodName : ct.methods.keySet()) {
+          System.out.println("  Method: " + methodName);
+          MethodMetadata mm = ct.methods.get(methodName);
+          for (String argName : mm.args.keySet()) {
+            System.out.println("    Formal: " + mm.args.get(argName) + " " + argName);
+          }
+
+          for (String localVar : mm.localVars.keySet()) {
+            System.out.println("    Local: " + mm.localVars.get(localVar) + " " + localVar);
+          }
+        }
+      }
+      System.out.println();
 
       // First verification:  verify method override relationships
       verifyOverrides(pm);

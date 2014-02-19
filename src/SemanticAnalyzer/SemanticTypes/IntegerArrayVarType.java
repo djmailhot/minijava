@@ -11,4 +11,8 @@ public class IntegerArrayVarType extends VarType {
     }
     return singleton;
   }
+
+  public String toString() {
+    return "int[]";
+  }
 }

@@ -5,6 +5,8 @@
 
 package SemanticAnalyzer;
 
+import java.util.Map;
+
 import AST.*;
 import AST.Visitor.Visitor;
 import SemanticAnalyzer.ErrorMessages;
@@ -12,10 +14,10 @@ import SemanticAnalyzer.SemanticTypes.*;
 
 public class ClassDeclarationVisitor implements Visitor {
   
-  private ProgramMetadata pm;
+  private Map<String, ClassVarType> classScope;
 
   public ClassDeclarationVisitor(ProgramMetadata pm) {
-    this.pm = pm;
+    this.classScope = pm.classes;
   }
 
 
@@ -30,10 +32,10 @@ public class ClassDeclarationVisitor implements Visitor {
 
   private void addClass(String name, int lineNumber) {
     // check if we have a class name conflict
-    if (pm.classes.containsKey(name)) {
+    if (classScope.containsKey(name)) {
       ErrorMessages.errDuplicateClass(lineNumber, name);
     }
-    pm.classes.put(name, new ClassVarType());
+    classScope.put(name, new ClassVarType());
   }
 
   // Identifier i1 -> the MainClass declared name

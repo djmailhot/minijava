@@ -110,13 +110,13 @@ public class SemAnalMain {
 
             Iterator<VarType> pArgs = parentMethod.args.values().iterator();
             for (VarType cArg : childMethod.args.values()) {
-              if (!cArg.subtypeOrEqual(pArgs.next())) {
+              if (!cArg.equals(pArgs.next())) {
                 ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
                     child.name, parent.name);
               }
             }
 
-            if (!childMethod.returnType.supertypeOrEqual(parentMethod.returnType)) {
+            if (!childMethod.returnType.equals(parentMethod.returnType)) {
               ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
                   child.name, parent.name);
             }

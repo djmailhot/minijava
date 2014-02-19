@@ -105,20 +105,20 @@ public class SemAnalMain {
 
             if (childMethod.args.size() != parentMethod.args.size()) {
               ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
-                  child.name, parent.name);;
+                  child.name, parent.name);
             }
 
             Iterator<VarType> pArgs = parentMethod.args.values().iterator();
             for (VarType cArg : childMethod.args.values()) {
               if (!cArg.equals(pArgs.next())) {
                 ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
-                    child.name, parent.name);;
+                    child.name, parent.name);
               }
             }
 
             if (!childMethod.returnType.equals(parentMethod.returnType)) {
               ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
-                  child.name, parent.name);;
+                  child.name, parent.name);
             }
           }
         }

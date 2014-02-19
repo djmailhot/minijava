@@ -3,9 +3,7 @@ package SemanticAnalyzer.SemanticTypes;
 public class DoubleArrayVarType extends PrimitiveVarType {
   private static DoubleArrayVarType singleton;
 
-  private DoubleArrayVarType() {}
-
-  public static DoubleArrayVarType getDoubleArrayVarType() {
+  public static DoubleArrayVarType singleton() {
     if (singleton == null) {
       singleton = new DoubleArrayVarType();
     }

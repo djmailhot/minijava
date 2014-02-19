@@ -33,15 +33,15 @@ public class ClassInternalsVisitor implements Visitor {
    */
   private VarType deriveVarType(Type type, int lineNumber) {
     if (type instanceof IntegerType) {
-      return IntegerVarType.getIntegerVarType();
+      return IntegerVarType.singleton();
     } else if (type instanceof DoubleType) {
-      return DoubleVarType.getDoubleVarType();
+      return DoubleVarType.singleton();
     } else if (type instanceof BooleanType) {
-      return BooleanVarType.getBooleanVarType();
+      return BooleanVarType.singleton();
     } else if (type instanceof IntArrayType) {
-      return IntegerArrayVarType.getIntegerArrayVarType();
+      return IntegerArrayVarType.singleton();
     } else if (type instanceof DoubleArrayType) {
-      return DoubleArrayVarType.getDoubleArrayVarType();
+      return DoubleArrayVarType.singleton();
     } else if (type instanceof IdentifierType) {
       // This is a class name, so look for the class definition
       String identifierName = ((IdentifierType)type).s;

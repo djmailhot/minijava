@@ -3,9 +3,7 @@ package SemanticAnalyzer.SemanticTypes;
 public class BooleanVarType extends PrimitiveVarType {
   private static BooleanVarType singleton;
 
-  private BooleanVarType() {}
-
-  public static BooleanVarType getBooleanVarType() {
+  public static BooleanVarType singleton() {
     if (singleton == null) {
       singleton = new BooleanVarType();
     }

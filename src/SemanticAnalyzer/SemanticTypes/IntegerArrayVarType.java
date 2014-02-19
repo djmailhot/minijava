@@ -3,9 +3,7 @@ package SemanticAnalyzer.SemanticTypes;
 public class IntegerArrayVarType extends PrimitiveVarType {
   private static IntegerArrayVarType singleton;
 
-  private IntegerArrayVarType() {}
-
-  public static IntegerArrayVarType getIntegerArrayVarType() {
+  public static IntegerArrayVarType singleton() {
     if (singleton == null) {
       singleton = new IntegerArrayVarType();
     }

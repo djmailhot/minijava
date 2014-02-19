@@ -3,9 +3,7 @@ package SemanticAnalyzer.SemanticTypes;
 public class IntegerVarType extends PrimitiveVarType {
   private static IntegerVarType singleton;
 
-  private IntegerVarType() {}
-
-  public static IntegerVarType getIntegerVarType() {
+  public static IntegerVarType singleton() {
     if (singleton == null) {
       singleton = new IntegerVarType();
     }

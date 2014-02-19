@@ -22,4 +22,9 @@ public class ErrorMessages {
   public static void errClassHierarchyCycle(int lineNum, String symbol) {
     printErrorMessage(lineNum, "Cycle in class hierarchy: "+symbol+" is a superclass of itself");
   }
+
+  public static void errInvalidOverride(int lineNum, String methodName, String childName, String parentName) {
+    printErrorMessage(lineNum, "Override of "+methodName+" in class "+childName
+        +" doesn't match definition in superclass "+parentName+".");
+  }
 }

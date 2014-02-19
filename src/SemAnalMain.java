@@ -94,28 +94,36 @@ public class SemAnalMain {
   }
 
   private static void verifyOverrides(ProgramMetadata pm) {
-    for (String className : pm.classes.keySet()) {
-      ClassVarType childClass = pm.classes.get(className);
-      ClassVarType superclass = childClass.superclass;
+    for (ClassVarType child : pm.classes.values()) {
+      ClassVarType parent = child.superclass;
 
-      while (superclass != null) {
-        for (String methodName : childClass.methods.keySet()) {
-          if (superclass.methods.containsKey(methodName)) {
-            MethodMetadata childMethod = childClass.methods.get(methodName);
-            MethodMetadata parentMethod = superclass.methods.get(methodName);
+      while (parent != null) {
+        for (String methodName : child.methods.keySet()) {
+          if (parent.methods.containsKey(methodName)) {
+            MethodMetadata childMethod = child.methods.get(methodName);
+            MethodMetadata parentMethod = parent.methods.get(methodName);
 
-            if (!childMethod.args.equals(parentMethod.args)
-                || !childMethod.returnType.equals(parentMethod.returnType)) {
-              // TODO: Print line number, possibly superclass name.
-              // Maybe we should include that information in ClassVarType.
-              System.err.println("Override of "+methodName+" in "+className
-                  + " doesn't match definition in superclass.");
-              System.exit(0);
+            if (childMethod.args.size() != parentMethod.args.size()) {
+              ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
+                  child.name, parent.name);;
+            }
+
+            Iterator<VarType> pArgs = parentMethod.args.values().iterator();
+            for (VarType cArg : childMethod.args.values()) {
+              if (!cArg.equals(pArgs.next())) {
+                ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
+                    child.name, parent.name);;
+              }
+            }
+
+            if (!childMethod.returnType.equals(parentMethod.returnType)) {
+              ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
+                  child.name, parent.name);;
             }
           }
         }
 
-        superclass = superclass.superclass;
+        parent = parent.superclass;
       }
     }
   }

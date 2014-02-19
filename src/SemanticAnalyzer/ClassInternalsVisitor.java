@@ -5,13 +5,11 @@
 
 package SemanticAnalyzer;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import AST.*;
 import AST.Visitor.Visitor;
 import SemanticAnalyzer.ErrorMessages;
-import SemanticAnalyzer.TypeGraph;
 import SemanticAnalyzer.SemanticTypes.*;
 
 public class ClassInternalsVisitor implements Visitor {
@@ -170,7 +168,7 @@ public class ClassInternalsVisitor implements Visitor {
 
     VarType returnType = deriveVarType(n.t, lineNumber);
 
-    MethodMetadata mm = new MethodMetadata(returnType);
+    MethodMetadata mm = new MethodMetadata(returnType, methodName, lineNumber);
 
     argsScope = mm.args;
     for (int i = 0; i < n.fl.size(); i++) {

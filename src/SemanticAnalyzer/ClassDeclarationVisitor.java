@@ -35,7 +35,7 @@ public class ClassDeclarationVisitor implements Visitor {
     if (classScope.containsKey(name)) {
       ErrorMessages.errDuplicateClass(lineNumber, name);
     }
-    classScope.put(name, new ClassVarType());
+    classScope.put(name, new ClassVarType(name, lineNumber));
   }
 
   // Identifier i1 -> the MainClass declared name

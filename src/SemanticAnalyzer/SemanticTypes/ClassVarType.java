@@ -9,12 +9,18 @@ public class ClassVarType extends VarType {
   public Map<String, VarType> fields;
   public Map<String, MethodMetadata> methods;
 
-  public ClassVarType() {
+  // For convenience when printing error messages
+  public String name;
+  public int lineNumber;
+
+  public ClassVarType(String name, int lineNumber) {
     this.fields = new HashMap<String, VarType>();
     this.methods = new HashMap<String, MethodMetadata>();
+    this.name = name;
+    this.lineNumber = lineNumber;
   }
 
   public String toString() {
-    return this.getClass().getName();
+    return name;
   }
 }

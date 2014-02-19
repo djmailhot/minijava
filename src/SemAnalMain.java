@@ -1,3 +1,5 @@
+import java.util.Iterator;
+
 import AST.*;
 import SemanticAnalyzer.*;
 import SemanticAnalyzer.SemanticTypes.*;
@@ -39,22 +41,11 @@ public class SemAnalMain {
 
       // Debug: print all class hierarchy relationships
       System.out.println("Pass 2: Class hierarchy");
-      for (String className : pm.classes.keySet()) {
-        ClassVarType childClass = pm.classes.get(className);
-        if (childClass.superclass == null) {
-          System.out.println(className + " is a base class");
-        } else {
-          String parentName = null;
-          // This loop is a hack, but it's just for debug purposes; we don't need a bimap.
-          for (String prospectiveParent : pm.classes.keySet()) {
-            ClassVarType parentClass = pm.classes.get(prospectiveParent);
-            if (parentClass == childClass.superclass) {
-              parentName = prospectiveParent;
-              break;
-            }
-          }
-          System.out.println(className + " extends " + parentName);
-        }
+      for (ClassVarType c : pm.classes.values()) {
+        if (c.superclass == null)
+          System.out.println(c + " is a base class");
+        else
+          System.out.println(c + " extends " + c.superclass);
       }
       System.out.println();
 
@@ -63,16 +54,14 @@ public class SemAnalMain {
 
       // Debug: print all class declarations
       System.out.println("Pass 3: Class internals");
-      for (String className : pm.classes.keySet()) {
-        System.out.println("Class: " + className);
-        ClassVarType ct = pm.classes.get(className);
+      for (ClassVarType ct: pm.classes.values()) {
+        System.out.println("Class: " + ct);
         for (String fieldName : ct.fields.keySet()) {
           System.out.println("  Field: " + ct.fields.get(fieldName) + " " + fieldName);
         }
 
-        for (String methodName : ct.methods.keySet()) {
-          System.out.println("  Method: " + methodName);
-          MethodMetadata mm = ct.methods.get(methodName);
+        for (MethodMetadata mm : ct.methods.values()) {
+          System.out.println("  Method: " + mm);
           for (String argName : mm.args.keySet()) {
             System.out.println("    Formal: " + mm.args.get(argName) + " " + argName);
           }

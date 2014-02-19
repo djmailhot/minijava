@@ -7,7 +7,7 @@ import java.util.Map;
 public class MethodMetadata {
 
   public VarType returnType;
-  public LinkedHashMap<String, VarType> args;
+  public LinkedHashMap<String, VarType> params;
   public Map<String, VarType> localVars;
 
   // For convenience when printing error messages
@@ -16,7 +16,7 @@ public class MethodMetadata {
 
   public MethodMetadata(VarType returnType, String name, int lineNumber) {
     this.returnType = returnType;
-    this.args = new LinkedHashMap<String, VarType>();
+    this.params = new LinkedHashMap<String, VarType>();
     this.localVars = new HashMap<String, VarType>();
     this.name = name;
     this.lineNumber = lineNumber;

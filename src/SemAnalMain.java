@@ -62,8 +62,8 @@ public class SemAnalMain {
 
         for (MethodMetadata mm : ct.methods.values()) {
           System.out.println("  Method: " + mm);
-          for (String argName : mm.args.keySet()) {
-            System.out.println("    Formal: " + mm.args.get(argName) + " " + argName);
+          for (String argName : mm.params.keySet()) {
+            System.out.println("    Formal: " + mm.params.get(argName) + " " + argName);
           }
 
           for (String localVar : mm.localVars.keySet()) {
@@ -103,13 +103,13 @@ public class SemAnalMain {
             MethodMetadata childMethod = child.methods.get(methodName);
             MethodMetadata parentMethod = parent.methods.get(methodName);
 
-            if (childMethod.args.size() != parentMethod.args.size()) {
+            if (childMethod.params.size() != parentMethod.params.size()) {
               ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
                   child.name, parent.name);
             }
 
-            Iterator<VarType> pArgs = parentMethod.args.values().iterator();
-            for (VarType cArg : childMethod.args.values()) {
+            Iterator<VarType> pArgs = parentMethod.params.values().iterator();
+            for (VarType cArg : childMethod.params.values()) {
               if (!cArg.equals(pArgs.next())) {
                 ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
                     child.name, parent.name);

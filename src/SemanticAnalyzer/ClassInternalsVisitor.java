@@ -17,13 +17,13 @@ public class ClassInternalsVisitor implements Visitor {
   private final Map<String, ClassVarType> classScope;
   private Map<String, VarType> localScope;
   private Map<String, MethodMetadata> methodScope;
-  private Map<String, VarType> argsScope;
+  private Map<String, VarType> paramsScope;
 
   public ClassInternalsVisitor(ProgramMetadata pm) {
     this.classScope = pm.classes;
     this.localScope = null;
     this.methodScope = null;
-    this.argsScope = null;
+    this.paramsScope = null;
   }
 
   /**
@@ -71,7 +71,7 @@ public class ClassInternalsVisitor implements Visitor {
   }
 
   // Identifier i1;  the class name
-  // Identifier i2;  args
+  // Identifier i2;  params
   // Statement s;
   public void visit(MainClass n) {
     String className = n.i1.s;
@@ -170,16 +170,22 @@ public class ClassInternalsVisitor implements Visitor {
 
     MethodMetadata mm = new MethodMetadata(returnType, methodName, lineNumber);
 
-    argsScope = mm.args;
+    paramsScope = mm.params;
     for (int i = 0; i < n.fl.size(); i++) {
       n.fl.get(i).accept(this);
     }
-    argsScope = null;
 
     localScope = mm.localVars;
     for (int i = 0; i < n.vl.size(); i++) {
-      n.vl.get(i).accept(this);
+      VarDecl vd = n.vl.get(i);
+      String localVar = vd.i.s;
+      // check whether any local var has the same name as a formal parameter
+      if (paramsScope.containsKey(localVar)) {
+        ErrorMessages.errDuplicateVariable(vd.getLineNumber(), localVar);
+      }
+      vd.accept(this);
     }
+    paramsScope = null;
     localScope = null;
 
     methodScope.put(methodName, mm);
@@ -195,12 +201,12 @@ public class ClassInternalsVisitor implements Visitor {
     VarType varType = deriveVarType(n.t, lineNumber);
 
     // check the name
-    if (argsScope.containsKey(varName)) {
+    if (paramsScope.containsKey(varName)) {
       // duplicate name
       ErrorMessages.errDuplicateVariable(lineNumber, varName);
     } else if (varType != null) {
       // its actually good!
-      argsScope.put(varName, varType);
+      paramsScope.put(varName, varType);
     } // forget about it and move on
   }
 

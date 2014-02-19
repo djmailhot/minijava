@@ -1,6 +1,6 @@
 package SemanticAnalyzer.SemanticTypes;
 
-public class DoubleArrayVarType extends VarType {
+public class DoubleArrayVarType extends PrimitiveVarType {
   private static DoubleArrayVarType singleton;
 
   private DoubleArrayVarType() {}

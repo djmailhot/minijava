@@ -23,4 +23,18 @@ public class ClassVarType extends VarType {
   public String toString() {
     return name;
   }
+
+  public boolean subtypeOrEqual(VarType o) {
+    if (o instanceof ClassVarType) {
+      ClassVarType co = (ClassVarType) o;
+      while (co != null) {
+        if (equals(co))
+          return true;
+        co = co.superclass;
+      }
+    }
+
+    return false;
+  }
+
 }

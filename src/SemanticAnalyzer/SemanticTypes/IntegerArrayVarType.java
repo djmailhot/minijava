@@ -1,6 +1,6 @@
 package SemanticAnalyzer.SemanticTypes;
 
-public class IntegerArrayVarType extends VarType {
+public class IntegerArrayVarType extends PrimitiveVarType {
   private static IntegerArrayVarType singleton;
 
   private IntegerArrayVarType() {}

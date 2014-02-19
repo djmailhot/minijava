@@ -116,7 +116,7 @@ public class SemAnalMain {
               }
             }
 
-            if (!childMethod.returnType.equals(parentMethod.returnType)) {
+            if (!childMethod.returnType.subtypeOrEqual(parentMethod.returnType)) {
               ErrorMessages.errInvalidOverride(child.lineNumber, methodName,
                   child.name, parent.name);
             }

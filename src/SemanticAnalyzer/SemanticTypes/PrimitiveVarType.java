@@ -2,7 +2,7 @@ package SemanticAnalyzer.SemanticTypes;
 
 public abstract class PrimitiveVarType extends VarType {
 
-  public boolean subtypeOrEqual(VarType o) {
+  public boolean supertypeOrEqual(VarType o) {
     return equals(o);
   }
 

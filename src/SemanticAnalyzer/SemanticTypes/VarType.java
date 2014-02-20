@@ -2,10 +2,10 @@ package SemanticAnalyzer.SemanticTypes;
 
 public abstract class VarType {
 
-  public abstract boolean subtypeOrEqual(VarType o);
-
-  public boolean supertypeOrEqual(VarType o) {
-    return o.subtypeOrEqual(this);
+  public boolean subtypeOrEqual(VarType o) {
+    return o.supertypeOrEqual(this);
   }
+
+  public abstract boolean supertypeOrEqual(VarType o);
 
 }

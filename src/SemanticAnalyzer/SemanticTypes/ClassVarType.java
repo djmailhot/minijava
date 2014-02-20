@@ -44,11 +44,7 @@ public class ClassVarType extends VarType {
     return method;
   }
 
-  public String toString() {
-    return name;
-  }
-
-  public boolean subtypeOrEqual(VarType o) {
+  public boolean supertypeOrEqual(VarType o) {
     if (o instanceof ClassVarType) {
       ClassVarType co = (ClassVarType) o;
       while (co != null) {
@@ -59,6 +55,10 @@ public class ClassVarType extends VarType {
     }
 
     return false;
+  }
+
+  public String toString() {
+    return name;
   }
 
 }

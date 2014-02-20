@@ -33,7 +33,7 @@ public class TypeCheckerVisitor implements Visitor {
   }
 
   private void assertSupertype(VarType expectedType, VarType actualType, int lineNum) {
-    if (!actualType.subtypeOrEqual(expectedType))
+    if (!expectedType.supertypeOrEqual(actualType))
       ErrorMessages.errIncompatibleTypes(lineNum, expectedType, actualType);
   }
 
@@ -401,7 +401,7 @@ public class TypeCheckerVisitor implements Visitor {
     Iterator<VarType> formals = method.params.values().iterator();
     for (int i = 0; i < n.el.size(); i++) {
       n.el.get(i).accept(this);
-      assertEqualType(formals.next(), evaluatedType, n.el.get(i).getLineNumber());
+      assertSupertype(formals.next(), evaluatedType, n.el.get(i).getLineNumber());
     }
 
     evaluatedType = method.returnType;

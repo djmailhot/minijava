@@ -52,6 +52,17 @@ public class TypeCheckerVisitor implements Visitor {
     return (t instanceof IntegerVarType) || (t instanceof DoubleVarType);
   }
 
+  private void checkNumericOperator(Exp e1, Exp e2, String operator) {
+    e1.accept(this);
+    VarType type1 = evaluatedType;
+
+    e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
+      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, type1, type2);
+  }
+
   // MainClass m;
   // ClassDeclList cl;
   public void visit(Program n) {
@@ -313,32 +324,27 @@ public class TypeCheckerVisitor implements Visitor {
 
   // Exp e1,e2;
   public void visit(Plus n) {
-    n.e1.accept(this);
-    n.e2.accept(this);
+    checkNumericOperator(n.e1, n.e2, "+");
   }
 
   // Exp e1,e2;
   public void visit(Minus n) {
-    n.e1.accept(this);
-    n.e2.accept(this);
+    checkNumericOperator(n.e1, n.e2, "-");
   }
 
   // Exp e1,e2;
   public void visit(Times n) {
-    n.e1.accept(this);
-    n.e2.accept(this);
+    checkNumericOperator(n.e1, n.e2, "*");
   }
 
   // Exp e1,e2;
   public void visit(Divide n) {
-    n.e1.accept(this);
-    n.e2.accept(this);
+    checkNumericOperator(n.e1, n.e2, "/");
   }
 
   // Exp e1,e2;
   public void visit(Modulo n) {
-    n.e1.accept(this);
-    n.e2.accept(this);
+    checkNumericOperator(n.e1, n.e2, "%");
   }
 
   // Exp e1,e2;

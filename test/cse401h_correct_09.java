@@ -47,8 +47,9 @@ class TestFunctions {
     return x / y;
   }
 
-  public boolean passedOneThroughSix(int a, int b, int c, int d, int e, int f) {
+  public int passedOneThroughSix(int a, int b, int c, int d, int e, int f) {
     boolean correct;
+    int ret;
 
     correct = true;
 
@@ -59,7 +60,12 @@ class TestFunctions {
     correct = correct && (e == 5);
     correct = correct && (f == 6);
 
-    return correct;
+    if (correct)
+      ret = 1;
+    else
+      ret = 0;
+
+    return ret;
   }
 
   public int nest1(int x) {

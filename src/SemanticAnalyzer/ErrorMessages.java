@@ -40,6 +40,6 @@ public class ErrorMessages {
   }
 
   public static void errInvalidPrintArgument(int lineNum, VarType actualType) {
-    printErrorMessage(lineNum, "Incompatible types. Required int or double, but found +"+actualType);
+    printErrorMessage(lineNum, "Incompatible types. Required int or double, but found "+actualType);
   }
 }

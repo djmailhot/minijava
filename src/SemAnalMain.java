@@ -76,6 +76,9 @@ public class SemAnalMain {
       // First verification:  verify method override relationships
       verifyOverrides(pm);
 
+      // Type check statements and expressions
+      program.accept(new TypeCheckerVisitor(pm));
+
       //
       // System.out.print("\n" + "Parsing completed");
       //

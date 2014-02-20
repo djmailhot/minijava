@@ -5,7 +5,7 @@ import SemanticAnalyzer.SemanticTypes.VarType;
 public class ErrorMessages {
 
   private static void printErrorMessage(int lineNum, String message) {
-    System.err.println("Line " + lineNum + ": " + message);
+    System.out.println("Line " + lineNum + ": " + message);
     System.exit(0);
   }
 

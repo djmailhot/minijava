@@ -1,5 +1,6 @@
 package SemanticAnalyzer;
 
+import SemanticAnalyzer.SemanticTypes.MethodMetadata;
 import SemanticAnalyzer.SemanticTypes.VarType;
 
 public class ErrorMessages {
@@ -41,5 +42,13 @@ public class ErrorMessages {
 
   public static void errInvalidPrintArgument(int lineNum, VarType actualType) {
     printErrorMessage(lineNum, "Incompatible types. Required int or double, but found "+actualType);
+  }
+
+  public static void errIllegalDereference(int lineNum, VarType type) {
+    printErrorMessage(lineNum, type+" cannot be dereferenced.");
+  }
+
+  public static void errArgListLength(int lineNum, VarType callee, MethodMetadata method) {
+    printErrorMessage(lineNum, "Method "+method+" in class "+callee+" cannot be applied with the given number of arguments.");
   }
 }

@@ -5,6 +5,7 @@
 
 package SemanticAnalyzer;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import AST.*;
@@ -366,10 +367,24 @@ public class TypeCheckerVisitor implements Visitor {
   // ExpList el;
   public void visit(Call n) {
     n.e.accept(this);
-    n.i.accept(this);
+    if (!(evaluatedType instanceof ClassVarType))
+      ErrorMessages.errIllegalDereference(n.getLineNumber(), evaluatedType);
+    ClassVarType callee = (ClassVarType) evaluatedType;
+
+    MethodMetadata method = callee.methods.get(n.i.s);
+    if (method == null)
+      ErrorMessages.errSymbolNotFound(n.i.getLineNumber(), n.i.s);
+
+    if (method.params.size() != n.el.size())
+      ErrorMessages.errArgListLength(n.el.getLineNumber(), callee, method);
+
+    Iterator<VarType> formals = method.params.values().iterator();
     for (int i = 0; i < n.el.size(); i++) {
       n.el.get(i).accept(this);
+      assertEqualType(formals.next(), evaluatedType, n.el.get(i).getLineNumber());
     }
+
+    evaluatedType = method.returnType;
   }
 
   // int i;

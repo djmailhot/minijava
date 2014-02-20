@@ -194,25 +194,61 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e1,e2;
   public void visit(ShortCircuitAnd n) {
     n.e1.accept(this);
+    VarType type1 = evaluatedType;
+
     n.e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (!(type1 instanceof BooleanVarType) || !(type2 instanceof BooleanVarType))
+      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "&&", type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // Exp e1,e2;
   public void visit(ShortCircuitOr n) {
     n.e1.accept(this);
+    VarType type1 = evaluatedType;
+
     n.e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (!(type1 instanceof BooleanVarType) || !(type2 instanceof BooleanVarType))
+      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "&&", type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // Exp e1,e2;
   public void visit(Equal n) {
     n.e1.accept(this);
+    VarType type1 = evaluatedType;
+
     n.e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (type1 instanceof PrimitiveVarType)
+      assertEqualType(type1, type2, n.getLineNumber());
+    else if (!type1.subtypeOrEqual(type2) && !type2.subtypeOrEqual(type1))
+      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "==", type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // Exp e1,e2;
   public void visit(NotEqual n) {
     n.e1.accept(this);
+    VarType type1 = evaluatedType;
+
     n.e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (type1 instanceof PrimitiveVarType)
+      assertEqualType(type1, type2, n.getLineNumber());
+    else if (!type1.subtypeOrEqual(type2) && !type2.subtypeOrEqual(type1))
+      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "!=", type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // Exp e1,e2;

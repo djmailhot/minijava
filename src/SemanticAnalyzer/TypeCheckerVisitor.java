@@ -365,43 +365,72 @@ public class TypeCheckerVisitor implements Visitor {
 
   // int i;
   public void visit(IntegerLiteral n) {
+    evaluatedType = IntegerVarType.singleton();
   }
 
   public void visit(DoubleLiteral n) {
+    evaluatedType = DoubleVarType.singleton();
   }
 
   public void visit(True n) {
+    evaluatedType = BooleanVarType.singleton();
   }
 
   public void visit(False n) {
+    evaluatedType = BooleanVarType.singleton();
   }
 
   public void visit(IdentifierExp n) {
+    VarType type = currentMethod.localVars.get(n.s);
+
+    if (type == null)
+      type = currentMethod.params.get(n.s);
+
+    if (type == null)
+      ErrorMessages.errSymbolNotFound(n.getLineNumber(), n.s);
+
+    evaluatedType = type;
   }
 
   public void visit(ConstantExp n) {
+    evaluatedType = IntegerVarType.singleton();
   }
 
   public void visit(This n) {
+    evaluatedType = currentClass;
   }
 
   // Exp e;
   public void visit(NewIntArray n) {
     n.e.accept(this);
+    assertEqualType(IntegerVarType.singleton(), evaluatedType, n.getLineNumber());
+
+    evaluatedType = IntegerArrayVarType.singleton();
   }
 
   // Exp e;
   public void visit(NewDoubleArray n) {
     n.e.accept(this);
+    assertEqualType(IntegerVarType.singleton(), evaluatedType, n.getLineNumber());
+
+    evaluatedType = DoubleArrayVarType.singleton();
   }
 
   // Identifier i;
   public void visit(NewObject n) {
+    ClassVarType objectType = classes.get(n.i.s);
+    if (objectType == null)
+      ErrorMessages.errSymbolNotFound(n.getLineNumber(), n.i.s);
+
+    evaluatedType = objectType;
   }
 
   // Exp e;
   public void visit(Not n) {
     n.e.accept(this);
+    assertEqualType(BooleanVarType.singleton(), evaluatedType, n.getLineNumber());
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   public void visit(Identifier n) {}

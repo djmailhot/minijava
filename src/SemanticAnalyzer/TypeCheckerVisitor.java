@@ -48,6 +48,10 @@ public class TypeCheckerVisitor implements Visitor {
     return type;
   }
 
+  private boolean isNumber(VarType t) {
+    return (t instanceof IntegerVarType) || (t instanceof DoubleVarType);
+  }
+
   // MainClass m;
   // ClassDeclList cl;
   public void visit(Program n) {
@@ -164,7 +168,7 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e;
   public void visit(Print n) {
     n.e.accept(this);
-    if (!(evaluatedType instanceof IntegerVarType) && !(evaluatedType instanceof DoubleVarType))
+    if (!isNumber(evaluatedType))
       ErrorMessages.errInvalidPrintArgument(n.getLineNumber(), evaluatedType);
   }
 
@@ -254,25 +258,57 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e1,e2;
   public void visit(LessThan n) {
     n.e1.accept(this);
+    VarType type1 = evaluatedType;
+
     n.e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
+      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "<", type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // Exp e1,e2;
   public void visit(GreaterThan n) {
     n.e1.accept(this);
+    VarType type1 = evaluatedType;
+
     n.e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
+      ErrorMessages.errBadOperandTypes(n.getLineNumber(), ">", type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // Exp e1,e2;
   public void visit(LessEqual n) {
     n.e1.accept(this);
+    VarType type1 = evaluatedType;
+
     n.e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
+      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "<=", type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // Exp e1,e2;
   public void visit(GreaterEqual n) {
     n.e1.accept(this);
+    VarType type1 = evaluatedType;
+
     n.e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
+      ErrorMessages.errBadOperandTypes(n.getLineNumber(), ">=", type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // Exp e1,e2;

@@ -51,4 +51,8 @@ public class ErrorMessages {
   public static void errArgListLength(int lineNum, VarType callee, MethodMetadata method) {
     printErrorMessage(lineNum, "Method "+method+" in class "+callee+" cannot be applied with the given number of arguments.");
   }
+
+  public static void errIllegalArrayLookup(int lineNum, VarType type) {
+    printErrorMessage(lineNum, "Array required, but "+type+" found");
+  }
 }

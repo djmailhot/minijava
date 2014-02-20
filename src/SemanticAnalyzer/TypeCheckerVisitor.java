@@ -201,13 +201,18 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e1,e2;
   public void visit(ArrayAssign n) {
     n.i.accept(this);
-    VarType expectedType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
+    VarType arrayType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
+    if (!(arrayType instanceof IntegerArrayVarType) && !(arrayType instanceof DoubleArrayVarType))
+      ErrorMessages.errIllegalArrayLookup(n.i.getLineNumber(), arrayType);
 
     n.e1.accept(this);
     assertEqualType(IntegerVarType.singleton(), evaluatedType, n.e1.getLineNumber());
 
     n.e2.accept(this);
-    assertEqualType(expectedType, evaluatedType, n.e2.getLineNumber());
+    if (arrayType instanceof IntegerArrayVarType)
+      assertEqualType(IntegerVarType.singleton(), evaluatedType, n.e2.getLineNumber());
+    else
+      assertEqualType(DoubleVarType.singleton(), evaluatedType, n.e2.getLineNumber());
   }
 
   // Exp e1,e2;
@@ -354,12 +359,27 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e1,e2;
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
+    VarType arrayType = evaluatedType;
+    if (!(arrayType instanceof IntegerArrayVarType) && !(arrayType instanceof DoubleArrayVarType))
+      ErrorMessages.errIllegalArrayLookup(n.e1.getLineNumber(), arrayType);
+
     n.e2.accept(this);
+    assertEqualType(IntegerVarType.singleton(), evaluatedType, n.e2.getLineNumber());
+
+    if (arrayType instanceof IntegerArrayVarType)
+      evaluatedType = IntegerVarType.singleton();
+    else
+      evaluatedType = DoubleVarType.singleton();
   }
 
   // Exp e;
   public void visit(ArrayLength n) {
     n.e.accept(this);
+    VarType arrayType = evaluatedType;
+    if (!(arrayType instanceof IntegerArrayVarType) && !(arrayType instanceof DoubleArrayVarType))
+      ErrorMessages.errIllegalArrayLookup(n.e.getLineNumber(), arrayType);
+
+    evaluatedType = IntegerVarType.singleton();
   }
 
   // Exp e;

@@ -36,14 +36,17 @@ public class TypeCheckerVisitor implements Visitor {
       ErrorMessages.errIncompatibleTypes(lineNum, expectedType, actualType);
   }
 
-  private VarType getTypeOfVariable(Identifier i) {
-    VarType type = currentMethod.localVars.get(i.s);
+  private VarType getTypeOfVariable(String id, int lineNum) {
+    VarType type = currentClass.fields.get(id);
 
     if (type == null)
-      type = currentMethod.params.get(i.s);
+      type = currentMethod.localVars.get(id);
 
     if (type == null)
-      ErrorMessages.errSymbolNotFound(i.getLineNumber(), i.s);
+      type = currentMethod.params.get(id);
+
+    if (type == null)
+      ErrorMessages.errSymbolNotFound(lineNum, id);
 
     return type;
   }
@@ -187,7 +190,7 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e;
   public void visit(Assign n) {
     n.i.accept(this);
-    VarType expectedType = getTypeOfVariable(n.i);
+    VarType expectedType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
 
     n.e.accept(this);
     assertSupertype(expectedType, evaluatedType, n.getLineNumber());
@@ -197,7 +200,7 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e1,e2;
   public void visit(ArrayAssign n) {
     n.i.accept(this);
-    VarType expectedType = getTypeOfVariable(n.i);
+    VarType expectedType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
 
     n.e1.accept(this);
     assertEqualType(IntegerVarType.singleton(), evaluatedType, n.e1.getLineNumber());
@@ -387,15 +390,7 @@ public class TypeCheckerVisitor implements Visitor {
   }
 
   public void visit(IdentifierExp n) {
-    VarType type = currentMethod.localVars.get(n.s);
-
-    if (type == null)
-      type = currentMethod.params.get(n.s);
-
-    if (type == null)
-      ErrorMessages.errSymbolNotFound(n.getLineNumber(), n.s);
-
-    evaluatedType = type;
+    evaluatedType = getTypeOfVariable(n.s, n.getLineNumber());
   }
 
   public void visit(ConstantExp n) {

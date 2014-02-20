@@ -56,6 +56,34 @@ public class TypeCheckerVisitor implements Visitor {
     return (t instanceof IntegerVarType) || (t instanceof DoubleVarType);
   }
 
+  private void checkBooleanOperator(Exp e1, Exp e2, String operator) {
+    e1.accept(this);
+    VarType type1 = evaluatedType;
+
+    e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (!(type1 instanceof BooleanVarType) || !(type2 instanceof BooleanVarType))
+      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
+  }
+
+  private void checkEqualityOperator(Exp e1, Exp e2, String operator) {
+    e1.accept(this);
+    VarType type1 = evaluatedType;
+
+    e2.accept(this);
+    VarType type2 = evaluatedType;
+
+    if (type1 instanceof PrimitiveVarType)
+      assertEqualType(type1, type2, e1.getLineNumber());
+    else if (!type1.subtypeOrEqual(type2) && !type2.subtypeOrEqual(type1))
+      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, type1, type2);
+
+    evaluatedType = BooleanVarType.singleton();
+  }
+
   private void checkNumericOperator(Exp e1, Exp e2, String operator) {
     e1.accept(this);
     VarType type1 = evaluatedType;
@@ -65,6 +93,11 @@ public class TypeCheckerVisitor implements Visitor {
 
     if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
       ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, type1, type2);
+}
+
+  private void checkComparisonOperator(Exp e1, Exp e2, String operator) {
+    checkNumericOperator(e1, e2, operator);
+    evaluatedType = BooleanVarType.singleton();
   }
 
   // MainClass m;
@@ -217,118 +250,42 @@ public class TypeCheckerVisitor implements Visitor {
 
   // Exp e1,e2;
   public void visit(ShortCircuitAnd n) {
-    n.e1.accept(this);
-    VarType type1 = evaluatedType;
-
-    n.e2.accept(this);
-    VarType type2 = evaluatedType;
-
-    if (!(type1 instanceof BooleanVarType) || !(type2 instanceof BooleanVarType))
-      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "&&", type1, type2);
-
-    evaluatedType = BooleanVarType.singleton();
+    checkBooleanOperator(n.e1, n.e2, "&&");
   }
 
   // Exp e1,e2;
   public void visit(ShortCircuitOr n) {
-    n.e1.accept(this);
-    VarType type1 = evaluatedType;
-
-    n.e2.accept(this);
-    VarType type2 = evaluatedType;
-
-    if (!(type1 instanceof BooleanVarType) || !(type2 instanceof BooleanVarType))
-      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "&&", type1, type2);
-
-    evaluatedType = BooleanVarType.singleton();
+    checkBooleanOperator(n.e1, n.e2, "||");
   }
 
   // Exp e1,e2;
   public void visit(Equal n) {
-    n.e1.accept(this);
-    VarType type1 = evaluatedType;
-
-    n.e2.accept(this);
-    VarType type2 = evaluatedType;
-
-    if (type1 instanceof PrimitiveVarType)
-      assertEqualType(type1, type2, n.getLineNumber());
-    else if (!type1.subtypeOrEqual(type2) && !type2.subtypeOrEqual(type1))
-      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "==", type1, type2);
-
-    evaluatedType = BooleanVarType.singleton();
+    checkEqualityOperator(n.e1, n.e2, "==");
   }
 
   // Exp e1,e2;
   public void visit(NotEqual n) {
-    n.e1.accept(this);
-    VarType type1 = evaluatedType;
-
-    n.e2.accept(this);
-    VarType type2 = evaluatedType;
-
-    if (type1 instanceof PrimitiveVarType)
-      assertEqualType(type1, type2, n.getLineNumber());
-    else if (!type1.subtypeOrEqual(type2) && !type2.subtypeOrEqual(type1))
-      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "!=", type1, type2);
-
-    evaluatedType = BooleanVarType.singleton();
+    checkEqualityOperator(n.e1, n.e2, "!=");
   }
 
   // Exp e1,e2;
   public void visit(LessThan n) {
-    n.e1.accept(this);
-    VarType type1 = evaluatedType;
-
-    n.e2.accept(this);
-    VarType type2 = evaluatedType;
-
-    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
-      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "<", type1, type2);
-
-    evaluatedType = BooleanVarType.singleton();
+    checkComparisonOperator(n.e1, n.e2, "<");
   }
 
   // Exp e1,e2;
   public void visit(GreaterThan n) {
-    n.e1.accept(this);
-    VarType type1 = evaluatedType;
-
-    n.e2.accept(this);
-    VarType type2 = evaluatedType;
-
-    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
-      ErrorMessages.errBadOperandTypes(n.getLineNumber(), ">", type1, type2);
-
-    evaluatedType = BooleanVarType.singleton();
+    checkComparisonOperator(n.e1, n.e2, ">");
   }
 
   // Exp e1,e2;
   public void visit(LessEqual n) {
-    n.e1.accept(this);
-    VarType type1 = evaluatedType;
-
-    n.e2.accept(this);
-    VarType type2 = evaluatedType;
-
-    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
-      ErrorMessages.errBadOperandTypes(n.getLineNumber(), "<=", type1, type2);
-
-    evaluatedType = BooleanVarType.singleton();
+    checkComparisonOperator(n.e1, n.e2, "<=");
   }
 
   // Exp e1,e2;
   public void visit(GreaterEqual n) {
-    n.e1.accept(this);
-    VarType type1 = evaluatedType;
-
-    n.e2.accept(this);
-    VarType type2 = evaluatedType;
-
-    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
-      ErrorMessages.errBadOperandTypes(n.getLineNumber(), ">=", type1, type2);
-
-    evaluatedType = BooleanVarType.singleton();
+    checkComparisonOperator(n.e1, n.e2, ">=");
   }
 
   // Exp e1,e2;

@@ -38,7 +38,7 @@ public class TypeCheckerVisitor implements Visitor {
   }
 
   private VarType getTypeOfVariable(String id, int lineNum) {
-    VarType type = currentClass.fields.get(id);
+    VarType type = currentClass.getFieldType(id);
 
     if (type == null)
       type = currentMethod.localVars.get(id);
@@ -371,7 +371,7 @@ public class TypeCheckerVisitor implements Visitor {
       ErrorMessages.errIllegalDereference(n.getLineNumber(), evaluatedType);
     ClassVarType callee = (ClassVarType) evaluatedType;
 
-    MethodMetadata method = callee.methods.get(n.i.s);
+    MethodMetadata method = callee.getMethod(n.i.s);
     if (method == null)
       ErrorMessages.errSymbolNotFound(n.i.getLineNumber(), n.i.s);
 

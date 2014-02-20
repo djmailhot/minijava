@@ -20,6 +20,30 @@ public class ClassVarType extends VarType {
     this.lineNumber = lineNumber;
   }
 
+  public VarType getFieldType(String name) {
+    ClassVarType currentClass = this;
+    VarType field = null;
+
+    while (currentClass != null && field == null) {
+      field = currentClass.fields.get(name);
+      currentClass = currentClass.superclass;
+    }
+
+    return field;
+  }
+
+  public MethodMetadata getMethod(String name) {
+    ClassVarType currentClass = this;
+    MethodMetadata method = null;
+
+    while (currentClass != null && method == null) {
+      method = currentClass.methods.get(name);
+      currentClass = currentClass.superclass;
+    }
+
+    return method;
+  }
+
   public String toString() {
     return name;
   }

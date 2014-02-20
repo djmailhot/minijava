@@ -68,6 +68,8 @@ import java_cup.runtime.Symbol;
         return "EXTENDS";
       case sym.NEW:
         return "NEW";
+      case sym.THIS:
+        return "THIS";
       case sym.PUBLIC:
         return "PUBLIC";
       case sym.MAIN:
@@ -162,6 +164,7 @@ intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 "class" { return symbol(sym.CLASS); }
 "extends" { return symbol(sym.EXTENDS); }
 "new" { return symbol(sym.NEW); }
+"this" { return symbol(sym.THIS); }
 
 "public" { return symbol(sym.PUBLIC); }
 "static" { return symbol(sym.STATIC); }

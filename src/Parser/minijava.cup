@@ -118,6 +118,7 @@ terminal PRINT;
 terminal CLASS;
 terminal EXTENDS;
 terminal NEW;
+terminal THIS;
 
 terminal PUBLIC;
 terminal STATIC;
@@ -429,6 +430,9 @@ ExpressionList ::=
 Expression    ::=
           IDENTIFIER:name
             {: RESULT = new IdentifierExp(name, nameleft); :}
+
+        | THIS:t
+            {: RESULT = new This(tleft); :}
 
         | TRUE:t
             {: RESULT = new True(tleft); :}

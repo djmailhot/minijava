@@ -52,6 +52,10 @@ public class TypeCheckerVisitor implements Visitor {
     return (t == Primitive.INT) || (t == Primitive.DOUBLE);
   }
 
+  private boolean isArray(VarType t) {
+    return (t == Primitive.INT_ARRAY || t == Primitive.DOUBLE_ARRAY);
+  }
+
   private VarType evalBooleanOperator(Exp e1, Exp e2, String operator) {
     e1.accept(this);
     e2.accept(this);
@@ -224,7 +228,7 @@ public class TypeCheckerVisitor implements Visitor {
   public void visit(ArrayAssign n) {
     n.i.accept(this);
     VarType arrayType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
-    if (arrayType != Primitive.INT_ARRAY && arrayType != Primitive.DOUBLE_ARRAY)
+    if (!isArray(arrayType))
       ErrorMessages.errIllegalArrayLookup(n.i.getLineNumber(), arrayType);
 
     n.e1.accept(this);
@@ -306,7 +310,7 @@ public class TypeCheckerVisitor implements Visitor {
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
     VarType arrayType = n.e1.type;
-    if (arrayType != Primitive.INT_ARRAY && arrayType != Primitive.DOUBLE_ARRAY)
+    if (!isArray(arrayType))
       ErrorMessages.errIllegalArrayLookup(n.e1.getLineNumber(), arrayType);
 
     n.e2.accept(this);
@@ -322,7 +326,7 @@ public class TypeCheckerVisitor implements Visitor {
   public void visit(ArrayLength n) {
     n.e.accept(this);
     VarType arrayType = n.e.type;
-    if (arrayType != Primitive.INT_ARRAY && arrayType != Primitive.DOUBLE_ARRAY)
+    if (!isArray(arrayType))
       ErrorMessages.errIllegalArrayLookup(n.e.getLineNumber(), arrayType);
 
     n.type = Primitive.INT;

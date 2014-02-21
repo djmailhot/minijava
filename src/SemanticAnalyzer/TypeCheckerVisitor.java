@@ -49,36 +49,36 @@ public class TypeCheckerVisitor implements Visitor {
   }
 
   private boolean isNumber(VarType t) {
-    return (t instanceof IntegerVarType) || (t instanceof DoubleVarType);
+    return (t == Primitive.INT) || (t == Primitive.DOUBLE);
   }
 
   private VarType evalBooleanOperator(Exp e1, Exp e2, String operator) {
     e1.accept(this);
     e2.accept(this);
 
-    if (!(e1.type instanceof BooleanVarType) || !(e2.type instanceof BooleanVarType))
+    if (!(e1.type == Primitive.BOOLEAN) || !(e2.type == Primitive.BOOLEAN))
       ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, e1.type, e2.type);
 
-    return BooleanVarType.singleton();
+    return Primitive.BOOLEAN;
   }
 
   private VarType evalEqualityOperator(Exp e1, Exp e2, String operator) {
     e1.accept(this);
     e2.accept(this);
 
-    if (e1.type instanceof PrimitiveVarType)
+    if (e1.type instanceof Primitive)
       assertEqualType(e1.type, e2.type, e1.getLineNumber());
     else if (!e1.type.subtypeOrEqual(e2.type) && !e2.type.subtypeOrEqual(e1.type))
       ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, e1.type, e2.type);
 
-    return BooleanVarType.singleton();
+    return Primitive.BOOLEAN;
   }
 
   private VarType evalNumericOperator(Exp e1, Exp e2, String operator) {
     e1.accept(this);
     e2.accept(this);
 
-    if (!isNumber(e1.type) || !isNumber(e2.type) || !e1.type.equals(e2.type))
+    if (!isNumber(e1.type) || !isNumber(e2.type) || e1.type != e2.type)
       ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, e1.type, e2.type);
 
     return e1.type;
@@ -86,7 +86,7 @@ public class TypeCheckerVisitor implements Visitor {
 
   private VarType evalComparisonOperator(Exp e1, Exp e2, String operator) {
     evalNumericOperator(e1, e2, operator);
-    return BooleanVarType.singleton();
+    return Primitive.BOOLEAN;
   }
 
   // MainClass m;
@@ -187,7 +187,7 @@ public class TypeCheckerVisitor implements Visitor {
   // Statement s1,s2;
   public void visit(If n) {
     n.e.accept(this);
-    assertEqualType(BooleanVarType.singleton(), n.e.type, n.getLineNumber());
+    assertEqualType(Primitive.BOOLEAN, n.e.type, n.getLineNumber());
 
     n.s1.accept(this);
     n.s2.accept(this);
@@ -197,7 +197,7 @@ public class TypeCheckerVisitor implements Visitor {
   // Statement s;
   public void visit(While n) {
     n.e.accept(this);
-    assertEqualType(BooleanVarType.singleton(), n.e.type, n.getLineNumber());
+    assertEqualType(Primitive.BOOLEAN, n.e.type, n.getLineNumber());
 
     n.s.accept(this);
   }
@@ -224,17 +224,17 @@ public class TypeCheckerVisitor implements Visitor {
   public void visit(ArrayAssign n) {
     n.i.accept(this);
     VarType arrayType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
-    if (!(arrayType instanceof IntegerArrayVarType) && !(arrayType instanceof DoubleArrayVarType))
+    if (arrayType != Primitive.INT_ARRAY && arrayType != Primitive.DOUBLE_ARRAY)
       ErrorMessages.errIllegalArrayLookup(n.i.getLineNumber(), arrayType);
 
     n.e1.accept(this);
-    assertEqualType(IntegerVarType.singleton(), n.e1.type, n.e1.getLineNumber());
+    assertEqualType(Primitive.INT, n.e1.type, n.e1.getLineNumber());
 
     n.e2.accept(this);
-    if (arrayType instanceof IntegerArrayVarType)
-      assertEqualType(IntegerVarType.singleton(), n.e2.type, n.e2.getLineNumber());
+    if (arrayType == Primitive.INT_ARRAY)
+      assertEqualType(Primitive.INT, n.e2.type, n.e2.getLineNumber());
     else
-      assertEqualType(DoubleVarType.singleton(), n.e2.type, n.e2.getLineNumber());
+      assertEqualType(Primitive.DOUBLE, n.e2.type, n.e2.getLineNumber());
   }
 
   // Exp e1,e2;
@@ -306,26 +306,26 @@ public class TypeCheckerVisitor implements Visitor {
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
     VarType arrayType = n.e1.type;
-    if (!(arrayType instanceof IntegerArrayVarType) && !(arrayType instanceof DoubleArrayVarType))
+    if (arrayType != Primitive.INT_ARRAY && arrayType != Primitive.DOUBLE_ARRAY)
       ErrorMessages.errIllegalArrayLookup(n.e1.getLineNumber(), arrayType);
 
     n.e2.accept(this);
-    assertEqualType(IntegerVarType.singleton(), n.e2.type, n.e2.getLineNumber());
+    assertEqualType(Primitive.INT, n.e2.type, n.e2.getLineNumber());
 
-    if (arrayType instanceof IntegerArrayVarType)
-      n.type = IntegerVarType.singleton();
+    if (arrayType == Primitive.INT_ARRAY)
+      n.type = Primitive.INT;
     else
-      n.type = DoubleVarType.singleton();
+      n.type = Primitive.DOUBLE;
   }
 
   // Exp e;
   public void visit(ArrayLength n) {
     n.e.accept(this);
     VarType arrayType = n.e.type;
-    if (!(arrayType instanceof IntegerArrayVarType) && !(arrayType instanceof DoubleArrayVarType))
+    if (arrayType != Primitive.INT_ARRAY && arrayType != Primitive.DOUBLE_ARRAY)
       ErrorMessages.errIllegalArrayLookup(n.e.getLineNumber(), arrayType);
 
-    n.type = IntegerVarType.singleton();
+    n.type = Primitive.INT;
   }
 
   // Exp e;
@@ -355,19 +355,19 @@ public class TypeCheckerVisitor implements Visitor {
 
   // int i;
   public void visit(IntegerLiteral n) {
-    n.type = IntegerVarType.singleton();
+    n.type = Primitive.INT;
   }
 
   public void visit(DoubleLiteral n) {
-    n.type = DoubleVarType.singleton();
+    n.type = Primitive.DOUBLE;
   }
 
   public void visit(True n) {
-    n.type = BooleanVarType.singleton();
+    n.type = Primitive.BOOLEAN;
   }
 
   public void visit(False n) {
-    n.type = BooleanVarType.singleton();
+    n.type = Primitive.BOOLEAN;
   }
 
   public void visit(IdentifierExp n) {
@@ -375,7 +375,7 @@ public class TypeCheckerVisitor implements Visitor {
   }
 
   public void visit(ConstantExp n) {
-    n.type = IntegerVarType.singleton();
+    n.type = Primitive.INT;
   }
 
   public void visit(This n) {
@@ -385,17 +385,17 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e;
   public void visit(NewIntArray n) {
     n.e.accept(this);
-    assertEqualType(IntegerVarType.singleton(), n.e.type, n.getLineNumber());
+    assertEqualType(Primitive.INT, n.e.type, n.getLineNumber());
 
-    n.type = IntegerArrayVarType.singleton();
+    n.type = Primitive.INT_ARRAY;
   }
 
   // Exp e;
   public void visit(NewDoubleArray n) {
     n.e.accept(this);
-    assertEqualType(IntegerVarType.singleton(), n.e.type, n.getLineNumber());
+    assertEqualType(Primitive.INT, n.e.type, n.getLineNumber());
 
-    n.type = DoubleArrayVarType.singleton();
+    n.type = Primitive.DOUBLE_ARRAY;
   }
 
   // Identifier i;
@@ -410,9 +410,9 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e;
   public void visit(Not n) {
     n.e.accept(this);
-    assertEqualType(BooleanVarType.singleton(), n.e.type, n.getLineNumber());
+    assertEqualType(Primitive.BOOLEAN, n.e.type, n.getLineNumber());
 
-    n.type = BooleanVarType.singleton();
+    n.type = Primitive.BOOLEAN;
   }
 
   public void visit(Identifier n) {}

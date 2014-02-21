@@ -7,7 +7,7 @@ public class ErrorMessages {
 
   private static void printErrorMessage(int lineNum, String message) {
     System.out.println("Line " + lineNum + ": " + message);
-    System.exit(0);
+    System.exit(1);
   }
 
   public static void errDuplicateClass(int lineNum, String name) {

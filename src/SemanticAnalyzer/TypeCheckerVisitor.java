@@ -19,10 +19,6 @@ public class TypeCheckerVisitor implements Visitor {
   private ClassVarType currentClass;
   private MethodMetadata currentMethod;
 
-  /** Contains the type evaluated by an invocation of visit().
-   *  This lets us avoid implementing a new Visitor that returns a VarType. */
-  private VarType evaluatedType;
-
   public TypeCheckerVisitor(ProgramMetadata pm) {
     this.classes = pm.classes;
   }
@@ -56,48 +52,41 @@ public class TypeCheckerVisitor implements Visitor {
     return (t instanceof IntegerVarType) || (t instanceof DoubleVarType);
   }
 
-  private void checkBooleanOperator(Exp e1, Exp e2, String operator) {
+  private VarType evalBooleanOperator(Exp e1, Exp e2, String operator) {
     e1.accept(this);
-    VarType type1 = evaluatedType;
-
     e2.accept(this);
-    VarType type2 = evaluatedType;
 
-    if (!(type1 instanceof BooleanVarType) || !(type2 instanceof BooleanVarType))
-      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, type1, type2);
+    if (!(e1.type instanceof BooleanVarType) || !(e2.type instanceof BooleanVarType))
+      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, e1.type, e2.type);
 
-    evaluatedType = BooleanVarType.singleton();
+    return BooleanVarType.singleton();
   }
 
-  private void checkEqualityOperator(Exp e1, Exp e2, String operator) {
+  private VarType evalEqualityOperator(Exp e1, Exp e2, String operator) {
     e1.accept(this);
-    VarType type1 = evaluatedType;
-
     e2.accept(this);
-    VarType type2 = evaluatedType;
 
-    if (type1 instanceof PrimitiveVarType)
-      assertEqualType(type1, type2, e1.getLineNumber());
-    else if (!type1.subtypeOrEqual(type2) && !type2.subtypeOrEqual(type1))
-      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, type1, type2);
+    if (e1.type instanceof PrimitiveVarType)
+      assertEqualType(e1.type, e2.type, e1.getLineNumber());
+    else if (!e1.type.subtypeOrEqual(e2.type) && !e2.type.subtypeOrEqual(e1.type))
+      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, e1.type, e2.type);
 
-    evaluatedType = BooleanVarType.singleton();
+    return BooleanVarType.singleton();
   }
 
-  private void checkNumericOperator(Exp e1, Exp e2, String operator) {
+  private VarType evalNumericOperator(Exp e1, Exp e2, String operator) {
     e1.accept(this);
-    VarType type1 = evaluatedType;
-
     e2.accept(this);
-    VarType type2 = evaluatedType;
 
-    if (!isNumber(type1) || !isNumber(type2) || !type1.equals(type2))
-      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, type1, type2);
+    if (!isNumber(e1.type) || !isNumber(e2.type) || !e1.type.equals(e2.type))
+      ErrorMessages.errBadOperandTypes(e1.getLineNumber(), operator, e1.type, e2.type);
+
+    return e1.type;
 }
 
-  private void checkComparisonOperator(Exp e1, Exp e2, String operator) {
-    checkNumericOperator(e1, e2, operator);
-    evaluatedType = BooleanVarType.singleton();
+  private VarType evalComparisonOperator(Exp e1, Exp e2, String operator) {
+    evalNumericOperator(e1, e2, operator);
+    return BooleanVarType.singleton();
   }
 
   // MainClass m;
@@ -176,7 +165,7 @@ public class TypeCheckerVisitor implements Visitor {
       n.sl.get(i).accept(this);
     }
     n.e.accept(this);
-    assertSupertype(currentMethod.returnType, evaluatedType, n.e.getLineNumber());
+    assertSupertype(currentMethod.returnType, n.e.type, n.e.getLineNumber());
     currentMethod = null;
   }
 
@@ -198,7 +187,7 @@ public class TypeCheckerVisitor implements Visitor {
   // Statement s1,s2;
   public void visit(If n) {
     n.e.accept(this);
-    assertEqualType(BooleanVarType.singleton(), evaluatedType, n.getLineNumber());
+    assertEqualType(BooleanVarType.singleton(), n.e.type, n.getLineNumber());
 
     n.s1.accept(this);
     n.s2.accept(this);
@@ -208,7 +197,7 @@ public class TypeCheckerVisitor implements Visitor {
   // Statement s;
   public void visit(While n) {
     n.e.accept(this);
-    assertEqualType(BooleanVarType.singleton(), evaluatedType, n.getLineNumber());
+    assertEqualType(BooleanVarType.singleton(), n.e.type, n.getLineNumber());
 
     n.s.accept(this);
   }
@@ -216,8 +205,8 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e;
   public void visit(Print n) {
     n.e.accept(this);
-    if (!isNumber(evaluatedType))
-      ErrorMessages.errInvalidPrintArgument(n.getLineNumber(), evaluatedType);
+    if (!isNumber(n.e.type))
+      ErrorMessages.errInvalidPrintArgument(n.getLineNumber(), n.e.type);
   }
 
   // Identifier i;
@@ -227,7 +216,7 @@ public class TypeCheckerVisitor implements Visitor {
     VarType expectedType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
 
     n.e.accept(this);
-    assertSupertype(expectedType, evaluatedType, n.getLineNumber());
+    assertSupertype(expectedType, n.e.type, n.getLineNumber());
   }
 
   // Identifier i;
@@ -239,104 +228,104 @@ public class TypeCheckerVisitor implements Visitor {
       ErrorMessages.errIllegalArrayLookup(n.i.getLineNumber(), arrayType);
 
     n.e1.accept(this);
-    assertEqualType(IntegerVarType.singleton(), evaluatedType, n.e1.getLineNumber());
+    assertEqualType(IntegerVarType.singleton(), n.e1.type, n.e1.getLineNumber());
 
     n.e2.accept(this);
     if (arrayType instanceof IntegerArrayVarType)
-      assertEqualType(IntegerVarType.singleton(), evaluatedType, n.e2.getLineNumber());
+      assertEqualType(IntegerVarType.singleton(), n.e2.type, n.e2.getLineNumber());
     else
-      assertEqualType(DoubleVarType.singleton(), evaluatedType, n.e2.getLineNumber());
+      assertEqualType(DoubleVarType.singleton(), n.e2.type, n.e2.getLineNumber());
   }
 
   // Exp e1,e2;
   public void visit(ShortCircuitAnd n) {
-    checkBooleanOperator(n.e1, n.e2, "&&");
+    n.type = evalBooleanOperator(n.e1, n.e2, "&&");
   }
 
   // Exp e1,e2;
   public void visit(ShortCircuitOr n) {
-    checkBooleanOperator(n.e1, n.e2, "||");
+    n.type = evalBooleanOperator(n.e1, n.e2, "||");
   }
 
   // Exp e1,e2;
   public void visit(Equal n) {
-    checkEqualityOperator(n.e1, n.e2, "==");
+    n.type = evalEqualityOperator(n.e1, n.e2, "==");
   }
 
   // Exp e1,e2;
   public void visit(NotEqual n) {
-    checkEqualityOperator(n.e1, n.e2, "!=");
+    n.type = evalEqualityOperator(n.e1, n.e2, "!=");
   }
 
   // Exp e1,e2;
   public void visit(LessThan n) {
-    checkComparisonOperator(n.e1, n.e2, "<");
+    n.type = evalComparisonOperator(n.e1, n.e2, "<");
   }
 
   // Exp e1,e2;
   public void visit(GreaterThan n) {
-    checkComparisonOperator(n.e1, n.e2, ">");
+    n.type = evalComparisonOperator(n.e1, n.e2, ">");
   }
 
   // Exp e1,e2;
   public void visit(LessEqual n) {
-    checkComparisonOperator(n.e1, n.e2, "<=");
+    n.type = evalComparisonOperator(n.e1, n.e2, "<=");
   }
 
   // Exp e1,e2;
   public void visit(GreaterEqual n) {
-    checkComparisonOperator(n.e1, n.e2, ">=");
+    n.type = evalComparisonOperator(n.e1, n.e2, ">=");
   }
 
   // Exp e1,e2;
   public void visit(Plus n) {
-    checkNumericOperator(n.e1, n.e2, "+");
+    n.type = evalNumericOperator(n.e1, n.e2, "+");
   }
 
   // Exp e1,e2;
   public void visit(Minus n) {
-    checkNumericOperator(n.e1, n.e2, "-");
+    n.type = evalNumericOperator(n.e1, n.e2, "-");
   }
 
   // Exp e1,e2;
   public void visit(Times n) {
-    checkNumericOperator(n.e1, n.e2, "*");
+    n.type = evalNumericOperator(n.e1, n.e2, "*");
   }
 
   // Exp e1,e2;
   public void visit(Divide n) {
-    checkNumericOperator(n.e1, n.e2, "/");
+    n.type = evalNumericOperator(n.e1, n.e2, "/");
   }
 
   // Exp e1,e2;
   public void visit(Modulo n) {
-    checkNumericOperator(n.e1, n.e2, "%");
+    n.type = evalNumericOperator(n.e1, n.e2, "%");
   }
 
   // Exp e1,e2;
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
-    VarType arrayType = evaluatedType;
+    VarType arrayType = n.e1.type;
     if (!(arrayType instanceof IntegerArrayVarType) && !(arrayType instanceof DoubleArrayVarType))
       ErrorMessages.errIllegalArrayLookup(n.e1.getLineNumber(), arrayType);
 
     n.e2.accept(this);
-    assertEqualType(IntegerVarType.singleton(), evaluatedType, n.e2.getLineNumber());
+    assertEqualType(IntegerVarType.singleton(), n.e2.type, n.e2.getLineNumber());
 
     if (arrayType instanceof IntegerArrayVarType)
-      evaluatedType = IntegerVarType.singleton();
+      n.type = IntegerVarType.singleton();
     else
-      evaluatedType = DoubleVarType.singleton();
+      n.type = DoubleVarType.singleton();
   }
 
   // Exp e;
   public void visit(ArrayLength n) {
     n.e.accept(this);
-    VarType arrayType = evaluatedType;
+    VarType arrayType = n.e.type;
     if (!(arrayType instanceof IntegerArrayVarType) && !(arrayType instanceof DoubleArrayVarType))
       ErrorMessages.errIllegalArrayLookup(n.e.getLineNumber(), arrayType);
 
-    evaluatedType = IntegerVarType.singleton();
+    n.type = IntegerVarType.singleton();
   }
 
   // Exp e;
@@ -344,69 +333,69 @@ public class TypeCheckerVisitor implements Visitor {
   // ExpList el;
   public void visit(Call n) {
     n.e.accept(this);
-    if (!(evaluatedType instanceof ClassVarType))
-      ErrorMessages.errIllegalDereference(n.getLineNumber(), evaluatedType);
-    ClassVarType callee = (ClassVarType) evaluatedType;
+    if (!(n.e.type instanceof ClassVarType))
+      ErrorMessages.errIllegalDereference(n.getLineNumber(), n.e.type);
+    ClassVarType receiver = (ClassVarType) n.e.type;
 
-    MethodMetadata method = callee.getMethod(n.i.s);
+    MethodMetadata method = receiver.getMethod(n.i.s);
     if (method == null)
       ErrorMessages.errSymbolNotFound(n.i.getLineNumber(), n.i.s);
 
     if (method.params.size() != n.el.size())
-      ErrorMessages.errArgListLength(n.el.getLineNumber(), callee, method);
+      ErrorMessages.errArgListLength(n.el.getLineNumber(), receiver, method);
 
     Iterator<VarType> formals = method.params.values().iterator();
     for (int i = 0; i < n.el.size(); i++) {
       n.el.get(i).accept(this);
-      assertSupertype(formals.next(), evaluatedType, n.el.get(i).getLineNumber());
+      assertSupertype(formals.next(), n.el.get(i).type, n.el.get(i).getLineNumber());
     }
 
-    evaluatedType = method.returnType;
+    n.type = method.returnType;
   }
 
   // int i;
   public void visit(IntegerLiteral n) {
-    evaluatedType = IntegerVarType.singleton();
+    n.type = IntegerVarType.singleton();
   }
 
   public void visit(DoubleLiteral n) {
-    evaluatedType = DoubleVarType.singleton();
+    n.type = DoubleVarType.singleton();
   }
 
   public void visit(True n) {
-    evaluatedType = BooleanVarType.singleton();
+    n.type = BooleanVarType.singleton();
   }
 
   public void visit(False n) {
-    evaluatedType = BooleanVarType.singleton();
+    n.type = BooleanVarType.singleton();
   }
 
   public void visit(IdentifierExp n) {
-    evaluatedType = getTypeOfVariable(n.s, n.getLineNumber());
+    n.type = getTypeOfVariable(n.s, n.getLineNumber());
   }
 
   public void visit(ConstantExp n) {
-    evaluatedType = IntegerVarType.singleton();
+    n.type = IntegerVarType.singleton();
   }
 
   public void visit(This n) {
-    evaluatedType = currentClass;
+    n.type = currentClass;
   }
 
   // Exp e;
   public void visit(NewIntArray n) {
     n.e.accept(this);
-    assertEqualType(IntegerVarType.singleton(), evaluatedType, n.getLineNumber());
+    assertEqualType(IntegerVarType.singleton(), n.e.type, n.getLineNumber());
 
-    evaluatedType = IntegerArrayVarType.singleton();
+    n.type = IntegerArrayVarType.singleton();
   }
 
   // Exp e;
   public void visit(NewDoubleArray n) {
     n.e.accept(this);
-    assertEqualType(IntegerVarType.singleton(), evaluatedType, n.getLineNumber());
+    assertEqualType(IntegerVarType.singleton(), n.e.type, n.getLineNumber());
 
-    evaluatedType = DoubleArrayVarType.singleton();
+    n.type = DoubleArrayVarType.singleton();
   }
 
   // Identifier i;
@@ -415,15 +404,15 @@ public class TypeCheckerVisitor implements Visitor {
     if (objectType == null)
       ErrorMessages.errSymbolNotFound(n.getLineNumber(), n.i.s);
 
-    evaluatedType = objectType;
+    n.type = objectType;
   }
 
   // Exp e;
   public void visit(Not n) {
     n.e.accept(this);
-    assertEqualType(BooleanVarType.singleton(), evaluatedType, n.getLineNumber());
+    assertEqualType(BooleanVarType.singleton(), n.e.type, n.getLineNumber());
 
-    evaluatedType = BooleanVarType.singleton();
+    n.type = BooleanVarType.singleton();
   }
 
   public void visit(Identifier n) {}

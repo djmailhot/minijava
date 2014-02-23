@@ -53,6 +53,6 @@ public class ErrorMessages {
   }
 
   public static void errIllegalArrayLookup(int lineNum, VarType type) {
-    printErrorMessage(lineNum, "Array required, but "+type+" found");
+    printErrorMessage(lineNum, "Array required for this operation, but "+type+" found");
   }
 }

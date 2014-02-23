@@ -82,6 +82,8 @@ public class SemAnalMain {
       //
       // System.out.print("\n" + "Parsing completed");
       //
+      exit(0);
+
     } catch (Exception e) {
       //
       // yuck: some kind of error in the compiler implementation

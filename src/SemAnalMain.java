@@ -82,7 +82,7 @@ public class SemAnalMain {
       //
       // System.out.print("\n" + "Parsing completed");
       //
-      exit(0);
+      System.exit(0);
 
     } catch (Exception e) {
       //

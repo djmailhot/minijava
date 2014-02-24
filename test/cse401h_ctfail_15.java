@@ -1,15 +1,15 @@
 //
-// Test for cycles in class hierarchy
+// Test for invalid method overrides
 //
 class cse401h_ctfail_15 {
 
   public static void main (String [] args) {
-    System.out.println(new TestClassHierarchyCycle().run());
+    System.out.println(new TestInvalidMethodOverride().run());
   }
 
 }
 
-class TestClassHierarchyCycle {
+class TestInvalidMethodOverride {
 
   public int run() {
     System.out.println(20000015);
@@ -18,20 +18,24 @@ class TestClassHierarchyCycle {
 
 }
 
-class A extends C {
-  public int m0() {
+class A {
+  public int m0(int a) {
     return 0;
+  }
+
+  public int m1(int x) {
+    return x;
   }
 }
 
 class B extends A {
-  public int m1() {
-    return 1;
+  public int m1(int y) {
+    return y;
   }
 }
 
 class C extends B {
-  public int m2() {
-    return 2;
+  public int m0(boolean a) {
+    return a;
   }
 }

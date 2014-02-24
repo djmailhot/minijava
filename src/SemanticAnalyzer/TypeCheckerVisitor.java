@@ -282,7 +282,13 @@ public class TypeCheckerVisitor implements Visitor {
 
   // Exp e1,e2;
   public void visit(Modulo n) {
-    n.type = evalNumericOperator(n.e1, n.e2, "%");
+    n.e1.accept(this);
+    n.e2.accept(this);
+
+    if (n.e1.type != Primitive.INT || n.e2.type != Primitive.INT)
+      ErrorMessages.errBadOperandTypes(n.e1.getLineNumber(), "%", n.e1.type, n.e2.type);
+
+    n.type = Primitive.INT;
   }
 
   // Exp e1,e2;

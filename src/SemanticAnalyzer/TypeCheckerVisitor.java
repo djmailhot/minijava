@@ -144,13 +144,6 @@ public class TypeCheckerVisitor implements Visitor {
 
   // Type t;
   // Identifier i;
-  public void visit(VarDecl n) {
-    n.t.accept(this);
-    n.i.accept(this);
-  }
-
-  // Type t;
-  // Identifier i;
   // FormalList fl;
   // VarDeclList vl;
   // StatementList sl;
@@ -171,13 +164,6 @@ public class TypeCheckerVisitor implements Visitor {
     n.e.accept(this);
     assertSupertype(currentMethod.returnType, n.e.type, n.e.getLineNumber());
     currentMethod = null;
-  }
-
-  // Type t;
-  // Identifier i;
-  public void visit(Formal n) {
-    n.t.accept(this);
-    n.i.accept(this);
   }
 
   // StatementList sl;
@@ -419,6 +405,8 @@ public class TypeCheckerVisitor implements Visitor {
     n.type = Primitive.BOOLEAN;
   }
 
+  public void visit(VarDecl n) {}
+  public void visit(Formal n) {}
   public void visit(Identifier n) {}
   public void visit(Display n) {}
   public void visit(IntArrayType n) {}

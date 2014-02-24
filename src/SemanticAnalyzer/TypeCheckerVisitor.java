@@ -105,8 +105,6 @@ public class TypeCheckerVisitor implements Visitor {
   // Identifier i1,i2;
   // Statement s;
   public void visit(MainClass n) {
-    n.i1.accept(this);
-    n.i2.accept(this);
     n.s.accept(this);
   }
 
@@ -115,7 +113,6 @@ public class TypeCheckerVisitor implements Visitor {
   // MethodDeclList ml;
   public void visit(ClassDeclSimple n) {
     currentClass = classes.get(n.i.s);
-    n.i.accept(this);
     for (int i = 0; i < n.vl.size(); i++) {
       n.vl.get(i).accept(this);
     }
@@ -131,7 +128,6 @@ public class TypeCheckerVisitor implements Visitor {
   // MethodDeclList ml;
   public void visit(ClassDeclExtends n) {
     currentClass = classes.get(n.i.s);
-    n.i.accept(this);
     n.j.accept(this);
     for (int i = 0; i < n.vl.size(); i++) {
       n.vl.get(i).accept(this);
@@ -151,7 +147,6 @@ public class TypeCheckerVisitor implements Visitor {
   public void visit(MethodDecl n) {
     currentMethod = currentClass.methods.get(n.i.s);
     n.t.accept(this);
-    n.i.accept(this);
     for (int i = 0; i < n.fl.size(); i++) {
       n.fl.get(i).accept(this);
     }
@@ -202,7 +197,6 @@ public class TypeCheckerVisitor implements Visitor {
   // Identifier i;
   // Exp e;
   public void visit(Assign n) {
-    n.i.accept(this);
     VarType expectedType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
 
     n.e.accept(this);
@@ -212,7 +206,6 @@ public class TypeCheckerVisitor implements Visitor {
   // Identifier i;
   // Exp e1,e2;
   public void visit(ArrayAssign n) {
-    n.i.accept(this);
     VarType arrayType = getTypeOfVariable(n.i.s, n.i.getLineNumber());
     if (!isArray(arrayType))
       ErrorMessages.errIllegalArrayLookup(n.i.getLineNumber(), arrayType);

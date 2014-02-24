@@ -1,3 +1,8 @@
+/*
+ * Group cse401h
+ * Jake Bailey, David Mailhot
+ */
+
 import java.util.Iterator;
 
 import AST.*;
@@ -9,10 +14,9 @@ import Scanner.scanner;
 import java_cup.runtime.Symbol;
 
 /**
- * Entry point for semantic analysis. Feel free to use this as your compiler's
- * entry point, and feel free to modify it as you see fit.
+ * Entry point for semantic analysis.
  */
-public class SemAnalMain {
+public class TypeChecker {
   public static void main(String[] args) {
     try {
       // create a scanner on the input file

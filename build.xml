@@ -159,17 +159,13 @@
     </java>
   </target>
 
-  <target name="semanal" depends="compile">
+  <target name="typecheck" depends="compile">
     <java
-      classname="SemAnalMain"
+      classname="TypeChecker"
       classpath="build/classes;lib/CUP.jar"
       fork="true"
-      input="${file}.java"
+      input="${file}"
       >
-      <!--
-      input="SamplePrograms/ExampleConst.java"
-      output="SamplePrograms/ExampleConst.s"
-      -->
     </java>
   </target>
 

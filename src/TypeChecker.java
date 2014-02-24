@@ -27,77 +27,31 @@ public class TypeChecker {
       Program program = (Program)root.value;
 
 
-      // initialize the semantic analysis type graph
+      // initialize the root symbol table
       ProgramMetadata pm = new ProgramMetadata();
 
       // First pass:  initialize types for all declared classes
       program.accept(new ClassDeclarationVisitor(pm));
 
-      // Debug: print all class declarations
-      System.out.println("Pass 1: Class declarations");
-      for (String className : pm.classes.keySet()) {
-        System.out.println(className + " is a class");
-      }
-      System.out.println();
-
       // Second pass: Link subclasses to superclasses
       program.accept(new ClassHierarchyVisitor(pm));
-
-      // Debug: print all class hierarchy relationships
-      System.out.println("Pass 2: Class hierarchy");
-      for (ClassVarType c : pm.classes.values()) {
-        if (c.superclass == null)
-          System.out.println(c + " is a base class");
-        else
-          System.out.println(c + " extends " + c.superclass);
-      }
-      System.out.println();
 
       // Third pass:  for all declared classes fill in class and method details
       program.accept(new ClassInternalsVisitor(pm));
 
-      // Debug: print all class declarations
-      System.out.println("Pass 3: Class internals");
-      for (ClassVarType ct: pm.classes.values()) {
-        System.out.println("Class: " + ct);
-        for (String fieldName : ct.fields.keySet()) {
-          System.out.println("  Field: " + ct.fields.get(fieldName) + " " + fieldName);
-        }
+      // Debug: print all gathered symbols
+      printClassInternals(pm);
 
-        for (MethodMetadata mm : ct.methods.values()) {
-          System.out.println("  Method: " + mm);
-          for (String argName : mm.params.keySet()) {
-            System.out.println("    Formal: " + mm.params.get(argName) + " " + argName);
-          }
-
-          for (String localVar : mm.localVars.keySet()) {
-            System.out.println("    Local: " + mm.localVars.get(localVar) + " " + localVar);
-          }
-        }
-      }
-      System.out.println();
-
-      // First verification:  verify method override relationships
+      // Verify method override relationships
       verifyOverrides(pm);
 
       // Type check statements and expressions
       program.accept(new TypeCheckerVisitor(pm));
 
-      //
-      // System.out.print("\n" + "Parsing completed");
-      //
       System.exit(0);
 
     } catch (Exception e) {
-      //
-      // yuck: some kind of error in the compiler implementation
-      // that we're not expecting (a bug!)
-      //
       System.err.println("Unexpected internal compiler error: " + e.toString());
-
-      //
-      // print out a stack dump
-      //
       e.printStackTrace();
     }
   }
@@ -135,6 +89,27 @@ public class TypeChecker {
         parent = parent.superclass;
       }
     }
+  }
+
+  private static void printClassInternals(ProgramMetadata pm) {
+    for (ClassVarType ct: pm.classes.values()) {
+      System.out.print("Class: " + ct);
+      System.out.println(ct.superclass != null ? " (extends " + ct.superclass + ")" : "");
+
+      for (String fieldName : ct.fields.keySet())
+        System.out.println("  Field: " + ct.fields.get(fieldName) + " " + fieldName);
+
+      for (MethodMetadata mm : ct.methods.values()) {
+        System.out.println("  Method: " + mm);
+
+        for (String argName : mm.params.keySet())
+          System.out.println("    Formal: " + mm.params.get(argName) + " " + argName);
+
+        for (String localVar : mm.localVars.keySet())
+          System.out.println("    Local: " + mm.localVars.get(localVar) + " " + localVar);
+      }
+    }
+    System.out.println();
   }
 
 }

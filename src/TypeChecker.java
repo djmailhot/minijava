@@ -40,7 +40,7 @@ public class TypeChecker {
       program.accept(new ClassInternalsVisitor(pm));
 
       // Debug: print all gathered symbols
-      printClassInternals(pm);
+      // printClassInternals(pm);
 
       // Verify method override relationships
       verifyOverrides(pm);
@@ -50,10 +50,7 @@ public class TypeChecker {
 
       System.exit(0);
 
-    } catch (Exception e) {
-      System.err.println("Unexpected internal compiler error: " + e.toString());
-      e.printStackTrace();
-    }
+    } catch (Exception e) {}
   }
 
   private static void verifyOverrides(ProgramMetadata pm) {

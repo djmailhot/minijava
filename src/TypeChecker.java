@@ -50,7 +50,9 @@ public class TypeChecker {
 
       System.exit(0);
 
-    } catch (Exception e) {}
+    } catch (Exception e) {
+      System.exit(1);
+    }
   }
 
   private static void verifyOverrides(ProgramMetadata pm) {

@@ -113,9 +113,6 @@ public class TypeCheckerVisitor implements Visitor {
   // MethodDeclList ml;
   public void visit(ClassDeclSimple n) {
     currentClass = classes.get(n.i.s);
-    for (int i = 0; i < n.vl.size(); i++) {
-      n.vl.get(i).accept(this);
-    }
     for (int i = 0; i < n.ml.size(); i++) {
       n.ml.get(i).accept(this);
     }
@@ -129,9 +126,6 @@ public class TypeCheckerVisitor implements Visitor {
   public void visit(ClassDeclExtends n) {
     currentClass = classes.get(n.i.s);
     n.j.accept(this);
-    for (int i = 0; i < n.vl.size(); i++) {
-      n.vl.get(i).accept(this);
-    }
     for (int i = 0; i < n.ml.size(); i++) {
       n.ml.get(i).accept(this);
     }
@@ -146,13 +140,6 @@ public class TypeCheckerVisitor implements Visitor {
   // Exp e;
   public void visit(MethodDecl n) {
     currentMethod = currentClass.methods.get(n.i.s);
-    n.t.accept(this);
-    for (int i = 0; i < n.fl.size(); i++) {
-      n.fl.get(i).accept(this);
-    }
-    for (int i = 0; i < n.vl.size(); i++) {
-      n.vl.get(i).accept(this);
-    }
     for (int i = 0; i < n.sl.size(); i++) {
       n.sl.get(i).accept(this);
     }

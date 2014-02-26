@@ -24,7 +24,7 @@ class TestFunctions {
 
     // Test argument ordering
     System.out.println(this.divide(4, 2));
-    ret = this.passedOneThroughSix(1, 2, 3, 4, 5, 6);
+    ret = this.passedOneThroughFive(1, 2, 3, 4, 5);
 
     // Test nested function calls
     System.out.println(this.nest1(42));
@@ -47,7 +47,7 @@ class TestFunctions {
     return x / y;
   }
 
-  public int passedOneThroughSix(int a, int b, int c, int d, int e, int f) {
+  public boolean passedOneThroughFive(int a, int b, int c, int d, int e) {
     boolean correct;
     int ret;
 
@@ -58,7 +58,6 @@ class TestFunctions {
     correct = correct && (c == 3);
     correct = correct && (d == 4);
     correct = correct && (e == 5);
-    correct = correct && (f == 6);
 
     if (correct)
       ret = 1;

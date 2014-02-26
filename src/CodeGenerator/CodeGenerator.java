@@ -11,7 +11,7 @@ import java.io.PrintStream;
 public class CodeGenerator {
 
   private static final String[] PARAM_REGISTERS =
-    { "", "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+    { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
 
   private PrintStream outputStream;
   private int labelCounter;

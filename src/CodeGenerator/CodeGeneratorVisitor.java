@@ -5,76 +5,22 @@
 
 package CodeGenerator;
 
-import AST.ASTNode;
-import AST.ArrayAssign;
-import AST.ArrayLength;
-import AST.ArrayLookup;
-import AST.Assign;
-import AST.Block;
-import AST.BooleanType;
-import AST.Call;
-import AST.ClassDecl;
-import AST.ClassDeclExtends;
-import AST.ClassDeclList;
-import AST.ClassDeclSimple;
-import AST.ConstantExp;
-import AST.Display;
-import AST.Divide;
-import AST.DoubleArrayType;
-import AST.DoubleLiteral;
-import AST.DoubleType;
-import AST.Equal;
-import AST.Exp;
-import AST.ExpList;
-import AST.False;
-import AST.Formal;
-import AST.FormalList;
-import AST.GreaterEqual;
-import AST.GreaterThan;
-import AST.Identifier;
-import AST.IdentifierExp;
-import AST.IdentifierType;
-import AST.If;
-import AST.IntArrayType;
-import AST.IntegerLiteral;
-import AST.IntegerType;
-import AST.LessEqual;
-import AST.LessThan;
-import AST.MainClass;
-import AST.MethodDecl;
-import AST.MethodDeclList;
-import AST.Minus;
-import AST.Modulo;
-import AST.NewIntArray;
-import AST.NewDoubleArray;
-import AST.NewObject;
-import AST.Not;
-import AST.NotEqual;
-import AST.Plus;
-import AST.Print;
-import AST.Program;
-import AST.ShortCircuitAnd;
-import AST.ShortCircuitOr;
-import AST.Statement;
-import AST.StatementList;
-import AST.This;
-import AST.Times;
-import AST.True;
-import AST.Type;
-import AST.VarDecl;
-import AST.VarDeclList;
-import AST.While;
+import java.util.Map;
 
+import AST.*;
 import AST.Visitor.Visitor;
-
-// Sample code generation visitor.
-// Robert R. Henry 2013-11-12
+import SemanticAnalyzer.SemanticTypes.*;
 
 public class CodeGeneratorVisitor implements Visitor {
 
-  private CodeGenerator cg;
-  public CodeGeneratorVisitor(CodeGenerator cg) {
+  private final CodeGenerator cg;
+  private final Map<String, ClassVarType> classes;
+
+  private ClassVarType currentClass;
+
+  public CodeGeneratorVisitor(CodeGenerator cg, ProgramMetadata pm) {
     this.cg = cg;
+    this.classes = pm.classes;
   }
 
   // Display added for toy example language.  Not used in regular MiniJava
@@ -95,17 +41,20 @@ public class CodeGeneratorVisitor implements Visitor {
   // Identifier i1,i2;
   // Statement s;
   public void visit(MainClass n) {
+    currentClass = classes.get(n.i1.s);
     cg.genFunctionEntry("asm_main");
     n.i1.accept(this);
     n.i2.accept(this);
     n.s.accept(this);
     cg.genFunctionExit("asm_main");
+    currentClass = null;
   }
 
   // Identifier i;
   // VarDeclList vl;
   // MethodDeclList ml;
   public void visit(ClassDeclSimple n) {
+    currentClass = classes.get(n.i.s);
     n.i.accept(this);
     for (int i = 0; i < n.vl.size(); i++) {
       n.vl.get(i).accept(this);
@@ -113,6 +62,7 @@ public class CodeGeneratorVisitor implements Visitor {
     for (int i = 0; i < n.ml.size(); i++) {
       n.ml.get(i).accept(this);
     }
+    currentClass = null;
   }
 
   // Identifier i;
@@ -120,6 +70,7 @@ public class CodeGeneratorVisitor implements Visitor {
   // VarDeclList vl;
   // MethodDeclList ml;
   public void visit(ClassDeclExtends n) {
+    currentClass = classes.get(n.i.s);
     n.i.accept(this);
     n.j.accept(this);
     for (int i = 0; i < n.vl.size(); i++) {
@@ -128,6 +79,7 @@ public class CodeGeneratorVisitor implements Visitor {
     for (int i = 0; i < n.ml.size(); i++) {
       n.ml.get(i).accept(this);
     }
+    currentClass = null;
   }
 
   // Type t;
@@ -146,7 +98,7 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(MethodDecl n) {
     n.t.accept(this);
     n.i.accept(this);
-    cg.genMethodEntry(n.i.s);
+    cg.genMethodEntry(currentClass.name, currentClass.getMethod(n.i.s));
     for (int i = 0; i < n.fl.size(); i++) {
       n.fl.get(i).accept(this);
     }
@@ -157,7 +109,7 @@ public class CodeGeneratorVisitor implements Visitor {
       n.sl.get(i).accept(this);
     }
     n.e.accept(this);
-    cg.genMethodExit(n.i.s);
+    cg.genMethodExit(currentClass.name, currentClass.getMethod(n.i.s));
   }
 
   // Type t;
@@ -377,7 +329,8 @@ public class CodeGeneratorVisitor implements Visitor {
       n.el.get(i).accept(this);
       cg.genActual(i + 1);
     }
-    cg.genMethodCall(n.i.s);
+    ClassVarType classType = (ClassVarType) n.e.type;
+    cg.genMethodCall(classType.name, classType.getMethod(n.i.s));
   }
 
   // int i;

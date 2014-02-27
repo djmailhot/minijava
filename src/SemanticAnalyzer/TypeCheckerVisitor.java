@@ -105,7 +105,9 @@ public class TypeCheckerVisitor implements Visitor {
   // Identifier i1,i2;
   // Statement s;
   public void visit(MainClass n) {
+    currentClass = classes.get(n.i1.s);
     n.s.accept(this);
+    currentClass = null;
   }
 
   // Identifier i;

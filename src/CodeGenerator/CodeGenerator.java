@@ -8,6 +8,8 @@ package CodeGenerator;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
+import SemanticAnalyzer.SemanticTypes.*;
+
 public class CodeGenerator {
 
   private static final String[] PARAM_REGISTERS =
@@ -36,6 +38,38 @@ public class CodeGenerator {
     }
   }
 
+  /**
+   * Returns an assembler label name uniquely identifying the given method.
+   *
+   * Mimics g++ name mangling, for fun.
+   */
+  private String mangle(String className, MethodMetadata method) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("_ZN")
+      .append(className.length())
+      .append(className)
+      .append(method.name.length())
+      .append(method.name)
+      .append("E");
+
+    if (method.params.isEmpty()) {
+      sb.append("v");
+    } else {
+      for (VarType param : method.params.values()) {
+        if (param instanceof Primitive) {
+          if (param == Primitive.INT_ARRAY || param == Primitive.DOUBLE_ARRAY)
+            sb.append("P");
+          sb.append(param.toString().charAt(0));
+        } else {
+          sb.append(param.toString().length())
+            .append(param.toString());
+        }
+      }
+    }
+
+    return sb.toString();
+  }
+
   public void genFunctionEntry(String functionName) {
     printComment("entry point for " + assemblerPrefixName + functionName);
     printSection(".text");
@@ -52,9 +86,9 @@ public class CodeGenerator {
     printInsn("ret");
   }
 
-  public void genMethodEntry(String methodName) {
-    printComment("entry point for " + assemblerPrefixName + methodName);
-    printLabel(methodName);
+  public void genMethodEntry(String className, MethodMetadata method) {
+    printComment("entry point for " + className + "." + method + "()");
+    printLabel(mangle(className, method));
 
     printInsn("pushq", "%rbp");
     printInsn("movq", "%rsp", "%rbp");
@@ -63,8 +97,8 @@ public class CodeGenerator {
     printInsn("pushq", "%rbx");
   }
 
-  public void genMethodExit(String methodName) {
-    printComment("return point for " + assemblerPrefixName + methodName);
+  public void genMethodExit(String className, MethodMetadata method) {
+    printComment("return point for " + className + "." + method + "()");
 
     // Pop return value
     printInsn("popq", "%rax");
@@ -76,8 +110,8 @@ public class CodeGenerator {
     printInsn("ret");
   }
 
-  public void genMethodCall(String methodName) {
-    printInsn("call", assemblerPrefixName + methodName);
+  public void genMethodCall(String className, MethodMetadata method) {
+    printInsn("call", assemblerPrefixName + mangle(className, method));
     printInsn("pushq", "%rax");
   }
 

@@ -28,7 +28,7 @@ public class CodeGenMain {
       TypeChecker.typeCheck(program, pm);
 
       CodeGenerator cg = new CodeGenerator(null);
-      program.accept(new CodeGeneratorVisitor(cg));
+      program.accept(new CodeGeneratorVisitor(cg, pm));
 
       System.exit(0);
 

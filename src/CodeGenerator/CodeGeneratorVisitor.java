@@ -185,8 +185,8 @@ public class CodeGeneratorVisitor implements Visitor {
   // Identifier i;
   // Exp e;
   public void visit(Assign n) {
-    n.i.accept(this);
     n.e.accept(this);
+    cg.genAssign(n.i.s);
   }
 
   // Identifier i;
@@ -351,6 +351,7 @@ public class CodeGeneratorVisitor implements Visitor {
   }
 
   public void visit(IdentifierExp n) {
+    cg.genLookup(n.s);
   }
 
   public void visit(ConstantExp n) {

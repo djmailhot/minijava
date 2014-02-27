@@ -7,6 +7,8 @@ package CodeGenerator;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import SemanticAnalyzer.SemanticTypes.*;
 
@@ -17,6 +19,8 @@ public class CodeGenerator {
 
   private PrintStream outputStream;
   private int labelCounter;
+  private Map<String, Integer> localOffsets;
+
   public String assemblerPrefixName;
 
   public CodeGenerator(String outputFileName) {
@@ -95,6 +99,28 @@ public class CodeGenerator {
 
     // Store callee-saved registers
     printInsn("pushq", "%rbx");
+
+    // Allocate space for `this` pointer, parameters, and local variables
+    int numLocals = 1 + method.params.size() + method.localVars.size();
+    printInsn("subq", String.format("$%d", 8 * numLocals), "%rsp");
+
+    // Store `this` pointer
+    printInsn("movq", PARAM_REGISTERS[0], String.format("-%d(%%rbp)", 8));
+
+    // Store arguments and keep track of their offsets
+    localOffsets = new HashMap<String, Integer>();
+    for (String argName : method.params.keySet()) {
+      int offset = 8 * (localOffsets.size() + 2);
+      printInsn("movq", PARAM_REGISTERS[localOffsets.size() + 1],
+          String.format("-%d(%%rbp)", offset));
+      localOffsets.put(argName, offset);
+    }
+
+    // Track offsets for locals
+    for (String localName : method.localVars.keySet()) {
+      int offset = 8 * (localOffsets.size() + 2);
+      localOffsets.put(localName, offset);
+    }
   }
 
   public void genMethodExit(String className, MethodMetadata method) {
@@ -102,6 +128,10 @@ public class CodeGenerator {
 
     // Pop return value
     printInsn("popq", "%rax");
+
+    // Free the space used by arguments and local variables, +1 for `this`.
+    printInsn("addq", String.format("$%d", 8 * (localOffsets.size() + 1)), "%rsp");
+    localOffsets = null;
 
     // Restore callee-saved registers
     printInsn("popq", "%rbx");
@@ -192,6 +222,20 @@ public class CodeGenerator {
 
   public void genJmp(String label) {
     printInsn("jmp", label);  // jump to label
+  }
+
+  public void genAssign(String identifier) {
+    printComment("assign to " + identifier);
+    printInsn("popq", "%rax"); // read expression result
+    int offset = localOffsets.get(identifier);
+    printInsn("movq", "%rax", String.format("-%d(%%rbp)", offset));
+  }
+
+  public void genLookup(String identifier) {
+    printComment("lookup " + identifier);
+    int offset = localOffsets.get(identifier);
+    printInsn("movq", String.format("-%d(%%rbp)", offset), "%rax");
+    printInsn("pushq", "%rax");
   }
 
   public void genEqual() {

@@ -149,13 +149,11 @@
       classname="CodeGenMain"
       classpath="build/classes;lib/CUP.jar"
       fork="true"
-      input="${file}.java"
-      output="${file}.s"
       >
-      <!--
-      input="SamplePrograms/ExampleConst.java"
-      output="SamplePrograms/ExampleConst.s"
-      -->
+      <arg value="-i"/>
+      <arg value="${file}.java"/>
+      <arg value="-o"/>
+      <arg value="${file}.s"/>
     </java>
   </target>
 

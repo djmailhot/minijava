@@ -28,6 +28,8 @@ public class CodeGenerator {
       try {
         outputStream = new PrintStream(outputFileName);
       } catch (FileNotFoundException e) {
+        System.err.println(e);
+        System.exit(1);
       }
     } else {
       outputStream = System.out;

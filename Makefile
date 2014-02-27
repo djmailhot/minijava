@@ -81,7 +81,7 @@ $(SAMPLEDIR)/%.expect: $(SAMPLEDIR)/%.class $(CLASSPATH_T)
 # We use ant to compile the mini java compiler
 #
 $(SAMPLEDIR)/%.s: $(SAMPLEDIR)/%.java compileMJ.T Makefile
-	java -classpath ./build/classes:./lib/CUP.jar TestParser -p -o $@ -i $< < $<
+	java -classpath ./build/classes:./lib/CUP.jar CodeGenMain -o $@ -i $< < $<
 $(SAMPLEDIR)/%.x: $(SAMPLEDIR)/%.s boot.c Makefile
 	gcc -Wall -fno-pic -m64 -g $< boot.c number_converter.o -o $@
 $(SAMPLEDIR)/%.actual: $(SAMPLEDIR)/%.x

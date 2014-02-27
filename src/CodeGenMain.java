@@ -7,6 +7,7 @@ import AST.*;
 import CodeGenerator.*;
 import Parser.parser;
 import Scanner.scanner;
+import SemanticAnalyzer.SemanticTypes.ProgramMetadata;
 
 import java_cup.runtime.Symbol;
 
@@ -21,6 +22,10 @@ public class CodeGenMain {
       parser p = new parser(s);
       Symbol root = p.parse();
       Program program = (Program) root.value;
+
+      // Build symbol tables and annotate AST.Exp nodes with types
+      ProgramMetadata pm = TypeChecker.gatherSymbols(program);
+      TypeChecker.typeCheck(program, pm);
 
       CodeGenerator cg = new CodeGenerator(null);
       program.accept(new CodeGeneratorVisitor(cg));

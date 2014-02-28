@@ -165,9 +165,8 @@ public class CodeGenerator {
     itemsOnStack--;
 
     if (itemsOnStack != 0) {
-      System.out.println("Error: " + itemsOnStack + " values left on stack at end of "
-          + className + "." + method + "().");
-      System.exit(1);
+      System.out.println("Warning: " + itemsOnStack + " values were left on the "
+          + "expression stack at return from " + className + "." + method + "().");
     }
 
     // Free the space used by arguments and local variables

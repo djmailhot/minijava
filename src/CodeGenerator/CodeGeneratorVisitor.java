@@ -375,6 +375,10 @@ public class CodeGeneratorVisitor implements Visitor {
 
   // Identifier i;
   public void visit(NewObject n) {
+    ClassVarType newClass = classes.get(n.i.s);
+    int size = 1 + newClass.fields.size();
+
+    cg.genAllocateObject(size);
   }
 
   // Exp e;

@@ -52,6 +52,21 @@ public class CodeGenerator {
   }
 
   /**
+   * Returns an assembler label name uniquely identifying the given class.
+   *
+   * Mimics g++ name mangling, for fun.
+   */
+  private String mangle(String className) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("_ZN")
+      .append(className.length())
+      .append(className)
+      .append("E");
+
+    return sb.toString();
+  }
+
+  /**
    * Returns an assembler label name uniquely identifying the given method.
    *
    * Mimics g++ name mangling, for fun.

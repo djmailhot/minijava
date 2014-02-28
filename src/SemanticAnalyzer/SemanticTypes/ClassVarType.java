@@ -1,6 +1,6 @@
 package SemanticAnalyzer.SemanticTypes;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ClassVarType extends VarType {
@@ -14,8 +14,8 @@ public class ClassVarType extends VarType {
   public int lineNumber;
 
   public ClassVarType(String name, int lineNumber) {
-    this.fields = new HashMap<String, VarType>();
-    this.methods = new HashMap<String, MethodMetadata>();
+    this.fields = new LinkedHashMap<String, VarType>();
+    this.methods = new LinkedHashMap<String, MethodMetadata>();
     this.name = name;
     this.lineNumber = lineNumber;
   }

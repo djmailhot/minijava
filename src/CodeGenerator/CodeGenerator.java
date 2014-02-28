@@ -17,6 +17,10 @@ public class CodeGenerator {
   private static final String[] PARAM_REGISTERS =
     { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
 
+  // The runtime error codes that our compiled program can exit with.
+  private static final int ERR_OUT_OF_BOUNDS = 10;
+  private static final int ERR_NEG_ARRAY_SIZE = 11;
+
   private PrintStream outputStream;
   private int labelCounter;
   private Map<String, Integer> localOffsets;
@@ -103,9 +107,11 @@ public class CodeGenerator {
    */
   private void genRuntimeError(int errorCode) {
     switch (errorCode) {
-    case 1:
-      printComment("array out of bounds error");
+    case ERR_OUT_OF_BOUNDS:
+      printComment("index out of bounds");
       break;
+    case ERR_NEG_ARRAY_SIZE:
+      printComment("negative array size");
     default:
       printComment("unknown error");
       break;
@@ -369,7 +375,7 @@ public class CodeGenerator {
     printInsn("jle", labelPass); // ok if 0 <= offset
 
     printLocalLabel(labelError);
-    genRuntimeError(1);
+    genRuntimeError(ERR_OUT_OF_BOUNDS);
     printLocalLabel(labelPass);
 }
 
@@ -515,6 +521,16 @@ public class CodeGenerator {
     printComment("allocate array");
 
     printInsn("popq", "%rbx");  // get the size of the array
+
+    String labelPass = newLabel("size_ok");
+
+    printInsn("movq", "$0", "%rdx");
+    printInsn("cmpq", "%rbx", "%rdx");  // compare size to 0
+    printInsn("jle", labelPass); // ok if 0 <= size
+
+    genRuntimeError(ERR_NEG_ARRAY_SIZE);
+    printLocalLabel(labelPass);
+
     printInsn("movq", "%rbx", "%rdi");  // copy to first argument position
     printInsn("addq", "$1", "%rdi");  // increment by 1 (space for array length)
     printInsn("shlq", "$3", "%rdi");  // multiply by 8 to get byte count

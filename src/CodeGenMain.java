@@ -73,7 +73,7 @@ public class CodeGenMain {
       int index = cvt.size() - cvt.fields.size();
       for (String name : cvt.fields.keySet()) {
         cvt.fieldOffsets.put(name, index);
-        index += 1;
+        index += 8;
       }
     }
   }

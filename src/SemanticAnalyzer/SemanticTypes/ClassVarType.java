@@ -110,11 +110,11 @@ public class ClassVarType extends VarType {
   private int size(ClassVarType currClass) {
     int size;
     if (currClass == null) {
-      size = 1;  // make room for the vtable
+      size = 8;  // make room for the vtable
     } else if (currClass.size != -1) {  // size can never be -1 due to the vtable pointer
       size = currClass.size;
     } else {
-      size = currClass.fields.size() + size(currClass.superclass);
+      size = currClass.fields.size() * 8 + size(currClass.superclass);
       currClass.size = size;  // store the value for later
     }
     return size;

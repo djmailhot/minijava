@@ -307,6 +307,14 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
+  public void genArrayLength() {
+    printComment("array length");
+
+    printInsn("popq", "%rax");  // array pointer
+    printInsn("movq", "-8(%rax)", "%rax");  // lookup length
+    printInsn("pushq", "%rax");
+  }
+
   public void genEqual() {
     printComment("equal operation");
     printInsn("popq", "%rax");  // right operand

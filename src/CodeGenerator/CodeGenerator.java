@@ -82,6 +82,22 @@ public class CodeGenerator {
     return sb.toString();
   }
 
+  /**
+   * Debug method for printing the value of a register or a literal.
+   */
+  private void debugPrint(String s) {
+    for (String reg : PARAM_REGISTERS)
+      printInsn("pushq", reg);
+
+    printInsn("pushq", "%rax");
+    printInsn("movq", s, "%rdi");
+    genCall("put");
+    printInsn("popq", "%rax");
+
+    for (int i = PARAM_REGISTERS.length - 1; i >= 0; --i)
+      printInsn("popq", PARAM_REGISTERS[i]);
+  }
+
   public void genFunctionEntry(String functionName) {
     printComment("entry point for " + assemblerPrefixName + functionName);
     printSection(".text");

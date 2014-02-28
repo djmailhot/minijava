@@ -98,6 +98,22 @@ public class CodeGenerator {
       printInsn("popq", PARAM_REGISTERS[i]);
   }
 
+  /**
+   * Exits with the given error code.
+   */
+  private void genRuntimeError(int errorCode) {
+    switch (errorCode) {
+    case 1:
+      printComment("array out of bounds error");
+      break;
+    default:
+      printComment("unknown error");
+      break;
+    }
+    printInsn("movq", "$"+errorCode, "%rdi");
+    genCall(assemblerPrefixName + "exit");
+  }
+
   public void genFunctionEntry(String functionName) {
     printComment("entry point for " + assemblerPrefixName + functionName);
     printSection(".text");
@@ -303,11 +319,11 @@ public class CodeGenerator {
   public void genArrayAssign(String identifier) {
     printComment("array assign");
 
-    // TODO: bounds checking
     printInsn("popq", "%rcx"); // value to assign
     printInsn("popq", "%rbx"); // array offset
     genLookup(identifier);
     printInsn("popq", "%rax"); // array pointer
+    genBoundsCheck("%rax", "%rbx");
     printInsn("movq", "%rcx", "(%rax,%rbx,8)");  // store value
     itemsOnStack -= 3;
   }
@@ -315,9 +331,9 @@ public class CodeGenerator {
   public void genArrayLookup() {
     printComment("array lookup");
 
-    // TODO: bounds checking
     printInsn("popq", "%rbx");  // array offset
     printInsn("popq", "%rax");  // array pointer
+    genBoundsCheck("%rax", "%rbx");
     printInsn("movq", "(%rax,%rbx,8)", "%rbx");  // lookup value
     printInsn("pushq", "%rbx");
     itemsOnStack--;
@@ -330,6 +346,32 @@ public class CodeGenerator {
     printInsn("movq", "-8(%rax)", "%rax");  // lookup length
     printInsn("pushq", "%rax");
   }
+
+  /**
+   * Reads the length of the array referred to by the pointer in the given
+   * register. Emits code that causes a runtime error if the offset in the given
+   * register is less than zero or greater than or equal to the length.
+   * Overwrites the value in %rdx.
+   *
+   * @param array A register containing a pointer to the array to check.
+   * @param offset A register containing the offset into the array.
+   */
+  private void genBoundsCheck(String array, String offset) {
+    String labelError = newLabel("out_of_bounds");
+    String labelPass = newLabel("bounds_ok");
+
+    printInsn("movq", "-8("+array+")", "%rdx");  // lookup length
+    printInsn("cmpq", offset, "%rdx");  // compare offset to length
+    printInsn("jle", labelError);  // error if length <= offset
+
+    printInsn("movq", "$0", "%rdx");
+    printInsn("cmpq", offset, "%rdx");  // compare offset to 0
+    printInsn("jle", labelPass); // ok if 0 <= offset
+
+    printLocalLabel(labelError);
+    genRuntimeError(1);
+    printLocalLabel(labelPass);
+}
 
   public void genEqual() {
     printComment("equal operation");

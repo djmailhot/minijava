@@ -52,21 +52,6 @@ public class CodeGenerator {
   }
 
   /**
-   * Returns an assembler label name uniquely identifying the given class.
-   *
-   * Mimics g++ name mangling, for fun.
-   */
-  private String mangle(String className) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("_ZN")
-      .append(className.length())
-      .append(className)
-      .append("E");
-
-    return sb.toString();
-  }
-
-  /**
    * Returns an assembler label name uniquely identifying the given method.
    *
    * Mimics g++ name mangling, for fun.
@@ -445,7 +430,7 @@ public class CodeGenerator {
     printInsn("popq", "%rdi");  // get the size of the array
     printInsn("movq", "%rdi", "(%rbx)");  // put the length
 
-    printInsn("call", assemblerPrefixName + "mjmalloc");  // the data chunk
+    genCall("mjmalloc");  // the data chunk
     printInsn("movq", "%rax", "("+QUAD_SIZE+"%rbx)");  // put the data
 
     printInsn("pushq", "%rbx");  // push the address of the heap space
@@ -455,7 +440,7 @@ public class CodeGenerator {
     printComment("allocate array");
 
     printInsn("movq", "$"+size, "%rdi");  // prepare the size of the object
-    printInsn("call", assemblerPrefixName + "mjmalloc");
+    genCall("mjmalloc");
     printInsn("pushq", "%rax");  // push the address of the new heap space
   }
 }

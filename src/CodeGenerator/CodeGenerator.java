@@ -14,7 +14,6 @@ import SemanticAnalyzer.SemanticTypes.*;
 
 public class CodeGenerator {
 
-  private static final int QUAD_SIZE = 4;
   private static final String[] PARAM_REGISTERS =
     { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
 
@@ -267,6 +266,8 @@ public class CodeGenerator {
 
   public void genAssign(String identifier) {
     printComment("assign to " + identifier);
+
+    // TODO: assignment to fields
     printInsn("popq", "%rax"); // read expression result
     int offset = localOffsets.get(identifier);
     printInsn("movq", "%rax", String.format("-%d(%%rbp)", offset));
@@ -275,10 +276,35 @@ public class CodeGenerator {
 
   public void genLookup(String identifier) {
     printComment("lookup " + identifier);
+
+    // TODO: lookup of fields
     int offset = localOffsets.get(identifier);
     printInsn("movq", String.format("-%d(%%rbp)", offset), "%rax");
     printInsn("pushq", "%rax");
     itemsOnStack++;
+  }
+
+  public void genArrayAssign(String identifier) {
+    printComment("array assign");
+
+    // TODO: bounds checking
+    printInsn("popq", "%rcx"); // value to assign
+    printInsn("popq", "%rbx"); // array offset
+    genLookup(identifier);
+    printInsn("popq", "%rax"); // array pointer
+    printInsn("movq", "%rcx", "(%rax,%rbx,8)");  // store value
+    itemsOnStack -= 3;
+  }
+
+  public void genArrayLookup() {
+    printComment("array lookup");
+
+    // TODO: bounds checking
+    printInsn("popq", "%rbx");  // array offset
+    printInsn("popq", "%rax");  // array pointer
+    printInsn("movq", "(%rax,%rbx,8)", "%rbx");  // lookup value
+    printInsn("pushq", "%rbx");
+    itemsOnStack--;
   }
 
   public void genEqual() {
@@ -421,26 +447,26 @@ public class CodeGenerator {
 
   public void genAllocateArray() {
     printComment("allocate array");
-    // the size is the top arg on the stack
 
-    // make an array metadata object
-    genAllocateObject(QUAD_SIZE*2);
-    printInsn("popq", "%rbx");  // the metadata object of size 2, with a length and a data pointer
+    printInsn("popq", "%rbx");  // get the size of the array
+    printInsn("movq", "%rbx", "%rdi");  // copy to first argument position
+    printInsn("addq", "$1", "%rdi");  // increment by 1 (space for array length)
+    printInsn("shlq", "$3", "%rdi");  // multiply by 8 to get byte count
 
-    printInsn("popq", "%rdi");  // get the size of the array
-    printInsn("movq", "%rdi", "(%rbx)");  // put the length
+    genCall("mjmalloc");
 
-    genCall("mjmalloc");  // the data chunk
-    printInsn("movq", "%rax", "("+QUAD_SIZE+"%rbx)");  // put the data
+    printInsn("movq", "%rbx", "(%rax)");  // put the length
+    printInsn("addq", "$8", "%rax"); // add 8 (so a[-1] is the length)
 
-    printInsn("pushq", "%rbx");  // push the address of the heap space
+    printInsn("pushq", "%rax");  // push the array pointer
   }
 
   public void genAllocateObject(int size) {
-    printComment("allocate array");
+    printComment("allocate object");
 
     printInsn("movq", "$"+size, "%rdi");  // prepare the size of the object
     genCall("mjmalloc");
     printInsn("pushq", "%rax");  // push the address of the new heap space
+    itemsOnStack++;
   }
 }

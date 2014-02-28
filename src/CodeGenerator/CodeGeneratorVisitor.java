@@ -195,6 +195,7 @@ public class CodeGeneratorVisitor implements Visitor {
     n.i.accept(this);
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genArrayAssign(n.i.s);
   }
 
   // Exp e1,e2;
@@ -312,6 +313,7 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genArrayLookup();
   }
 
   // Exp e;

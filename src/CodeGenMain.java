@@ -10,6 +10,7 @@ import CodeGenerator.*;
 import Parser.parser;
 import Scanner.scanner;
 import SemanticAnalyzer.SemanticTypes.ProgramMetadata;
+import SemanticAnalyzer.SemanticTypes.ClassVarType;
 
 import java_cup.runtime.Symbol;
 
@@ -51,6 +52,8 @@ public class CodeGenMain {
       ProgramMetadata pm = TypeChecker.gatherSymbols(program);
       TypeChecker.typeCheck(program, pm);
 
+      setClassFieldOffsets(pm);
+
       CodeGenerator cg = new CodeGenerator(outputFileName);
       program.accept(new CodeGeneratorVisitor(cg, pm));
 
@@ -60,6 +63,18 @@ public class CodeGenMain {
       System.err.println("Unexpected internal compiler error: " + e.toString());
       e.printStackTrace();
       System.exit(1);
+    }
+  }
+
+  private static void setClassFieldOffsets(ProgramMetadata pm) {
+    for (ClassVarType cvt : pm.classes.values()) {
+
+      // indexes are 0-indexed
+      int index = cvt.size() - cvt.fields.size();
+      for (String name : cvt.fields.keySet()) {
+        cvt.fieldOffsets.put(name, index);
+        index += 1;
+      }
     }
   }
 }

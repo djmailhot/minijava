@@ -21,6 +21,12 @@ public class CodeGenerator {
   private int labelCounter;
   private Map<String, Integer> localOffsets;
 
+  /** The number of bytes allocated for arguments and locals. */
+  private int localSegmentSize;
+
+  /** The number of 8-byte values on the current function's expression stack. */
+  private int itemsOnStack;
+
   public String assemblerPrefixName;
 
   public CodeGenerator(String outputFileName) {
@@ -84,6 +90,8 @@ public class CodeGenerator {
 
     printInsn("pushq", "%rbp");
     printInsn("movq", "%rsp", "%rbp");
+
+    itemsOnStack = 0;
   }
 
   public void genFunctionExit(String functionName) {
@@ -101,10 +109,16 @@ public class CodeGenerator {
 
     // Store callee-saved registers
     printInsn("pushq", "%rbx");
+    int savedRegistersSize = 8;
 
     // Allocate space for `this` pointer, parameters, and local variables
-    int numLocals = 1 + method.params.size() + method.localVars.size();
-    printInsn("subq", String.format("$%d", 8 * numLocals), "%rsp");
+    localSegmentSize = 8 * (1 + method.params.size() + method.localVars.size());
+
+    // Align to 16 byte multiple to help with stack alignment.
+    if ((savedRegistersSize + localSegmentSize) % 16 != 0)
+      localSegmentSize += 8;
+
+    printInsn("subq", String.format("$%d", localSegmentSize), "%rsp");
 
     // Store `this` pointer
     printInsn("movq", PARAM_REGISTERS[0], String.format("-%d(%%rbp)", 8));
@@ -123,17 +137,27 @@ public class CodeGenerator {
       int offset = 8 * (localOffsets.size() + 2);
       localOffsets.put(localName, offset);
     }
-  }
+
+    itemsOnStack = 0;
+}
 
   public void genMethodExit(String className, MethodMetadata method) {
     printComment("return point for " + className + "." + method + "()");
 
     // Pop return value
     printInsn("popq", "%rax");
+    itemsOnStack--;
 
-    // Free the space used by arguments and local variables, +1 for `this`.
-    printInsn("addq", String.format("$%d", 8 * (localOffsets.size() + 1)), "%rsp");
+    if (itemsOnStack != 0) {
+      System.out.println("Error: " + itemsOnStack + " values left on stack at end of "
+          + className + "." + method + "().");
+      System.exit(1);
+    }
+
+    // Free the space used by arguments and local variables
+    printInsn("addq", String.format("$%d", localSegmentSize), "%rsp");
     localOffsets = null;
+    localSegmentSize = 0;
 
     // Restore callee-saved registers
     printInsn("popq", "%rbx");
@@ -142,9 +166,20 @@ public class CodeGenerator {
     printInsn("ret");
   }
 
+  private void genCall(String functionName) {
+    if (itemsOnStack % 2 != 0)
+      printInsn("subq", "$8", "%rsp");
+
+    printInsn("call", assemblerPrefixName + functionName);
+
+    if (itemsOnStack % 2 != 0)
+      printInsn("addq", "$8", "%rsp");
+  }
+
   public void genMethodCall(String className, MethodMetadata method) {
-    printInsn("call", assemblerPrefixName + mangle(className, method));
+    genCall(mangle(className, method));
     printInsn("pushq", "%rax");
+    itemsOnStack++;
   }
 
   public void genActual(int position) {
@@ -154,11 +189,13 @@ public class CodeGenerator {
     }
     String register = PARAM_REGISTERS[position];
     printInsn("popq", register);
+    itemsOnStack--;
   }
 
   public void genConstant(int value) {
     printInsn("movq", String.format("$%d", value), "%rax");
     printInsn("pushq", "%rax");
+    itemsOnStack++;
   }
 
   public String newLabel(String labelName) {
@@ -214,12 +251,14 @@ public class CodeGenerator {
     printInsn("popq", "%rbx");  // boolean expression
     printInsn("cmpq", "$0", "%rbx");  // eval if false
     printInsn("je", label);  // if false, jump to label
+    itemsOnStack--;
   }
 
   public void genJmpIfTrue(String label) {
     printInsn("popq", "%rbx");  // boolean expression
     printInsn("cmpq", "$0", "%rbx");  // eval if false
     printInsn("jne", label);  // if not false, jump to label
+    itemsOnStack--;
   }
 
   public void genJmp(String label) {
@@ -231,6 +270,7 @@ public class CodeGenerator {
     printInsn("popq", "%rax"); // read expression result
     int offset = localOffsets.get(identifier);
     printInsn("movq", "%rax", String.format("-%d(%%rbp)", offset));
+    itemsOnStack--;
   }
 
   public void genLookup(String identifier) {
@@ -238,6 +278,7 @@ public class CodeGenerator {
     int offset = localOffsets.get(identifier);
     printInsn("movq", String.format("-%d(%%rbp)", offset), "%rax");
     printInsn("pushq", "%rax");
+    itemsOnStack++;
   }
 
   public void genEqual() {
@@ -248,6 +289,7 @@ public class CodeGenerator {
     printInsn("sete", "%al");  // set %al to 1 if equal
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genNotEqual() {
@@ -258,6 +300,7 @@ public class CodeGenerator {
     printInsn("setne", "%al");  // set %al to 1 if not equal
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genLessThan() {
@@ -268,6 +311,7 @@ public class CodeGenerator {
     printInsn("setl", "%al");  // set %al to 1 if less
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genGreaterThan() {
@@ -278,6 +322,7 @@ public class CodeGenerator {
     printInsn("setg", "%al");  // set %al to 1 if greater
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genLessEqual() {
@@ -288,6 +333,7 @@ public class CodeGenerator {
     printInsn("setle", "%al");  // set %al to 1 if less or equal
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genGreaterEqual() {
@@ -298,6 +344,7 @@ public class CodeGenerator {
     printInsn("setge", "%al");  // set %al to 1 if greater or equal
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genNot() {
@@ -307,6 +354,7 @@ public class CodeGenerator {
     printInsn("sete", "%al"); // set %al to ZF
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genAdd() {
@@ -315,6 +363,7 @@ public class CodeGenerator {
     printInsn("popq", "%rax");  // left operand
     printInsn("addq", "%rbx", "%rax");  // %rax += %rbx  (2nd operand is dst)
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genSub() {
@@ -323,6 +372,7 @@ public class CodeGenerator {
     printInsn("popq", "%rax");  // left operand
     printInsn("subq", "%rbx", "%rax");  // %rax -= %rbx  (2nd operand is dst)
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genMul() {
@@ -331,6 +381,7 @@ public class CodeGenerator {
     printInsn("popq", "%rax");  // left operand
     printInsn("imulq", "%rbx", "%rax");  // %rax *= %rbx  (2nd operand is dst)
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genDiv() {
@@ -341,6 +392,7 @@ public class CodeGenerator {
     printInsn("sarq", "$63", "%rdx");  // extend sign bit to fill register
     printInsn("idivq", "%rbx");  // %rdx:%rax /= %rbx (%rax is dest)
     printInsn("pushq", "%rax");
+    itemsOnStack--;
   }
 
   public void genMod() {
@@ -351,17 +403,20 @@ public class CodeGenerator {
     printInsn("sarq", "$63", "%rdx");  // extend sign bit to fill register
     printInsn("idivq", "%rbx");  // %rdx:%rax /= %rbx (%rdx contains remainder)
     printInsn("pushq", "%rdx");
+    itemsOnStack--;
   }
 
   public void genDisplay() {
     printInsn("popq", "%rdi");  // single operand
-    printInsn("call", assemblerPrefixName + "put");
+    itemsOnStack--;
+    genCall("put");
   }
 
   public void genPrint() {
     printComment("print statement");
     printInsn("popq", "%rdi");  // single operand
-    printInsn("call", assemblerPrefixName + "put");
+    itemsOnStack--;
+    genCall("put");
   }
 
 }

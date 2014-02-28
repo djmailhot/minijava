@@ -364,11 +364,13 @@ public class CodeGeneratorVisitor implements Visitor {
   // Exp e;
   public void visit(NewIntArray n) {
     n.e.accept(this);
+    cg.genAllocateArray();
   }
 
   // Exp e;
   public void visit(NewDoubleArray n) {
     n.e.accept(this);
+    cg.genAllocateArray();
   }
 
   // Identifier i;

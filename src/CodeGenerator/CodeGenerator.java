@@ -14,6 +14,7 @@ import SemanticAnalyzer.SemanticTypes.*;
 
 public class CodeGenerator {
 
+  private static final int QUAD_SIZE = 4;
   private static final String[] PARAM_REGISTERS =
     { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
 
@@ -419,4 +420,28 @@ public class CodeGenerator {
     genCall("put");
   }
 
+  public void genAllocateArray() {
+    printComment("allocate array");
+    // the size is the top arg on the stack
+
+    // make an array metadata object
+    genAllocateObject(QUAD_SIZE*2);
+    printInsn("popq", "%rbx");  // the metadata object of size 2, with a length and a data pointer
+
+    printInsn("popq", "%rdi");  // get the size of the array
+    printInsn("movq", "%rdi", "(%rbx)");  // put the length
+
+    printInsn("call", assemblerPrefixName + "mjmalloc");  // the data chunk
+    printInsn("movq", "%rax", "("+QUAD_SIZE+"%rbx)");  // put the data
+
+    printInsn("pushq", "%rbx");  // push the address of the heap space
+  }
+
+  public void genAllocateObject(int size) {
+    printComment("allocate array");
+
+    printInsn("movq", "$"+size, "%rdi");  // prepare the size of the object
+    printInsn("call", assemblerPrefixName + "mjmalloc");
+    printInsn("pushq", "%rax");  // push the address of the new heap space
+  }
 }

@@ -47,7 +47,7 @@ class TestFunctions {
     return x / y;
   }
 
-  public boolean passedOneThroughFive(int a, int b, int c, int d, int e) {
+  public int passedOneThroughFive(int a, int b, int c, int d, int e) {
     boolean correct;
     int ret;
 

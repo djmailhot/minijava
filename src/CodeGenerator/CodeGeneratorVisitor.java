@@ -330,7 +330,7 @@ public class CodeGeneratorVisitor implements Visitor {
     n.i.accept(this);
     for (int i = 0; i < n.el.size(); i++) {
       n.el.get(i).accept(this);
-      cg.genActual(i + 1);
+      cg.genActual(i);
     }
     ClassVarType classType = (ClassVarType) n.e.type;
     cg.genMethodCall(classType.name, classType.getMethod(n.i.s));

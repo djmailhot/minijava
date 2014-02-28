@@ -55,6 +55,20 @@ public class CodeGenerator {
   }
 
   /**
+   * Returns a unique assembler label name for the given class's vtable.
+   *
+   * Mimics g++ name mangling, for fun.
+   */
+  private String vtblName(String className) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("_ZTV")
+      .append(className.length())
+      .append(className);
+
+    return sb.toString();
+  }
+
+  /**
    * Returns an assembler label name uniquely identifying the given method.
    *
    * Mimics g++ name mangling, for fun.

@@ -527,7 +527,6 @@ public class CodeGenerator {
     printInsn("sete", "%al"); // set %al to ZF
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
-    itemsOnStack--;
   }
 
   public void genAdd() {

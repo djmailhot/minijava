@@ -234,13 +234,19 @@ public class CodeGenerator {
   }
 
   public void genActual(int position) {
-    if (position >= 5) {
+    if (position > 5) {
       System.err.println("Encountered a function with more than 5 explicit arguments.");
       System.exit(0);
     }
-    String register = PARAM_REGISTERS[position + 1];
+    String register = PARAM_REGISTERS[position];
     printInsn("popq", register);
     itemsOnStack--;
+  }
+
+  public void genThis() {
+    printInsn("movq", "-8(%rbp)", "%rdi");
+    printInsn("pushq", "%rdi");
+    itemsOnStack++;
   }
 
   public void genConstant(int value) {

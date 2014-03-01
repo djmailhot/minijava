@@ -327,10 +327,11 @@ public class CodeGeneratorVisitor implements Visitor {
   // ExpList el;
   public void visit(Call n) {
     n.e.accept(this);
+    cg.genActual(0);  // push the current class
     n.i.accept(this);
     for (int i = 0; i < n.el.size(); i++) {
       n.el.get(i).accept(this);
-      cg.genActual(i);
+      cg.genActual(i + 1);  // the first register rdi is reserved
     }
     ClassVarType classType = (ClassVarType) n.e.type;
     cg.genMethodCall(classType.name, classType.getMethod(n.i.s));
@@ -362,6 +363,7 @@ public class CodeGeneratorVisitor implements Visitor {
   }
 
   public void visit(This n) {
+    cg.genThis();
   }
 
   // Exp e;
@@ -381,7 +383,7 @@ public class CodeGeneratorVisitor implements Visitor {
     ClassVarType newClass = classes.get(n.i.s);
     int size = newClass.size();
 
-    // cg.genAllocateObject(size);
+    cg.genAllocateObject(size);
   }
 
   // Exp e;

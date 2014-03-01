@@ -113,6 +113,7 @@ public class CodeGenerator {
       break;
     case ERR_NEG_ARRAY_SIZE:
       printComment("negative array size");
+      break;
     default:
       printComment("unknown error");
       break;

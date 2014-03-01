@@ -321,32 +321,49 @@ public class CodeGenerator {
     printInsn("jmp", label);  // jump to label
   }
 
-  public void genAssign(String identifier) {
+  public void genAssign(ClassVarType currentClass, String identifier) {
     printComment("assign to " + identifier);
 
-    // TODO: assignment to fields
     printInsn("popq", "%rax"); // read expression result
-    int offset = localOffsets.get(identifier);
-    printInsn("movq", "%rax", String.format("-%d(%%rbp)", offset));
+
+    if (localOffsets.containsKey(identifier)) {
+      // identifier refers to a parameter or local variable
+      int offset = localOffsets.get(identifier);
+      printInsn("movq", "%rax", "-"+offset+"(%rbp)");
+    } else {
+      // identifier refers to a field
+      int offset = currentClass.getFieldOffset(identifier);
+      // get the `this` pointer
+      printInsn("movq", "-8(%rbp)", "%rbx");
+      printInsn("movq", "%rax", offset+"(%rbx)");
+    }
     itemsOnStack--;
   }
 
-  public void genLookup(String identifier) {
+  public void genLookup(ClassVarType currentClass, String identifier) {
     printComment("lookup " + identifier);
 
-    // TODO: lookup of fields
-    int offset = localOffsets.get(identifier);
-    printInsn("movq", String.format("-%d(%%rbp)", offset), "%rax");
+    if (localOffsets.containsKey(identifier)) {
+      // identifier refers to a parameter or local variable
+      int offset = localOffsets.get(identifier);
+      printInsn("movq", "-"+offset+"(%rbp)", "%rax");
+    } else {
+      // identifier refers to a field
+      int offset = currentClass.getFieldOffset(identifier);
+      // get the `this` pointer
+      printInsn("movq", "-8(%rbp)", "%rbx");
+      printInsn("movq", offset+"(%rbx)", "%rax");
+    }
     printInsn("pushq", "%rax");
     itemsOnStack++;
   }
 
-  public void genArrayAssign(String identifier) {
+  public void genArrayAssign(ClassVarType currentClass, String identifier) {
     printComment("array assign");
 
     printInsn("popq", "%rcx"); // value to assign
     printInsn("popq", "%rbx"); // array offset
-    genLookup(identifier);
+    genLookup(currentClass, identifier);
     printInsn("popq", "%rax"); // array pointer
     genBoundsCheck("%rax", "%rbx");
     printInsn("movq", "%rcx", "(%rax,%rbx,8)");  // store value

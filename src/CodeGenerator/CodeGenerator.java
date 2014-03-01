@@ -32,6 +32,10 @@ public class CodeGenerator {
 
   public String assemblerPrefixName;
 
+  /**
+   * Constructs a new CodeGenerator which outputs to the given file. Outputs to
+   * stdout if the given filename is "stdout" or null.
+   */
   public CodeGenerator(String outputFileName) {
     if (outputFileName != null && outputFileName != "stdout") {
       try {
@@ -100,7 +104,7 @@ public class CodeGenerator {
   }
 
   /**
-   * Exits with the given error code.
+   * Generates code that exits the minijava program with the given error code.
    */
   private void genRuntimeError(int errorCode) {
     switch (errorCode) {
@@ -117,6 +121,9 @@ public class CodeGenerator {
     genCall(assemblerPrefixName + "exit");
   }
 
+  /**
+   * Generates the prelude to a function body.
+   */
   public void genFunctionEntry(String functionName) {
     printComment("entry point for " + assemblerPrefixName + functionName);
     printSection(".text");
@@ -129,12 +136,19 @@ public class CodeGenerator {
     itemsOnStack = 0;
   }
 
+  /**
+   * Generates the end of a function body.
+   */
   public void genFunctionExit(String functionName) {
     printComment("return point for " + assemblerPrefixName + functionName);
     printInsn("popq", "%rbp");
     printInsn("ret");
   }
 
+  /**
+   * Generates the prelude to a method body. Ensures that the stack pointer is
+   * aligned to a multiple of 16 afterwards.
+   */
   public void genMethodEntry(String className, MethodMetadata method) {
     printComment("entry point for " + className + "." + method + "()");
     printLabel(mangle(className, method));
@@ -174,8 +188,11 @@ public class CodeGenerator {
     }
 
     itemsOnStack = 0;
-}
+  }
 
+  /**
+   * Generates the end of a method body.
+   */
   public void genMethodExit(String className, MethodMetadata method) {
     printComment("return point for " + className + "." + method + "()");
 
@@ -200,25 +217,35 @@ public class CodeGenerator {
     printInsn("ret");
   }
 
+  /**
+   * Generates a call to the given function.
+   */
   private void genCall(String functionName) {
+    // Align the stack pointer to a 16-byte multiple, if needed
     if (itemsOnStack % 2 != 0)
       printInsn("subq", "$8", "%rsp");
 
     printInsn("call", assemblerPrefixName + functionName);
 
+    // Restore the stack pointer
     if (itemsOnStack % 2 != 0)
       printInsn("addq", "$8", "%rsp");
   }
 
+  /**
+   * Generates a call to the given method.
+   */
   public void genMethodCall(ClassVarType classType, MethodMetadata method) {
     int offset = classType.getMethodOffset(method.name);
 
+    // Align the stack pointer to a 16-byte multiple, if needed
     if (itemsOnStack % 2 != 0)
       printInsn("subq", "$8", "%rsp");
 
     printInsn("movq", "(%rdi)", "%rax");  // look up vtbl pointer
     printInsn("callq", "*"+offset+"(%rax)");  // call method
 
+    // Restore the stack pointer
     if (itemsOnStack % 2 != 0)
       printInsn("addq", "$8", "%rsp");
 
@@ -226,6 +253,10 @@ public class CodeGenerator {
     itemsOnStack++;
   }
 
+  /**
+   * Generates code to load a value off the expression stack into the argument
+   * register for the given argument position.
+   */
   public void genActual(int position) {
     if (position > 5) {
       System.err.println("Encountered a function with more than 5 explicit arguments.");
@@ -236,6 +267,9 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
+  /**
+   * Pushes a pointer to the current `this` object onto the expression stack.
+   */
   public void genThis() {
     printInsn("movq", "-8(%rbp)", "%rdi");
     printInsn("pushq", "%rdi");
@@ -248,16 +282,26 @@ public class CodeGenerator {
     itemsOnStack++;
   }
 
+  /**
+   * Generates and returns unique label name containing the given string.
+   */
   public String newLabel(String labelName) {
     String label = "L" + labelCounter + labelName;
     labelCounter += 1;
     return label;
   }
 
+  /**
+   * Prints the given label with the platform-specific assembler prefix.
+   */
   public void printLabel(String labelName) {
     outputStream.println(assemblerPrefixName + labelName + ":");
   }
 
+  /**
+   * Prints the given label without the platform-specific assembler prefix.
+   * Useful for printing local asm labels.
+   */
   public void printLocalLabel(String labelName) {
     outputStream.println(labelName + ":");
   }

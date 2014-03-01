@@ -67,6 +67,10 @@ public class CodeGenMain {
     }
   }
 
+  /**
+   * Initializes the fieldOffsets and methodOffsets tables for each class type
+   * in the compiled program.
+   */
   private static void setClassMemberOffsets(ProgramMetadata pm) {
     for (ClassVarType cvt : pm.classes.values()) {
 
@@ -83,6 +87,16 @@ public class CodeGenMain {
     }
   }
 
+  /**
+   * Populates the given offsets table with the method offsets of the given
+   * class's superclasses. Then adds c's method offsets to the table, possibly
+   * overwriting methods which c overrides. Returns the total size of c's
+   * virtual table.
+   *
+   * @param c The class whose methods will be added to the given offsets table.
+   * @param offsets The method offsets table to populate.
+   * @return The size of c's vtable in bytes.
+   */
   private static int setMethodOffsets(ClassVarType c, Map<String, Integer> offsets) {
     int offset = 0;
 

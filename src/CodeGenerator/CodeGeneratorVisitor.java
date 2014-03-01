@@ -36,6 +36,7 @@ public class CodeGeneratorVisitor implements Visitor {
     for (int i = 0; i < n.cl.size(); i++) {
       n.cl.get(i).accept(this);
     }
+    cg.genVtables(classes.values());
   }
 
   // Identifier i1,i2;

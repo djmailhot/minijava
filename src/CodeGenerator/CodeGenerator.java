@@ -7,8 +7,7 @@ package CodeGenerator;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import SemanticAnalyzer.SemanticTypes.*;
 
@@ -570,5 +569,22 @@ public class CodeGenerator {
     genCall("mjmalloc");
     printInsn("pushq", "%rax");  // push the address of the new heap space
     itemsOnStack++;
+  }
+
+  public void genVtables(Collection<ClassVarType> classes) {
+    for (ClassVarType c : classes) {
+      printComment("vtbl for " + c);
+      printSection(".data");
+      printLabel(vtblName(c.name));
+      genVtableEntriesForClass(c);
+    }
+  }
+
+  private void genVtableEntriesForClass(ClassVarType c) {
+    if (c.superclass != null)
+      genVtableEntriesForClass(c.superclass);
+
+    for (MethodMetadata method : c.methods.values())
+      printInsn(".quad", assemblerPrefixName + mangle(c.name, method));
   }
 }

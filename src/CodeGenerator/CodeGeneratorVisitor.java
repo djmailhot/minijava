@@ -32,11 +32,11 @@ public class CodeGeneratorVisitor implements Visitor {
   // MainClass m;
   // ClassDeclList cl;
   public void visit(Program n) {
-    cg.genVtables(classes.values());
     n.m.accept(this);
     for (int i = 0; i < n.cl.size(); i++) {
       n.cl.get(i).accept(this);
     }
+    cg.genVtables(classes.values());
   }
 
   // Identifier i1,i2;
@@ -382,9 +382,8 @@ public class CodeGeneratorVisitor implements Visitor {
   // Identifier i;
   public void visit(NewObject n) {
     ClassVarType newClass = classes.get(n.i.s);
-    int size = newClass.size();
 
-    cg.genAllocateObject(size);
+    cg.genAllocateObject(newClass);
   }
 
   // Exp e;

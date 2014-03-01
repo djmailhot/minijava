@@ -579,11 +579,13 @@ public class CodeGenerator {
     printInsn("pushq", "%rax");  // push the array pointer
   }
 
-  public void genAllocateObject(int size) {
+  public void genAllocateObject(ClassVarType type) {
     printComment("allocate object");
 
-    printInsn("movq", "$"+size, "%rdi");  // prepare the size of the object
+    printInsn("movq", "$"+type.size(), "%rdi");  // prepare the size of the object
     genCall("mjmalloc");
+    printInsn("leaq", assemblerPrefixName + vtblName(type.name) + "(%rip)", "%rbx"); // get the vtbl address
+    printInsn("movq", "%rbx", "(%rax)"); // initialize the object's vtbl pointer
     printInsn("pushq", "%rax");  // push the address of the new heap space
     itemsOnStack++;
   }
@@ -592,6 +594,7 @@ public class CodeGenerator {
     for (ClassVarType c : classes) {
       printComment("vtbl for " + c);
       printSection(".data");
+      printGlobalName(vtblName(c.name));
       printLabel(vtblName(c.name));
       genVtableEntriesForClass(c);
     }

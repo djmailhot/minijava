@@ -373,8 +373,8 @@ public class CodeGenerator {
       // identifier refers to a field
       int offset = currentClass.getFieldOffset(identifier);
       // get the `this` pointer
-      printInsn("movq", "-8(%rbp)", "%rbx");
-      printInsn("movq", "%rax", offset+"(%rbx)");
+      printInsn("movq", "-8(%rbp)", "%rdx");
+      printInsn("movq", "%rax", offset+"(%rdx)");
     }
     itemsOnStack--;
   }
@@ -390,8 +390,8 @@ public class CodeGenerator {
       // identifier refers to a field
       int offset = currentClass.getFieldOffset(identifier);
       // get the `this` pointer
-      printInsn("movq", "-8(%rbp)", "%rbx");
-      printInsn("movq", offset+"(%rbx)", "%rax");
+      printInsn("movq", "-8(%rbp)", "%rdx");
+      printInsn("movq", offset+"(%rdx)", "%rax");
     }
     printInsn("pushq", "%rax");
     itemsOnStack++;

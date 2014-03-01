@@ -335,7 +335,7 @@ public class CodeGeneratorVisitor implements Visitor {
       cg.genActual(i + 1);  // the first register rdi is reserved
     }
     ClassVarType classType = (ClassVarType) n.e.type;
-    cg.genMethodCall(classType.name, classType.getMethod(n.i.s));
+    cg.genMethodCall(classType, classType.getMethod(n.i.s));
   }
 
   // int i;

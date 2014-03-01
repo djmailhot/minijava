@@ -4,6 +4,7 @@
  */
 
 import java.io.FileInputStream;
+import java.util.Map;
 
 import AST.*;
 import CodeGenerator.*;
@@ -52,7 +53,7 @@ public class CodeGenMain {
       ProgramMetadata pm = TypeChecker.gatherSymbols(program);
       TypeChecker.typeCheck(program, pm);
 
-      setClassFieldOffsets(pm);
+      setClassMemberOffsets(pm);
 
       CodeGenerator cg = new CodeGenerator(outputFileName);
       program.accept(new CodeGeneratorVisitor(cg, pm));
@@ -66,7 +67,7 @@ public class CodeGenMain {
     }
   }
 
-  private static void setClassFieldOffsets(ProgramMetadata pm) {
+  private static void setClassMemberOffsets(ProgramMetadata pm) {
     for (ClassVarType cvt : pm.classes.values()) {
 
       // indexes are 0-indexed
@@ -75,6 +76,26 @@ public class CodeGenMain {
         cvt.fieldOffsets.put(name, index);
         index += 8;
       }
+
+      // Set this class type's method offsets to refer to the lowest override in
+      // the class hierarchy for each method on this class type.
+      setMethodOffsets(cvt, cvt.methodOffsets);
     }
+  }
+
+  private static int setMethodOffsets(ClassVarType c, Map<String, Integer> offsets) {
+    int offset = 0;
+
+    // Add superclass methods to the offsets table
+    if (c.superclass != null)
+      offset = setMethodOffsets(c.superclass, offsets);
+
+    // Add c's method offsets, and overwrite offsets of overridden methods
+    for (String name : c.methods.keySet()) {
+      offsets.put(name, offset);
+      offset += 8;
+    }
+
+    return offset;
   }
 }

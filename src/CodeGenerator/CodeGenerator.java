@@ -100,22 +100,6 @@ public class CodeGenerator {
   }
 
   /**
-   * Debug method for printing the value of a register or a literal.
-   */
-  private void debugPrint(String s) {
-    for (String reg : PARAM_REGISTERS)
-      printInsn("pushq", reg);
-
-    printInsn("pushq", "%rax");
-    printInsn("movq", s, "%rdi");
-    genCall("put");
-    printInsn("popq", "%rax");
-
-    for (int i = PARAM_REGISTERS.length - 1; i >= 0; --i)
-      printInsn("popq", PARAM_REGISTERS[i]);
-  }
-
-  /**
    * Exits with the given error code.
    */
   private void genRuntimeError(int errorCode) {
@@ -226,8 +210,18 @@ public class CodeGenerator {
       printInsn("addq", "$8", "%rsp");
   }
 
-  public void genMethodCall(String className, MethodMetadata method) {
-    genCall(mangle(className, method));
+  public void genMethodCall(ClassVarType classType, MethodMetadata method) {
+    int offset = classType.getMethodOffset(method.name);
+
+    if (itemsOnStack % 2 != 0)
+      printInsn("subq", "$8", "%rsp");
+
+    printInsn("movq", "(%rdi)", "%rax");  // look up vtbl pointer
+    printInsn("callq", "*"+offset+"(%rax)");  // call method
+
+    if (itemsOnStack % 2 != 0)
+      printInsn("addq", "$8", "%rsp");
+
     printInsn("pushq", "%rax");
     itemsOnStack++;
   }

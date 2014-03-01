@@ -69,20 +69,7 @@ public class ClassVarType extends VarType {
   }
 
   public int getMethodOffset(String name) {
-    ClassVarType currClass = this;
-    Integer offset = null;
-
-    while (currClass != null && offset == null) {
-      // see if we have it
-      if (currClass.methodOffsets.containsKey(name)) {
-        offset = currClass.methodOffsets.get(name);
-
-      // move to the superclass
-      } else {
-        currClass = currClass.superclass;
-      }
-    }
-    return offset;
+    return methodOffsets.get(name);
   }
 
   public boolean supertypeOrEqual(VarType o) {

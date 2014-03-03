@@ -655,4 +655,8 @@ public class CodeGenerator {
 
     return vtable;
   }
+
+  public void genStatementCountIncrement(int lineNumber) {
+    printComment("line " + lineNumber);
+  }
 }

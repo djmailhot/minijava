@@ -19,6 +19,8 @@ public class ClassInternalsVisitor implements Visitor {
   private Map<String, MethodMetadata> methodScope;
   private Map<String, VarType> paramsScope;
 
+  private ClassVarType currentClass;
+
   public ClassInternalsVisitor(ProgramMetadata pm) {
     this.classScope = pm.classes;
     this.localScope = null;
@@ -95,17 +97,18 @@ public class ClassInternalsVisitor implements Visitor {
       ErrorMessages.errSymbolNotFound(lineNumber, className);
     } else {
 
-      ClassVarType ct = classScope.get(className);
-      localScope = ct.fields;
+      currentClass = classScope.get(className);
+      localScope = currentClass.fields;
       for (int i = 0; i < n.vl.size(); i++) {
         n.vl.get(i).accept(this);
       }
       localScope = null;
 
-      methodScope = ct.methods;
+      methodScope = currentClass.methods;
       for (int i = 0; i < n.ml.size(); i++) {
         n.ml.get(i).accept(this);
       }
+      currentClass = null;
       methodScope = null;
     }
   }
@@ -122,17 +125,18 @@ public class ClassInternalsVisitor implements Visitor {
     if (!classScope.containsKey(className)) {
       ErrorMessages.errSymbolNotFound(lineNumber, className);
     } else {
-      ClassVarType ct = classScope.get(className);
-      localScope = ct.fields;
+      currentClass = classScope.get(className);
+      localScope = currentClass.fields;
       for (int i = 0; i < n.vl.size(); i++) {
         n.vl.get(i).accept(this);
       }
       localScope = null;
 
-      methodScope = ct.methods;
+      methodScope = currentClass.methods;
       for (int i = 0; i < n.ml.size(); i++) {
         n.ml.get(i).accept(this);
       }
+      currentClass = null;
       methodScope = null;
     }
   }
@@ -168,7 +172,7 @@ public class ClassInternalsVisitor implements Visitor {
 
     VarType returnType = deriveVarType(n.t, lineNumber);
 
-    MethodMetadata mm = new MethodMetadata(returnType, methodName, lineNumber);
+    MethodMetadata mm = new MethodMetadata(currentClass, returnType, methodName, lineNumber);
 
     paramsScope = mm.params;
     for (int i = 0; i < n.fl.size(); i++) {

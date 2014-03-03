@@ -219,6 +219,7 @@ public class CodeGeneratorVisitor implements Visitor {
     cg.genConstant(1);
     cg.genJmp(labelEnd);
     cg.printLocalLabel(labelFalse);
+    cg.decrementStackItemCount();
     cg.genConstant(0);
     cg.printLocalLabel(labelEnd);
   }
@@ -236,6 +237,7 @@ public class CodeGeneratorVisitor implements Visitor {
     cg.genConstant(0);
     cg.genJmp(labelEnd);
     cg.printLocalLabel(labelTrue);
+    cg.decrementStackItemCount();
     cg.genConstant(1);
     cg.printLocalLabel(labelEnd);
   }

@@ -454,6 +454,14 @@ public class CodeGenerator {
     printLocalLabel(labelPass);
 }
 
+  /**
+   * ShortCircuitAnd and ShortCircuitOr need a way to indicate that only one of
+   * the constants they generate is actually pushed onto the stack.
+   */
+  public void decrementStackItemCount() {
+    itemsOnStack--;
+  }
+
   public void genEqual() {
     printComment("equal operation");
     printInsn("popq", "%rax");  // right operand

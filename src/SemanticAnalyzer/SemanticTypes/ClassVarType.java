@@ -7,8 +7,8 @@ import java.util.Map;
 public class ClassVarType extends VarType {
 
   public ClassVarType superclass;
-  public Map<String, VarType> fields;
-  public Map<String, MethodMetadata> methods;
+  public LinkedHashMap<String, VarType> fields;
+  public LinkedHashMap<String, MethodMetadata> methods;
   public Map<String, Integer> fieldOffsets;
   public Map<String, Integer> methodOffsets;
   private int size;

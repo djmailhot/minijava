@@ -634,15 +634,25 @@ public class CodeGenerator {
       printSection(".data");
       printGlobalName(vtblName(c.name));
       printLabel(vtblName(c.name));
-      genVtableEntriesForClass(c);
+
+      Map<String, MethodMetadata> vtable = getVtableEntriesForClass(c);
+      for (MethodMetadata method : vtable.values()) {
+        printInsn(".quad", assemblerPrefixName + mangle(c.name, method));
+      }
     }
   }
 
-  private void genVtableEntriesForClass(ClassVarType c) {
-    if (c.superclass != null)
-      genVtableEntriesForClass(c.superclass);
+  private Map<String, MethodMetadata> getVtableEntriesForClass(ClassVarType c) {
+    Map<String, MethodMetadata> vtable;
+    if (c.superclass != null) {
+      vtable = getVtableEntriesForClass(c.superclass);
+    } else {
+      vtable = new LinkedHashMap<String, MethodMetadata>();
+    }
 
     for (MethodMetadata method : c.methods.values())
-      printInsn(".quad", assemblerPrefixName + mangle(c.name, method));
+      vtable.put(method.name, method);
+
+    return vtable;
   }
 }

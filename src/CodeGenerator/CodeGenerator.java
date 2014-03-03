@@ -637,7 +637,7 @@ public class CodeGenerator {
 
       Map<String, MethodMetadata> vtable = getVtableEntriesForClass(c);
       for (MethodMetadata method : vtable.values()) {
-        printInsn(".quad", assemblerPrefixName + mangle(c.name, method));
+        printInsn(".quad", assemblerPrefixName + mangle(method.enclosingClass.name, method));
       }
     }
   }

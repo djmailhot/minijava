@@ -83,11 +83,11 @@ $(SAMPLEDIR)/%.expect: $(SAMPLEDIR)/%.class $(CLASSPATH_T)
 $(SAMPLEDIR)/%.s: $(SAMPLEDIR)/%.java compileMJ.T Makefile
 	java -classpath ./build/classes:./lib/CUP.jar CodeGenMain -o $@ -i $< < $<
 $(SAMPLEDIR)/%.x: $(SAMPLEDIR)/%.s boot.c Makefile
-	gcc -Wall -fno-pic -m64 -g $< boot.c number_converter.o -o $@
+	gcc -Wall -fno-pic -m64 -g $< boot.c number_converter.o -o $@ -lm
 $(SAMPLEDIR)/%.actual: $(SAMPLEDIR)/%.x
 	$< > $@
 number_converter.o: number_converter.c
-	gcc -c -Wall -fno-pic -m64 -g $< -o $@
+	gcc -c -Wall -fno-pic -m64 -g $< -o $@ -lm
 
 compileMJ.T: src/*.java src/*/*.java build.xml Makefile
 	ant compile

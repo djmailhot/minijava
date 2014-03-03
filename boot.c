@@ -11,6 +11,7 @@
  *  Additional functions used by compiled code can be added as desired.
  */
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -33,7 +34,7 @@ int64_t get(void)
 {
   int64_t k;
   printf("get: ");
-  scanf("%lld", &k);
+  scanf("%" PRId64, &k);
   return k;
 }
 
@@ -45,7 +46,7 @@ int64_t get(void)
  */
 void put(int64_t x)
 {
-  printf("%lld\n", x);
+  printf("%" PRId64 "\n", x);
 }
 
 void put_double(double d)

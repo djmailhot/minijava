@@ -328,12 +328,12 @@ public class CodeGeneratorVisitor implements Visitor {
   // ExpList el;
   public void visit(Call n) {
     n.e.accept(this);
-    cg.genActual(0);  // push the current class
     n.i.accept(this);
     for (int i = 0; i < n.el.size(); i++) {
       n.el.get(i).accept(this);
       cg.genActual(i + 1);  // the first register rdi is reserved
     }
+    cg.genActual(0);  // push the current class
     ClassVarType classType = (ClassVarType) n.e.type;
     cg.genMethodCall(classType, classType.getMethod(n.i.s));
   }

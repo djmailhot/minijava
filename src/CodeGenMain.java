@@ -81,17 +81,13 @@ public class CodeGenMain {
         index += 8;
       }
 
-      // Set this class type's method offsets to refer to the lowest override in
-      // the class hierarchy for each method on this class type.
       setMethodOffsets(cvt, cvt.methodOffsets);
     }
   }
 
   /**
-   * Populates the given offsets table with the method offsets of the given
-   * class's superclasses. Then adds c's method offsets to the table, possibly
-   * overwriting methods which c overrides. Returns the total size of c's
-   * virtual table.
+   * Populates the given offsets table with the method offsets of all of the
+   * given class's methods, including inherited methods.
    *
    * @param c The class whose methods will be added to the given offsets table.
    * @param offsets The method offsets table to populate.
@@ -104,10 +100,12 @@ public class CodeGenMain {
     if (c.superclass != null)
       offset = setMethodOffsets(c.superclass, offsets);
 
-    // Add c's method offsets, and overwrite offsets of overridden methods
+    // Add c's method offsets
     for (String name : c.methods.keySet()) {
-      offsets.put(name, offset);
-      offset += 8;
+      if (!offsets.containsKey(name)) {
+        offsets.put(name, offset);
+        offset += 8;
+      }
     }
 
     return offset;

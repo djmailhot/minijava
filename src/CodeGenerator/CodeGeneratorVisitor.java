@@ -144,7 +144,6 @@ public class CodeGeneratorVisitor implements Visitor {
   // StatementList sl;
   public void visit(Block n) {
     for (int i = 0; i < n.sl.size(); i++) {
-      cg.genStatementCountIncrement(n.sl.get(i).getLineNumber());
       n.sl.get(i).accept(this);
     }
   }
@@ -156,13 +155,12 @@ public class CodeGeneratorVisitor implements Visitor {
     String labelFalse = cg.newLabel("false");
     String labelEnd = cg.newLabel("end");
 
+    cg.genStatementCountIncrement(n.getLineNumber());
     n.e.accept(this);
     cg.genJmpIfFalse(labelFalse);
-    cg.genStatementCountIncrement(n.s1.getLineNumber());
     n.s1.accept(this);
     cg.genJmp(labelEnd);
     cg.printLocalLabel(labelFalse);
-    cg.genStatementCountIncrement(n.s2.getLineNumber());
     n.s2.accept(this);
     cg.printLocalLabel(labelEnd);
   }
@@ -174,10 +172,10 @@ public class CodeGeneratorVisitor implements Visitor {
     String labelTop = cg.newLabel("top");
     String labelBot = cg.newLabel("bot");
 
+    cg.genStatementCountIncrement(n.getLineNumber());
     cg.printLocalLabel(labelTop);
     n.e.accept(this);
     cg.genJmpIfFalse(labelBot);
-    cg.genStatementCountIncrement(n.s.getLineNumber());
     n.s.accept(this);
     cg.genJmp(labelTop);
     cg.printLocalLabel(labelBot);
@@ -185,6 +183,7 @@ public class CodeGeneratorVisitor implements Visitor {
 
   // Exp e;
   public void visit(Print n) {
+    cg.genStatementCountIncrement(n.getLineNumber());
     n.e.accept(this);
     cg.genPrint();
   }
@@ -193,6 +192,7 @@ public class CodeGeneratorVisitor implements Visitor {
   // Exp e;
   public void visit(Assign n) {
     n.e.accept(this);
+    cg.genStatementCountIncrement(n.getLineNumber());
     cg.genAssign(currentClass, n.i.s);
   }
 
@@ -202,6 +202,7 @@ public class CodeGeneratorVisitor implements Visitor {
     n.i.accept(this);
     n.e1.accept(this);
     n.e2.accept(this);
+    cg.genStatementCountIncrement(n.getLineNumber());
     cg.genArrayAssign(currentClass, n.i.s);
   }
 

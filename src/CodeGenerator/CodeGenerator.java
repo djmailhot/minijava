@@ -30,6 +30,8 @@ public class CodeGenerator {
   /** The number of 8-byte values on the current function's expression stack. */
   private int itemsOnStack;
 
+  private int maxLineNumber;
+
   public String assemblerPrefixName;
 
   /**
@@ -664,7 +666,29 @@ public class CodeGenerator {
     return vtable;
   }
 
+  public void genStatementCountsDeclaration() {
+    printInsn(".zerofill __DATA,__bss," + assemblerPrefixName + "statement_counts,"
+        + (8 * maxLineNumber) + ",8");
+  }
+
   public void genStatementCountIncrement(int lineNumber) {
+    maxLineNumber = (lineNumber > maxLineNumber) ? lineNumber : maxLineNumber;
     printComment("line " + lineNumber);
+    printInsn("leaq", assemblerPrefixName + "statement_counts(%rip)", "%rax");
+    printInsn("movq", "$"+(lineNumber-1), "%rbx");
+    printInsn("incq", "(%rax,%rbx,8)");
+  }
+
+  public void genPrintStatementCounts() {
+    genCall("generated_print_statement_counts");
+  }
+
+  public void genPrintStatementCountsDeclaration() {
+    genFunctionEntry("generated_print_statement_counts");
+    printInsn("leaq", assemblerPrefixName + "statement_counts(%rip)", "%rdi");
+    printInsn("movq", "$"+maxLineNumber, "%rsi");
+    genCall("print_statement_counts");
+    genFunctionExit("psc");
+
   }
 }

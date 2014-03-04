@@ -36,6 +36,8 @@ public class CodeGeneratorVisitor implements Visitor {
     for (int i = 0; i < n.cl.size(); i++) {
       n.cl.get(i).accept(this);
     }
+    cg.genPrintStatementCountsDeclaration();
+    cg.genStatementCountsDeclaration();
     cg.genVtables(classes.values());
   }
 
@@ -48,6 +50,7 @@ public class CodeGeneratorVisitor implements Visitor {
     n.i2.accept(this);
     cg.genStatementCountIncrement(n.s.getLineNumber());
     n.s.accept(this);
+    cg.genPrintStatementCounts();
     cg.genFunctionExit("asm_main");
     currentClass = null;
   }

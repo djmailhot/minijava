@@ -74,3 +74,14 @@ int main(void)
   asm_main();
   return 0;
 }
+
+void print_statement_counts(int64_t *array, int64_t length)
+{
+  int i;
+
+  printf("Statement counting profiler results:\n");
+
+  for (i = 0; i < length; ++i) {
+    printf("Line %d: %lld\n", i+1, array[i]);
+  }
+}

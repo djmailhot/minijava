@@ -154,6 +154,7 @@
       <arg value="${file}.java"/>
       <arg value="-o"/>
       <arg value="${file}.s"/>
+      <arg value="-c"/>
     </java>
   </target>
 

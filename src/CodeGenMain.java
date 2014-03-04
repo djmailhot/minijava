@@ -22,6 +22,7 @@ public class CodeGenMain {
   public static void main(String[] args) {
     String outputFileName = null;
     String inputFileName = null;
+    boolean statementCounting = false;
 
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals("-i")) {
@@ -29,6 +30,9 @@ public class CodeGenMain {
         i += 1;
       } else if (args[i].equals("-o")) {
         outputFileName = args[i+1];
+        i += 1;
+      } else if (args[i].equals("-c")) {
+        statementCounting = true;
         i += 1;
       } else {
         System.err.println("Unknown argument <" + args[i] + ">");
@@ -55,7 +59,7 @@ public class CodeGenMain {
 
       setClassMemberOffsets(pm);
 
-      CodeGenerator cg = new CodeGenerator(outputFileName);
+      CodeGenerator cg = new CodeGenerator(outputFileName, statementCounting);
       program.accept(new CodeGeneratorVisitor(cg, pm));
 
       System.exit(0);

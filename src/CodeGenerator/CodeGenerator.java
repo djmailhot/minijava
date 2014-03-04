@@ -21,6 +21,8 @@ public class CodeGenerator {
   private static final int ERR_NEG_ARRAY_SIZE = 11;
 
   private PrintStream outputStream;
+  private final boolean statementCounting;
+
   private int labelCounter;
   private Map<String, Integer> localOffsets;
 
@@ -38,7 +40,7 @@ public class CodeGenerator {
    * Constructs a new CodeGenerator which outputs to the given file. Outputs to
    * stdout if the given filename is "stdout" or null.
    */
-  public CodeGenerator(String outputFileName) {
+  public CodeGenerator(String outputFileName, boolean statementCounting) {
     if (outputFileName != null && outputFileName != "stdout") {
       try {
         outputStream = new PrintStream(outputFileName);
@@ -57,6 +59,8 @@ public class CodeGenerator {
     } else {
       assemblerPrefixName = "";
     }
+
+    this.statementCounting = statementCounting;
   }
 
   /**
@@ -667,23 +671,36 @@ public class CodeGenerator {
   }
 
   public void genStatementCountsDeclaration() {
+    if (!statementCounting)
+      return;
+
     printInsn(".zerofill __DATA,__bss," + assemblerPrefixName + "statement_counts,"
         + (8 * maxLineNumber) + ",8");
   }
 
   public void genStatementCountIncrement(int lineNumber) {
-    maxLineNumber = (lineNumber > maxLineNumber) ? lineNumber : maxLineNumber;
     printComment("line " + lineNumber);
+
+    if (!statementCounting)
+      return;
+
+    maxLineNumber = (lineNumber > maxLineNumber) ? lineNumber : maxLineNumber;
     printInsn("leaq", assemblerPrefixName + "statement_counts(%rip)", "%rax");
     printInsn("movq", "$"+(lineNumber-1), "%rbx");
     printInsn("incq", "(%rax,%rbx,8)");
   }
 
   public void genPrintStatementCounts() {
+    if (!statementCounting)
+      return;
+
     genCall("generated_print_statement_counts");
   }
 
   public void genPrintStatementCountsDeclaration() {
+    if (!statementCounting)
+      return;
+
     genFunctionEntry("generated_print_statement_counts");
     printInsn("leaq", assemblerPrefixName + "statement_counts(%rip)", "%rdi");
     printInsn("movq", "$"+maxLineNumber, "%rsi");

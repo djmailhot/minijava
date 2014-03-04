@@ -98,7 +98,7 @@ public class TestParser {
       //
       scanner s = new scanner(System.in);
       parser p = new parser(s);
-      CodeGenerator cg = new CodeGenerator(outputFileName);
+      CodeGenerator cg = new CodeGenerator(outputFileName, false);
       Symbol root;
 
       cg.genFunctionEntry("asm_main");

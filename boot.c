@@ -84,7 +84,7 @@ void print_statement_counts(int64_t *array, int64_t length)
   file = fopen("profile.out", "w");
 
   for (i = 0; i < length; ++i) {
-    fprintf(file, "Line %d: %lld\n", i+1, array[i]);
+    fprintf(file, "%lld\n", array[i]);
   }
 
   fclose(file);

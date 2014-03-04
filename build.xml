@@ -158,6 +158,23 @@
     </java>
   </target>
 
+  <target name="printprofile" depends="build">
+    <java
+      classname="StatementCountPrinter"
+      classpath="build/classes;lib/CUP.jar"
+      fork="true"
+      >
+      <arg value="-i"/>
+      <arg value="${file}.java"/>
+      <!--
+      <arg value="-o"/>
+      <arg value="${file}.profile"/>
+      -->
+      <arg value="-p"/>
+      <arg value="profile.out"/>
+    </java>
+  </target>
+
   <target name="typecheck" depends="compile">
     <java
       classname="TypeChecker"

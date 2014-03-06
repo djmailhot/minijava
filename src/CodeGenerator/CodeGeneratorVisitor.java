@@ -186,7 +186,7 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(Print n) {
     cg.genStatementCountIncrement(n.getLineNumber());
     n.e.accept(this);
-    cg.genPrint();
+      cg.genPrintInteger();
   }
 
   // Identifier i;
@@ -341,9 +341,9 @@ public class CodeGeneratorVisitor implements Visitor {
     n.i.accept(this);
     for (int i = 0; i < n.el.size(); i++) {
       n.el.get(i).accept(this);
-      cg.genActual(i + 1);  // the first register rdi is reserved
+        cg.genIntegerActual(i + 1);  // the first register rdi is reserved
     }
-    cg.genActual(0);  // push the current class
+    cg.genIntegerActual(0);  // push the current class
     ClassVarType classType = (ClassVarType) n.e.type;
     cg.genMethodCall(classType, classType.getMethod(n.i.s));
   }

@@ -13,8 +13,10 @@ import SemanticAnalyzer.SemanticTypes.*;
 
 public class CodeGenerator {
 
-  private static final String[] PARAM_REGISTERS =
+  private static final String[] PARAM_INTEGER_REGISTERS =
     { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+  private static final String[] PARAM_DOUBLE_REGISTERS =
+    { "%xmm0", "%xmm1", "%xmm2", "%xmm3", "%xmm4", "%xmm5" };
 
   // The runtime error codes that our compiled program can exit with.
   private static final int ERR_OUT_OF_BOUNDS = 10;
@@ -177,14 +179,14 @@ public class CodeGenerator {
     printInsn("subq", String.format("$%d", localSegmentSize), "%rsp");
 
     // Store `this` pointer
-    printInsn("movq", PARAM_REGISTERS[0], String.format("-%d(%%rbp)", 8));
+    printInsn("movq", PARAM_INTEGER_REGISTERS[0], String.format("-%d(%%rbp)", 8));
 
     // Store arguments and keep track of their offsets
     localOffsets = new HashMap<String, Integer>();
     for (String argName : method.params.keySet()) {
       int offset = 8 * (localOffsets.size() + 2);
-      printInsn("movq", PARAM_REGISTERS[localOffsets.size() + 1],
-          String.format("-%d(%%rbp)", offset));
+        printInsn("movq", PARAM_INTEGER_REGISTERS[localOffsets.size() + 1],
+            String.format("-%d(%%rbp)", offset));
       localOffsets.put(argName, offset);
     }
 
@@ -261,15 +263,15 @@ public class CodeGenerator {
   }
 
   /**
-   * Generates code to load a value off the expression stack into the argument
-   * register for the given argument position.
+   * Generates code to load a value off the expression stack into the integer 
+   * argument register for the given argument position.
    */
-  public void genActual(int position) {
+  public void genIntegerActual(int position) {
     if (position > 5) {
       System.err.println("Encountered a function with more than 5 explicit arguments.");
       System.exit(0);
     }
-    String register = PARAM_REGISTERS[position];
+    String register = PARAM_INTEGER_REGISTERS[position];
     printInsn("popq", register);
     itemsOnStack--;
   }
@@ -598,10 +600,9 @@ public class CodeGenerator {
     genCall("put");
   }
 
-  public void genPrint() {
-    printComment("print statement");
-    printInsn("popq", "%rdi");  // single operand
-    itemsOnStack--;
+  public void genPrintInteger() {
+    printComment("print int statement");
+    genIntegerActual(0);
     genCall("put");
   }
 

@@ -21,6 +21,9 @@ src/Scanner/*~
 *.swo
 .gdb_history
 
+# statement counting profiler output
+*.profile
+
 #
 # one off test programs
 #

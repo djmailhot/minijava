@@ -15,8 +15,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "number_converter.h"
+
+static char *executable_name;
 
 /*
  * This is the main function in compiled code
@@ -69,8 +72,9 @@ int64_t *mjmalloc(size_t num_bytes)
 /*
  * Execute the compiled mini Java program asm_main.
  */
-int main(void)
+int main(int argc, char **argv)
 {
+  executable_name = argv[0];
   asm_main();
   return 0;
 }
@@ -78,10 +82,20 @@ int main(void)
 void print_statement_counts(int64_t *array, int64_t length)
 {
   int i;
+  int filename_length;
+  char *filename;
+  char *extension = "profile";
+
+  // Add the extension .profile to the executable filename for our output file.
+  filename_length = strlen(executable_name) + 1 + strlen(extension);
+  filename = (char *) malloc(filename_length + 1);
+  if (!filename)
+    exit(20);
+  snprintf(filename, filename_length + 1, "%s.%s", executable_name, extension);
 
   // open file
   FILE *file;
-  file = fopen("profile.out", "w");
+  file = fopen(filename, "w");
 
   for (i = 0; i < length; ++i) {
     fprintf(file, "%lld\n", array[i]);

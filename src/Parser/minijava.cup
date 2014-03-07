@@ -390,23 +390,23 @@ AssignStatement ::=
         ;
 
 PrintStatement ::=
-          PRINT LPAREN Expression:e RPAREN SEMICOLON
-            {: RESULT = new Print(e, eleft); :}
+          PRINT:p LPAREN Expression:e RPAREN SEMICOLON
+            {: RESULT = new Print(e, pleft); :}
         ;
 
 WhileStatement ::=
           WHILE LPAREN Expression:e RPAREN Statement:s
-            {: RESULT = new While(e, s, sleft); :}
+            {: RESULT = new While(e, s, eleft); :}
         ;
 
 IfStatement ::=
           IF LPAREN Expression:e RPAREN Statement:s1 ELSE Statement:s2
-            {: RESULT = new If(e, s1, s2, s2left); :}
+            {: RESULT = new If(e, s1, s2, eleft); :}
         ;
 
 ArrayAssignStatement ::=
           Identifier:id LBRACKET Expression:e1 RBRACKET BECOMES Expression:e2 SEMICOLON
-            {: RESULT = new ArrayAssign(id, e1, e2, e2left); :}
+            {: RESULT = new ArrayAssign(id, e1, e2, idleft); :}
         ;
 
 Identifier  ::=

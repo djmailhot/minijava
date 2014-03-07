@@ -300,8 +300,16 @@ public class CodeGenerator {
     itemsOnStack++;
   }
 
-  public void genConstant(int value) {
+  public void genIntegerConstant(int value) {
     printInsn("movq", String.format("$%d", value), "%rax");
+    printInsn("pushq", "%rax");
+    itemsOnStack++;
+  }
+
+  public void genDoubleConstant(double value) {
+    long bits = Double.doubleToLongBits(value);
+
+    printInsn("movabsq", String.format("$%d", bits), "%rax");
     printInsn("pushq", "%rax");
     itemsOnStack++;
   }

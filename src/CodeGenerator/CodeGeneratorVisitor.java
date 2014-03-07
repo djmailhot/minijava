@@ -221,11 +221,11 @@ public class CodeGeneratorVisitor implements Visitor {
     cg.genJmpIfFalse(labelFalse);
     n.e2.accept(this);
     cg.genJmpIfFalse(labelFalse);
-    cg.genConstant(1);
+    cg.genIntegerConstant(1);
     cg.genJmp(labelEnd);
     cg.printLocalLabel(labelFalse);
     cg.decrementStackItemCount();
-    cg.genConstant(0);
+    cg.genIntegerConstant(0);
     cg.printLocalLabel(labelEnd);
   }
 
@@ -239,11 +239,11 @@ public class CodeGeneratorVisitor implements Visitor {
     cg.genJmpIfTrue(labelTrue);
     n.e2.accept(this);
     cg.genJmpIfTrue(labelTrue);
-    cg.genConstant(0);
+    cg.genIntegerConstant(0);
     cg.genJmp(labelEnd);
     cg.printLocalLabel(labelTrue);
     cg.decrementStackItemCount();
-    cg.genConstant(1);
+    cg.genIntegerConstant(1);
     cg.printLocalLabel(labelEnd);
   }
 
@@ -354,19 +354,20 @@ public class CodeGeneratorVisitor implements Visitor {
 
   // int i;
   public void visit(IntegerLiteral n) {
-    cg.genConstant(n.i);
+    cg.genIntegerConstant(n.i);
   }
 
   // double d;
   public void visit(DoubleLiteral n) {
+    cg.genDoubleConstant(n.d);
   }
 
   public void visit(True n) {
-    cg.genConstant(1);
+    cg.genIntegerConstant(1);
   }
 
   public void visit(False n) {
-    cg.genConstant(0);
+    cg.genIntegerConstant(0);
   }
 
   public void visit(IdentifierExp n) {
@@ -374,7 +375,7 @@ public class CodeGeneratorVisitor implements Visitor {
   }
 
   public void visit(ConstantExp n) {
-    cg.genConstant(n.value);
+    cg.genIntegerConstant(n.value);
   }
 
   public void visit(This n) {

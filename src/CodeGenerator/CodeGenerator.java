@@ -184,9 +184,17 @@ public class CodeGenerator {
     // Store arguments and keep track of their offsets
     localOffsets = new HashMap<String, Integer>();
     for (String argName : method.params.keySet()) {
+      VarType argType = method.params.get(argName);
+
       int offset = 8 * (localOffsets.size() + 2);
+
+      if (argType == Primitive.DOUBLE) {
+        printInsn("movsd", PARAM_DOUBLE_REGISTERS[localOffsets.size() + 1],
+            String.format("-%d(%%rbp)", offset));
+      } else {
         printInsn("movq", PARAM_INTEGER_REGISTERS[localOffsets.size() + 1],
             String.format("-%d(%%rbp)", offset));
+      }
       localOffsets.put(argName, offset);
     }
 
@@ -206,7 +214,11 @@ public class CodeGenerator {
     printComment("return point for " + className + "." + method + "()");
 
     // Pop return value
-    printInsn("popq", "%rax");
+    if (method.returnType == Primitive.DOUBLE) {
+      genPopDouble("%xmm0");
+    } else {
+      printInsn("popq", "%rax");
+    }
     itemsOnStack--;
 
     if (itemsOnStack != 0) {

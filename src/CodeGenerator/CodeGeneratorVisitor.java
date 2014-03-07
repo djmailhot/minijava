@@ -344,8 +344,13 @@ public class CodeGeneratorVisitor implements Visitor {
     n.e.accept(this);
     n.i.accept(this);
     for (int i = 0; i < n.el.size(); i++) {
-      n.el.get(i).accept(this);
+      Exp exp = n.el.get(i);
+      exp.accept(this);
+      if (exp.type == Primitive.DOUBLE) {
+        cg.genDoubleActual(i + 1);  // the first register xmm0 is reserved
+      } else {
         cg.genIntegerActual(i + 1);  // the first register rdi is reserved
+      }
     }
     cg.genIntegerActual(0);  // push the current class
     ClassVarType classType = (ClassVarType) n.e.type;

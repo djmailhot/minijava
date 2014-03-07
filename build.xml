@@ -171,7 +171,7 @@
       <arg value="${file}.profile"/>
       -->
       <arg value="-p"/>
-      <arg value="profile.out"/>
+      <arg value="${file}.x.profile"/>
     </java>
   </target>
 

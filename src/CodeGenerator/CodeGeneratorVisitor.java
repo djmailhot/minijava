@@ -186,7 +186,11 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(Print n) {
     cg.genStatementCountIncrement(n.getLineNumber());
     n.e.accept(this);
+    if (n.e.type == Primitive.DOUBLE) {
+      cg.genPrintDouble();
+    } else {
       cg.genPrintInteger();
+    }
   }
 
   // Identifier i;

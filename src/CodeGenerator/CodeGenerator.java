@@ -277,6 +277,21 @@ public class CodeGenerator {
   }
 
   /**
+   * Generates code to load a value off the expression stack into the double
+   * argument register for the given argument position.
+   */
+  public void genDoubleActual(int position) {
+    if (position > 5) {
+      System.err.println("Encountered a function with more than 5 explicit arguments.");
+      System.exit(0);
+    }
+    String register = PARAM_DOUBLE_REGISTERS[position];
+    printInsn("popq", "%rbx");
+    printInsn("movsd", "%rbx", register);
+    itemsOnStack--;
+  }
+
+  /**
    * Pushes a pointer to the current `this` object onto the expression stack.
    */
   public void genThis() {
@@ -604,6 +619,12 @@ public class CodeGenerator {
     printComment("print int statement");
     genIntegerActual(0);
     genCall("put");
+  }
+
+  public void genPrintDouble() {
+    printComment("print double statement");
+    genDoubleActual(0);
+    genCall("put_double");
   }
 
   public void genAllocateArray() {

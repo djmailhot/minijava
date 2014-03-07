@@ -1,4 +1,8 @@
 #!/bin/bash
-ant build -Dfile=$1;
-./$1.x;
-ant printprofile -Dfile=$1;
+
+# remove the .java extension, if present.
+file=`echo $1 | sed s/\.java$//`;
+
+ant build -Dfile=$file;
+./$file.x;
+ant printprofile -Dfile=$file;

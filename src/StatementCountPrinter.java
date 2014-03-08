@@ -58,10 +58,10 @@ public class StatementCountPrinter {
 
     Set<Integer> validStatements = getValidStatementLines(inputFileName);
 
-    System.out.println(validStatements);
-
     int lineNumber = 1;
-    String formatString = "Line %-3d: %6s  %s\n";
+    String formatString = "%9s:%5d:%s\n";
+    String nonStatementLine = "-";
+    String unexecutedLine = "#####";
 
     while (profile.hasNextInt()) {
       int count = profile.nextInt();
@@ -69,23 +69,23 @@ public class StatementCountPrinter {
 
       if (count == 0) {
         if (validStatements.contains(lineNumber))
-          countString = "-";
+          countString = unexecutedLine;
         else
-          countString = " ";
+          countString = nonStatementLine;
       }
 
-      out.printf(formatString, lineNumber++, countString, source.nextLine());
+      out.printf(formatString, countString, lineNumber++, source.nextLine());
     }
 
     while (source.hasNextLine()) {
       String countString = null;
 
       if (validStatements.contains(lineNumber))
-        countString = "-";
+        countString = unexecutedLine;
       else
-        countString = " ";
+        countString = nonStatementLine;
 
-      out.printf(formatString, lineNumber++, countString, source.nextLine());
+      out.printf(formatString, countString, lineNumber++, source.nextLine());
     }
   }
 

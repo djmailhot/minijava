@@ -173,8 +173,8 @@ public class CodeGeneratorVisitor implements Visitor {
     String labelTop = cg.newLabel("top");
     String labelBot = cg.newLabel("bot");
 
-    cg.genStatementCountIncrement(n.getLineNumber());
     cg.printLocalLabel(labelTop);
+    cg.genStatementCountIncrement(n.getLineNumber());
     n.e.accept(this);
     cg.genJmpIfFalse(labelBot);
     n.s.accept(this);

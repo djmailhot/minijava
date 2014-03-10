@@ -293,28 +293,44 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(Plus n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genAdd();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genAddDouble();
+    } else {
+      cg.genAddInteger();
+    }
   }
 
   // Exp e1,e2;
   public void visit(Minus n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genSub();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genSubDouble();
+    } else {
+      cg.genSubInteger();
+    }
   }
 
   // Exp e1,e2;
   public void visit(Times n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genMul();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genMulDouble();
+    } else {
+      cg.genMulInteger();
+    }
   }
 
   // Exp e1,e2;
   public void visit(Divide n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genDiv();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genDivDouble();
+    } else {
+      cg.genDivInteger();
+    }
   }
 
   // Exp e1,e2;

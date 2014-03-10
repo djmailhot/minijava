@@ -28,12 +28,6 @@ class TestDoubles {
     System.out.println(x);
     x = 5.5 * 2.0;
     System.out.println(x);
-    x = 5.0 % 3.0;
-    System.out.println(x);
-    x = 5.2 % 3.0;
-    System.out.println(x);
-    x = 5.0 % 3.5;
-    System.out.println(x);
 
     return 0;
   }

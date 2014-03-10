@@ -299,14 +299,12 @@ public class CodeGenerator {
     }
     String register = PARAM_DOUBLE_REGISTERS[position];
     genPopDouble(register);
+    itemsOnStack--;
   }
 
   public void genPopDouble(String register) {
-    printInsn("subq", "$16", "%rsp");  // allocate 2 temp quadwords
-    printInsn("popq", "16(%rsp)");  // put into lower-order quad
-    printInsn("movsd", "8(%rsp)", register);  // read from higher-order quad
-    printInsn("addq", "$16", "%rsp");  // free temp space
-    itemsOnStack--;
+    printInsn("movsd", "(%rsp)", register);  // read from the top of the stack
+    printInsn("addq", "$8", "%rsp");  // manually pop the stack pointer
   }
 
   /**

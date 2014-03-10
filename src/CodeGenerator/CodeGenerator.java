@@ -307,6 +307,11 @@ public class CodeGenerator {
     printInsn("addq", "$8", "%rsp");  // manually pop the stack pointer
   }
 
+  public void genPushDouble(String register) {
+    printInsn("subq", "$8", "%rsp");  // manually pop the stack pointer
+    printInsn("movsd", register, "(%rsp)");  // write to the top of the stack
+  }
+
   /**
    * Pushes a pointer to the current `this` object onto the expression stack.
    */
@@ -584,7 +589,7 @@ public class CodeGenerator {
     printInsn("pushq", "%rax");
   }
 
-  public void genAdd() {
+  public void genAddInteger() {
     printComment("add operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
@@ -593,7 +598,16 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
-  public void genSub() {
+  public void genAddDouble() {
+    printComment("add operation");
+    genPopDouble("%xmm1");  // right operand
+    genPopDouble("%xmm0");  // left operand
+    printInsn("addsd", "%xmm1", "%xmm0");  // %xmm0 *= %xmm1  (2nd operand is dst)
+    genPushDouble("%xmm0");
+    itemsOnStack--;
+  }
+
+  public void genSubInteger() {
     printComment("sub operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
@@ -602,7 +616,16 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
-  public void genMul() {
+  public void genSubDouble() {
+    printComment("sub operation");
+    genPopDouble("%xmm1");  // right operand
+    genPopDouble("%xmm0");  // left operand
+    printInsn("subsd", "%xmm1", "%xmm0");  // %xmm0 -= %xmm1  (2nd operand is dst)
+    genPushDouble("%xmm0");
+    itemsOnStack--;
+  }
+
+  public void genMulInteger() {
     printComment("mul operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
@@ -611,7 +634,16 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
-  public void genDiv() {
+  public void genMulDouble() {
+    printComment("mul operation");
+    genPopDouble("%xmm1");  // right operand
+    genPopDouble("%xmm0");  // left operand
+    printInsn("mulsd", "%xmm1", "%xmm0");  // %xmm0 *= %xmm1  (2nd operand is dst)
+    genPushDouble("%xmm0");
+    itemsOnStack--;
+  }
+
+  public void genDivInteger() {
     printComment("div operation");
     printInsn("popq", "%rbx");  // divisor
     printInsn("popq", "%rax");  // dividend
@@ -619,6 +651,15 @@ public class CodeGenerator {
     printInsn("sarq", "$63", "%rdx");  // extend sign bit to fill register
     printInsn("idivq", "%rbx");  // %rdx:%rax /= %rbx (%rax is dest)
     printInsn("pushq", "%rax");
+    itemsOnStack--;
+  }
+
+  public void genDivDouble() {
+    printComment("div operation");
+    genPopDouble("%xmm1");  // right operand
+    genPopDouble("%xmm0");  // left operand
+    printInsn("divsd", "%xmm1", "%xmm0");  // %xmm0 /= %xmm1  (2nd operand is dst)
+    genPushDouble("%xmm0");
     itemsOnStack--;
   }
 

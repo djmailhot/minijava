@@ -514,6 +514,14 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
+  private void genCmpDoubleTemplate(String function) {
+    genDoubleActual(1);
+    genDoubleActual(0);
+    genCall(function);
+    printInsn("pushq", "%rax");  // the return value
+    itemsOnStack++;
+  }
+
   public void genEqual() {
     printComment("equal operation");
     printInsn("popq", "%rax");  // right operand
@@ -523,6 +531,11 @@ public class CodeGenerator {
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
     itemsOnStack--;
+  }
+
+  public void genEqualDouble() {
+    printComment("equal operation");
+    genCmpDoubleTemplate("cmp_eq_double");
   }
 
   public void genNotEqual() {
@@ -536,6 +549,11 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
+  public void genNotEqualDouble() {
+    printComment("notequal operation");
+    genCmpDoubleTemplate("cmp_ne_double");
+  }
+
   public void genLessThan() {
     printComment("lessthan operation");
     printInsn("popq", "%rax");  // right operand
@@ -545,6 +563,11 @@ public class CodeGenerator {
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
     itemsOnStack--;
+  }
+
+  public void genLessThanDouble() {
+    printComment("lessthan operation");
+    genCmpDoubleTemplate("cmp_lt_double");
   }
 
   public void genGreaterThan() {
@@ -558,6 +581,11 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
+  public void genGreaterThanDouble() {
+    printComment("greaterthan operation");
+    genCmpDoubleTemplate("cmp_gt_double");
+  }
+
   public void genLessEqual() {
     printComment("lessorequal operation");
     printInsn("popq", "%rax");  // right operand
@@ -567,6 +595,11 @@ public class CodeGenerator {
     printInsn("movzbq", "%al", "%rax");  // pad with zeros
     printInsn("pushq", "%rax");
     itemsOnStack--;
+  }
+
+  public void genLessEqualDouble() {
+    printComment("lessorequal operation");
+    genCmpDoubleTemplate("cmp_le_double");
   }
 
   public void genGreaterEqual() {
@@ -580,6 +613,11 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
+  public void genGreaterEqualDouble() {
+    printComment("greaterorequal operation");
+    genCmpDoubleTemplate("cmp_ge_double");
+  }
+
   public void genNot() {
     printComment("negation operation");
     printInsn("popq", "%rax");
@@ -589,7 +627,7 @@ public class CodeGenerator {
     printInsn("pushq", "%rax");
   }
 
-  public void genAddInteger() {
+  public void genAdd() {
     printComment("add operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
@@ -607,7 +645,7 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
-  public void genSubInteger() {
+  public void genSub() {
     printComment("sub operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
@@ -625,7 +663,7 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
-  public void genMulInteger() {
+  public void genMul() {
     printComment("mul operation");
     printInsn("popq", "%rbx");  // right operand
     printInsn("popq", "%rax");  // left operand
@@ -643,7 +681,7 @@ public class CodeGenerator {
     itemsOnStack--;
   }
 
-  public void genDivInteger() {
+  public void genDiv() {
     printComment("div operation");
     printInsn("popq", "%rbx");  // divisor
     printInsn("popq", "%rax");  // dividend

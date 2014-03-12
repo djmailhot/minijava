@@ -251,42 +251,66 @@ public class CodeGeneratorVisitor implements Visitor {
   public void visit(Equal n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genEqual();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genEqualDouble();
+    } else {
+      cg.genEqual();
+    }
   }
 
   // Exp e1,e2;
   public void visit(NotEqual n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genNotEqual();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genNotEqualDouble();
+    } else {
+      cg.genNotEqual();
+    }
   }
 
   // Exp e1,e2;
   public void visit(LessThan n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genLessThan();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genLessThanDouble();
+    } else {
+      cg.genLessThan();
+    }
   }
 
   // Exp e1,e2;
   public void visit(GreaterThan n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genGreaterThan();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genGreaterThanDouble();
+    } else {
+      cg.genGreaterThan();
+    }
   }
 
   // Exp e1,e2;
   public void visit(LessEqual n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genLessEqual();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genLessEqualDouble();
+    } else {
+      cg.genLessEqual();
+    }
   }
 
   // Exp e1,e2;
   public void visit(GreaterEqual n) {
     n.e1.accept(this);
     n.e2.accept(this);
-    cg.genGreaterEqual();
+    if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
+      cg.genGreaterEqualDouble();
+    } else {
+      cg.genGreaterEqual();
+    }
   }
 
   // Exp e1,e2;
@@ -296,7 +320,7 @@ public class CodeGeneratorVisitor implements Visitor {
     if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
       cg.genAddDouble();
     } else {
-      cg.genAddInteger();
+      cg.genAdd();
     }
   }
 
@@ -307,7 +331,7 @@ public class CodeGeneratorVisitor implements Visitor {
     if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
       cg.genSubDouble();
     } else {
-      cg.genSubInteger();
+      cg.genSub();
     }
   }
 
@@ -318,7 +342,7 @@ public class CodeGeneratorVisitor implements Visitor {
     if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
       cg.genMulDouble();
     } else {
-      cg.genMulInteger();
+      cg.genMul();
     }
   }
 
@@ -329,7 +353,7 @@ public class CodeGeneratorVisitor implements Visitor {
     if (n.e1.type == Primitive.DOUBLE) {  // type checking guarantees e2 matches
       cg.genDivDouble();
     } else {
-      cg.genDivInteger();
+      cg.genDiv();
     }
   }
 

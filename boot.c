@@ -59,6 +59,36 @@ void put_double(double d)
   printf("%s\n", buf);
 }
 
+int cmp_eq_double(double a, double b)
+{
+  return a == b;
+}
+
+int cmp_ne_double(double a, double b)
+{
+  return a != b;
+}
+
+int cmp_lt_double(double a, double b)
+{
+  return a < b;
+}
+
+int cmp_gt_double(double a, double b)
+{
+  return a > b;
+}
+
+int cmp_le_double(double a, double b)
+{
+  return a <= b;
+}
+
+int cmp_ge_double(double a, double b)
+{
+  return a >= b;
+}
+
 /*
  * The function mjmalloc returns a pointer to a chunk of memory
  * at least num_bytes large.

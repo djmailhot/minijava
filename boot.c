@@ -128,7 +128,7 @@ void print_statement_counts(int64_t *array, int64_t length)
   file = fopen(filename, "w");
 
   for (i = 0; i < length; ++i) {
-    fprintf(file, "%lld\n", array[i]);
+    fprintf(file, "%" PRId64 "\n", array[i]);
   }
 
   fclose(file);

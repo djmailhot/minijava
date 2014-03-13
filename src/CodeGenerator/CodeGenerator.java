@@ -270,7 +270,11 @@ public class CodeGenerator {
     if (itemsOnStack % 2 != 0)
       printInsn("addq", "$8", "%rsp");
 
-    printInsn("pushq", "%rax");
+    if (method.returnType == Primitive.DOUBLE) {
+      genPushDouble("%xmm0");
+    } else {
+      printInsn("pushq", "%rax");
+    }
     itemsOnStack++;
   }
 
